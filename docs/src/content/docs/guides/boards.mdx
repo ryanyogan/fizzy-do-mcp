@@ -1,0 +1,153 @@
+---
+title: Working with Boards
+description: Learn how to manage boards with Fizzy MCP
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+# Working with Boards
+
+Boards are the top-level containers for organizing work in Fizzy. This guide covers common board operations.
+
+## What is a Board?
+
+A board represents a project, team, or area of work. It contains:
+
+- **Cards**: Individual work items
+- **Columns**: Workflow stages (e.g., "To Do", "In Progress", "Done")
+- **Settings**: Auto-postpone rules, access controls
+
+## Listing Boards
+
+Get all boards you have access to:
+
+```
+fizzy_list_boards()
+```
+
+Response:
+```json
+[
+  {
+    "id": "board_eng",
+    "name": "Engineering",
+    "cards_count": 45,
+    "columns_count": 4
+  },
+  {
+    "id": "board_design",
+    "name": "Design",
+    "cards_count": 23,
+    "columns_count": 3
+  }
+]
+```
+
+## Creating a Board
+
+Create a new board for a project:
+
+```
+fizzy_create_board({
+  name: "Q1 Planning",
+  all_access: true,
+  auto_postpone_period_in_days: 7
+})
+```
+
+<Aside>
+  `auto_postpone_period_in_days` automatically moves inactive cards to "Not Now" after the specified days.
+</Aside>
+
+## Board Settings
+
+### Access Control
+
+- `all_access: true` - All account members can see the board
+- `all_access: false` - Only invited members can access
+
+### Auto-Postpone
+
+Set automatic cleanup for stale cards:
+
+```
+fizzy_update_board({
+  board_id: "board_eng",
+  auto_postpone_period_in_days: 14
+})
+```
+
+Set to `null` to disable:
+
+```
+fizzy_update_board({
+  board_id: "board_eng",
+  auto_postpone_period_in_days: null
+})
+```
+
+## Publishing Boards
+
+Make a board publicly viewable:
+
+```
+fizzy_publish_board({
+  board_id: "board_roadmap"
+})
+```
+
+This generates a public URL anyone can view (read-only).
+
+To remove public access:
+
+```
+fizzy_unpublish_board({
+  board_id: "board_roadmap"
+})
+```
+
+## Board Workflow
+
+### Setting Up Columns
+
+<Steps>
+
+1. Create a new board
+   ```
+   fizzy_create_board({ name: "Sprint 1" })
+   ```
+
+2. Add workflow columns
+   ```
+   fizzy_create_column({ board_id: "board_xxx", name: "Backlog" })
+   fizzy_create_column({ board_id: "board_xxx", name: "In Progress" })
+   fizzy_create_column({ board_id: "board_xxx", name: "Review" })
+   fizzy_create_column({ board_id: "board_xxx", name: "Done" })
+   ```
+
+3. Create cards and triage them
+   ```
+   fizzy_create_card({ board_id: "board_xxx", title: "Feature A" })
+   fizzy_triage_card({ card_number: 1, column_id: "col_backlog" })
+   ```
+
+</Steps>
+
+## Deleting a Board
+
+<Aside type="danger">
+  Deleting a board is permanent and removes all cards!
+</Aside>
+
+```
+fizzy_delete_board({
+  board_id: "board_old"
+})
+```
+
+## Best Practices
+
+1. **One board per project** - Keep boards focused
+2. **Use auto-postpone** - Prevent stale cards from cluttering views
+3. **Limit columns** - 3-5 columns is optimal for most workflows
+4. **Publish roadmaps** - Share progress with stakeholders

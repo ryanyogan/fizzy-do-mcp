@@ -1,0 +1,108 @@
+---
+title: Error Handling
+description: Understanding and handling Fizzy MCP errors
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+# Error Handling
+
+Fizzy MCP uses a structured error system with explicit error types.
+
+## Error Types
+
+| Error | Code | Retryable | Description |
+|-------|------|-----------|-------------|
+| `FizzyApiError` | `API_ERROR` | 5xx only | HTTP API errors |
+| `FizzyAuthError` | `AUTH_ERROR` | No | Authentication failures |
+| `FizzyForbiddenError` | `FORBIDDEN_ERROR` | No | Permission denied |
+| `FizzyNotFoundError` | `NOT_FOUND_ERROR` | No | Resource not found |
+| `FizzyValidationError` | `VALIDATION_ERROR` | No | Invalid input |
+| `FizzyNetworkError` | `NETWORK_ERROR` | Yes | Network failures |
+| `FizzyConfigError` | `CONFIG_ERROR` | No | Configuration issues |
+| `FizzyRateLimitError` | `RATE_LIMIT_ERROR` | Yes | Too many requests |
+
+## Error Structure
+
+All errors include:
+
+```typescript
+{
+  name: string;       // Error class name
+  code: string;       // Unique error code
+  message: string;    // Human-readable message
+  retryable: boolean; // Whether to retry
+}
+```
+
+## MCP Tool Errors
+
+When a tool encounters an error, it returns:
+
+```json
+{
+  "content": [{
+    "type": "text",
+    "text": "Error: Card not found\nCode: NOT_FOUND_ERROR"
+  }],
+  "isError": true
+}
+```
+
+## Handling in TypeScript
+
+```typescript
+import { FizzyAuthError, FizzyNotFoundError } from '@fizzy-mcp/shared';
+
+const result = await client.cards.getByNumber(42);
+
+if (!result.ok) {
+  const error = result.error;
+  
+  if (error instanceof FizzyAuthError) {
+    // Re-authenticate
+    console.log('Please run: fizzy-mcp auth');
+  } else if (error instanceof FizzyNotFoundError) {
+    // Handle missing resource
+    console.log('Card not found');
+  } else if (error.retryable) {
+    // Retry the request
+    await retry(() => client.cards.getByNumber(42));
+  }
+}
+```
+
+## Retry Behavior
+
+The client automatically retries on:
+
+- Network errors
+- 5xx server errors
+- 429 rate limit responses
+
+Configuration:
+
+```typescript
+import { withRetry } from '@fizzy-mcp/client';
+
+const result = await withRetry(
+  () => client.cards.list(),
+  {
+    maxRetries: 5,
+    baseDelayMs: 1000,
+    maxDelayMs: 30000,
+  }
+);
+```
+
+## Rate Limiting
+
+If you hit rate limits:
+
+1. The client waits for `Retry-After` header
+2. Requests are retried automatically
+3. After max retries, `FizzyRateLimitError` is thrown
+
+<Aside type="tip">
+  To avoid rate limits, batch operations where possible and cache responses.
+</Aside>

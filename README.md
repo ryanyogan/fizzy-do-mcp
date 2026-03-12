@@ -25,7 +25,7 @@ An MCP (Model Context Protocol) server that enables AI agents to interact with [
 
 ```bash
 # Install globally
-npm install -g @fizzy-mcp/server
+npm install -g fizzy-do-mcp
 
 # Configure with your access token
 fizzy-mcp auth
@@ -38,32 +38,48 @@ export FIZZY_ACCESS_TOKEN="your-token-here"
 export FIZZY_ACCOUNT_SLUG="/897362094"  # Optional, auto-detected if omitted
 ```
 
-### 3. Add to Claude Desktop
+### 3. Add to Your AI Agent
 
-Add this to your Claude Desktop configuration (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
 
 ```json
 {
   "mcpServers": {
     "fizzy": {
       "command": "npx",
-      "args": ["@fizzy-mcp/server"]
+      "args": ["-y", "fizzy-do-mcp@latest"]
     }
   }
 }
 ```
 
-Or if installed globally:
+**OpenCode** (`~/.config/opencode/opencode.json`):
+
+```json
+{
+  "mcp": {
+    "fizzy": {
+      "type": "local",
+      "command": ["npx", "-y", "fizzy-do-mcp@latest"]
+    }
+  }
+}
+```
+
+**Cursor** (`~/.cursor/mcp.json`):
 
 ```json
 {
   "mcpServers": {
     "fizzy": {
-      "command": "fizzy-mcp"
+      "command": "npx",
+      "args": ["-y", "fizzy-do-mcp@latest"]
     }
   }
 }
 ```
+
+Credentials are stored securely in `~/.config/fizzy-mcp/config.json` - no need to add tokens to your MCP config.
 
 ### 4. Start Using
 
@@ -243,7 +259,7 @@ The project uses a monorepo structure with clear separation of concerns:
 - **@fizzy-mcp/shared** - Core types, Zod schemas, Result type for error handling
 - **@fizzy-mcp/client** - Fizzy API client with dependency injection, retry logic
 - **@fizzy-mcp/tools** - MCP tool registration, maps client methods to MCP tools
-- **@fizzy-mcp/server** - Entry point, CLI, credential management
+- **fizzy-do-mcp** - Entry point, CLI, credential management (published to npm)
 
 All packages are built with [tsup](https://tsup.egoist.dev/) targeting ES2022 and are fully tree-shakeable.
 

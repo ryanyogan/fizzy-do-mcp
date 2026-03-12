@@ -1,0 +1,165 @@
+---
+title: Team Collaboration
+description: Working together with Fizzy MCP
+---
+
+# Team Collaboration
+
+Fizzy MCP enables AI-assisted collaboration across your team.
+
+## User Management
+
+### List Team Members
+
+```
+fizzy_list_users()
+```
+
+Response:
+```json
+[
+  {
+    "id": "user_sarah",
+    "name": "Sarah Chen",
+    "email_address": "sarah@example.com"
+  },
+  {
+    "id": "user_mike",
+    "name": "Mike Johnson",
+    "email_address": "mike@example.com"
+  }
+]
+```
+
+### Get User Details
+
+```
+fizzy_get_user({
+  user_id: "user_sarah"
+})
+```
+
+## Assignments
+
+### Assign Work
+
+```
+fizzy_assign_card({
+  card_number: 42,
+  assignee_id: "user_sarah"
+})
+```
+
+### Find Someone's Work
+
+```
+fizzy_list_cards({
+  assignee_ids: ["user_sarah"]
+})
+```
+
+### Multiple Assignees
+
+Call `fizzy_assign_card` for each user:
+
+```
+fizzy_assign_card({ card_number: 42, assignee_id: "user_sarah" })
+fizzy_assign_card({ card_number: 42, assignee_id: "user_mike" })
+```
+
+## Comments
+
+### Add Context
+
+```
+fizzy_create_comment({
+  card_number: 42,
+  body: "<p>@sarah Can you take a look at this?</p>"
+})
+```
+
+### View Discussion
+
+```
+fizzy_list_comments({
+  card_number: 42
+})
+```
+
+### Update Your Comment
+
+```
+fizzy_update_comment({
+  card_number: 42,
+  comment_id: "comment_123",
+  body: "<p>Updated thoughts...</p>"
+})
+```
+
+## Notifications
+
+### Watch Important Cards
+
+```
+fizzy_watch_card({
+  card_number: 42
+})
+```
+
+### Stop Watching
+
+```
+fizzy_unwatch_card({
+  card_number: 42
+})
+```
+
+## Collaboration Patterns
+
+### Handoff
+
+1. Complete your work
+2. Add a comment with status
+3. Assign to the next person
+4. Move to their column
+
+```
+fizzy_create_comment({
+  card_number: 42,
+  body: "<p>Implementation complete. Ready for review.</p>"
+})
+
+fizzy_assign_card({
+  card_number: 42,
+  assignee_id: "user_reviewer"
+})
+
+fizzy_triage_card({
+  card_number: 42,
+  column_id: "col_review"
+})
+```
+
+### Daily Standup
+
+Ask your AI:
+
+> "What cards are assigned to the team and in progress?"
+
+```
+fizzy_list_cards({
+  board_ids: ["board_sprint"],
+  indexed_by: "all"
+})
+```
+
+### Sprint Review
+
+> "Show me all cards closed this week"
+
+```
+fizzy_list_cards({
+  indexed_by: "closed",
+  sorted_by: "newest"
+})
+```

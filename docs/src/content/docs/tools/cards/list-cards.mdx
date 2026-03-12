@@ -1,0 +1,152 @@
+---
+title: fizzy_list_cards
+description: List cards with optional filters
+---
+
+# fizzy_list_cards
+
+List Fizzy cards with optional filters. Use this to search and browse cards.
+
+## Description
+
+Returns cards matching the specified filters. This is one of the most frequently used tools for browsing and searching work items.
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `board_ids` | `string[]` | No | Filter by board ID(s) |
+| `tag_ids` | `string[]` | No | Filter by tag ID(s) |
+| `assignee_ids` | `string[]` | No | Filter by assignee user ID(s) |
+| `indexed_by` | `string` | No | Filter by card state |
+| `sorted_by` | `string` | No | Sort order |
+| `terms` | `string[]` | No | Search terms |
+
+### `indexed_by` Values
+
+| Value | Description |
+|-------|-------------|
+| `all` | All cards |
+| `closed` | Completed cards |
+| `not_now` | Postponed cards |
+| `stalled` | Inactive cards needing attention |
+| `postponing_soon` | Cards about to auto-postpone |
+| `golden` | Important/starred cards |
+
+### `sorted_by` Values
+
+| Value | Description |
+|-------|-------------|
+| `latest` | Most recently updated |
+| `newest` | Most recently created |
+| `oldest` | Oldest first |
+
+## Returns
+
+```typescript
+Array<{
+  id: string;
+  number: number;
+  title: string;
+  description: string | null;
+  status: 'drafted' | 'published';
+  closed: boolean;
+  postponed: boolean;
+  golden: boolean;
+  pinned: boolean;
+  watching: boolean;
+  board: { id: string; name: string };
+  column: { id: string; name: string } | null;
+  tags: Array<{ id: string; title: string }>;
+  assignees: Array<{ id: string; name: string }>;
+  created_at: string;
+  updated_at: string;
+}>
+```
+
+## Examples
+
+### List all cards on a board
+
+```
+fizzy_list_cards({
+  board_ids: ["board_abc123"]
+})
+```
+
+### Find golden cards
+
+```
+fizzy_list_cards({
+  indexed_by: "golden"
+})
+```
+
+### Search by terms
+
+```
+fizzy_list_cards({
+  terms: ["login", "bug"]
+})
+```
+
+### Cards assigned to a user
+
+```
+fizzy_list_cards({
+  assignee_ids: ["user_xyz789"]
+})
+```
+
+### Combine filters
+
+```
+fizzy_list_cards({
+  board_ids: ["board_abc123"],
+  tag_ids: ["tag_urgent"],
+  sorted_by: "newest"
+})
+```
+
+## Response Example
+
+```json
+[
+  {
+    "id": "card_123",
+    "number": 42,
+    "title": "Fix login bug",
+    "description": "<p>Users can't log in on mobile</p>",
+    "status": "published",
+    "closed": false,
+    "postponed": false,
+    "golden": true,
+    "pinned": false,
+    "watching": true,
+    "board": {
+      "id": "board_abc123",
+      "name": "Engineering"
+    },
+    "column": {
+      "id": "col_456",
+      "name": "In Progress"
+    },
+    "tags": [
+      { "id": "tag_urgent", "title": "urgent" },
+      { "id": "tag_bug", "title": "bug" }
+    ],
+    "assignees": [
+      { "id": "user_789", "name": "Sarah" }
+    ],
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-16T14:30:00Z"
+  }
+]
+```
+
+## Related Tools
+
+- [`fizzy_get_card`](/tools/cards/get-card/) - Get full card details
+- [`fizzy_create_card`](/tools/cards/create-card/) - Create a new card
+- [`fizzy_list_boards`](/tools/boards/list-boards/) - Get board IDs
+- [`fizzy_list_tags`](/tools/tags/list-tags/) - Get tag IDs

@@ -1,0 +1,72 @@
+---
+title: fizzy_update_card
+description: Update an existing card
+---
+
+# fizzy_update_card
+
+Update an existing Fizzy card.
+
+## Description
+
+Modify a card's title, description, status, or tags. All parameters are optional - only provide the fields you want to change.
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `card_number` | `number` | Yes | The card number |
+| `title` | `string` | No | New title for the card |
+| `description` | `string` | No | New description (supports Markdown or HTML) |
+| `status` | `string` | No | `drafted` or `published` |
+| `tag_ids` | `string[]` | No | Tag IDs to set on the card (replaces existing) |
+
+## Returns
+
+The updated card object.
+
+## Examples
+
+### Update title
+
+```
+fizzy_update_card({
+  card_number: 42,
+  title: "Updated: Implement user authentication"
+})
+```
+
+### Update description with Markdown
+
+```
+fizzy_update_card({
+  card_number: 42,
+  description: "## Progress\n\n- [x] Database schema\n- [x] API endpoints\n- [ ] Frontend integration"
+})
+```
+
+### Change status
+
+```
+fizzy_update_card({
+  card_number: 42,
+  status: "published"
+})
+```
+
+## Markdown Support
+
+The description field supports Markdown, which is automatically converted to HTML:
+
+- **Bold**: `**text**`
+- _Italic_: `_text_`
+- Links: `[text](url)`
+- Lists: `- item` or `1. item`
+- Code: `` `code` ``
+- Headings: `## Heading`
+
+## Related Tools
+
+- [`fizzy_get_card`](/tools/cards/get-card/) - Get current card details
+- [`fizzy_create_card`](/tools/cards/create-card/) - Create a new card
+- [`fizzy_tag_card`](/tools/cards/tag-card/) - Toggle individual tags

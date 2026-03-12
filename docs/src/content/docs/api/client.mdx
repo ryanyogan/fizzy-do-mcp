@@ -1,0 +1,141 @@
+---
+title: TypeScript Client
+description: Using the Fizzy TypeScript client directly
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+# TypeScript Client
+
+The Fizzy MCP server includes a fully-typed TypeScript client that you can use directly in your applications.
+
+## Installation
+
+```bash
+npm install @fizzy-mcp/client
+```
+
+## Basic Usage
+
+```typescript
+import { FizzyClient } from '@fizzy-mcp/client';
+
+const client = new FizzyClient({
+  accessToken: 'fz_xxxxxxxxxxxxx',
+  accountSlug: '/my-org', // optional
+  baseUrl: 'https://app.fizzy.do', // optional
+});
+```
+
+## Making Requests
+
+All methods return a `Result` type for explicit error handling:
+
+```typescript
+const result = await client.cards.list({
+  board_ids: ['board_abc123'],
+});
+
+if (result.ok) {
+  console.log(`Found ${result.value.length} cards`);
+} else {
+  console.error(`Error: ${result.error.message}`);
+}
+```
+
+## Available Namespaces
+
+### Identity
+
+```typescript
+client.identity.getIdentity()
+```
+
+### Account
+
+```typescript
+client.account.getSettings()
+```
+
+### Boards
+
+```typescript
+client.boards.list()
+client.boards.getById(id)
+client.boards.create({ name, all_access })
+client.boards.update(id, { name })
+client.boards.deleteBoard(id)
+client.boards.publish(id)
+client.boards.unpublish(id)
+```
+
+### Cards
+
+```typescript
+client.cards.list(filters)
+client.cards.getByNumber(number)
+client.cards.create(boardId, { title, description })
+client.cards.update(number, { title })
+client.cards.deleteCard(number)
+client.cards.close(number)
+client.cards.reopen(number)
+client.cards.postpone(number)
+client.cards.triage(number, columnId)
+client.cards.untriage(number)
+client.cards.toggleTag(number, tagTitle)
+client.cards.toggleAssignment(number, userId)
+client.cards.watch(number)
+client.cards.unwatch(number)
+client.cards.pin(number)
+client.cards.unpin(number)
+client.cards.markGolden(number)
+client.cards.unmarkGolden(number)
+```
+
+### Comments
+
+```typescript
+client.comments.list(cardNumber)
+client.comments.getById(cardNumber, commentId)
+client.comments.create(cardNumber, { body })
+client.comments.update(cardNumber, commentId, { body })
+client.comments.deleteComment(cardNumber, commentId)
+```
+
+### Columns
+
+```typescript
+client.columns.list(boardId)
+client.columns.getById(boardId, columnId)
+client.columns.create(boardId, { name, color })
+client.columns.update(boardId, columnId, { name })
+client.columns.deleteColumn(boardId, columnId)
+```
+
+### Tags
+
+```typescript
+client.tags.list()
+```
+
+### Users
+
+```typescript
+client.users.list()
+client.users.getById(userId)
+```
+
+## Error Types
+
+All errors extend `FizzyError`:
+
+```typescript
+import {
+  FizzyApiError,
+  FizzyAuthError,
+  FizzyNetworkError,
+  FizzyValidationError,
+} from '@fizzy-mcp/shared';
+```
+
+See [Error Handling](/api/errors/) for details.

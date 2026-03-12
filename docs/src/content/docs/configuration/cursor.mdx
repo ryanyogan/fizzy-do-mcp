@@ -1,0 +1,125 @@
+---
+title: Cursor
+description: Configure Fizzy MCP for Cursor editor
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+# Cursor Configuration
+
+This guide covers setting up Fizzy MCP with [Cursor](https://cursor.com), the AI-powered code editor.
+
+## Auto-Configuration
+
+The easiest way to configure Cursor is through the Fizzy MCP auth command:
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+When prompted, select Cursor for automatic configuration.
+
+## Manual Configuration
+
+<Steps>
+
+1. **Locate the configuration file**
+
+   ```
+   ~/.cursor/mcp.json
+   ```
+
+2. **Create or edit the file**
+
+   If the file doesn't exist, create it:
+
+   ```json
+   {
+     "mcpServers": {
+       "fizzy": {
+         "command": "npx",
+         "args": ["-y", "fizzy-do-mcp@latest"]
+       }
+     }
+   }
+   ```
+
+3. **Restart Cursor**
+
+   Close and reopen Cursor to load the new configuration.
+
+</Steps>
+
+## Verifying the Connection
+
+After restarting Cursor:
+
+1. Open the AI chat panel
+2. Check that MCP servers are connected
+3. Try asking: "What Fizzy boards do I have?"
+
+## Using Fizzy with Cursor
+
+Cursor's AI can help you manage tasks while coding:
+
+> "Create a card for this bug I'm fixing"
+
+> "Add this function implementation to the card description"
+
+> "What cards are in the current sprint?"
+
+### Code-Aware Task Management
+
+Cursor can reference your code when creating tasks:
+
+> "Create a card describing the changes I made to auth.ts"
+
+> "Update card #42 with the implementation status"
+
+## Configuration Options
+
+### Global Installation
+
+```json
+{
+  "mcpServers": {
+    "fizzy": {
+      "command": "fizzy-mcp"
+    }
+  }
+}
+```
+
+### Authentication
+
+After configuring Cursor, authenticate with Fizzy:
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+This stores your credentials securely in `~/.config/fizzy-mcp/config.json` (mode 0600). No need to put tokens in your MCP config.
+
+## Troubleshooting
+
+### Tools not appearing
+
+1. Verify `~/.cursor/mcp.json` exists and is valid JSON
+2. Restart Cursor completely
+3. Check Cursor's developer console for errors
+
+### Permission errors
+
+Ensure the config file is readable:
+
+```bash
+chmod 644 ~/.cursor/mcp.json
+```
+
+### Server not starting
+
+Test the server manually:
+
+```bash
+npx fizzy-do-mcp status
+```

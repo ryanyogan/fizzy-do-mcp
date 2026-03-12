@@ -1,0 +1,143 @@
+---
+title: Installation
+description: How to install and set up Fizzy MCP
+---
+
+import { Aside, Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+# Installation
+
+Fizzy MCP can be installed globally or run directly with `npx`.
+
+## Quick Start
+
+The fastest way to get started is with `npx`:
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+This downloads and runs the latest version, then guides you through authentication.
+
+## Package Managers
+
+<Tabs>
+  <TabItem label="npm">
+    ```bash
+    npm install -g fizzy-do-mcp
+    ```
+  </TabItem>
+  <TabItem label="pnpm">
+    ```bash
+    pnpm add -g fizzy-do-mcp
+    ```
+  </TabItem>
+  <TabItem label="yarn">
+    ```bash
+    yarn global add fizzy-do-mcp
+    ```
+  </TabItem>
+</Tabs>
+
+After installation, the `fizzy-mcp` command is available globally.
+
+## Verify Installation
+
+Check that Fizzy MCP is installed correctly:
+
+```bash
+fizzy-mcp --version
+```
+
+You should see the version number (e.g., `0.1.0`).
+
+## System Requirements
+
+| Requirement | Version |
+|-------------|---------|
+| Node.js | 20.0.0 or higher |
+| npm/pnpm/yarn | Any recent version |
+| Operating System | macOS, Linux, Windows |
+
+<Aside type="tip">
+  Node.js 20+ is required for ES modules support and modern JavaScript features.
+</Aside>
+
+## CLI Commands
+
+Fizzy MCP provides several CLI commands:
+
+### `fizzy-mcp auth`
+
+Configure authentication with your Fizzy Personal Access Token.
+
+```bash
+fizzy-mcp auth
+```
+
+Options:
+- `-t, --token <token>` - Provide token directly (will prompt if not provided)
+
+### `fizzy-mcp whoami`
+
+Display your current Fizzy identity and accessible accounts.
+
+```bash
+fizzy-mcp whoami
+```
+
+### `fizzy-mcp status`
+
+Check the server configuration status.
+
+```bash
+fizzy-mcp status
+```
+
+### `fizzy-mcp logout`
+
+Clear stored credentials.
+
+```bash
+fizzy-mcp logout
+```
+
+### `fizzy-mcp` (no command)
+
+Start the MCP server. This is what AI agents call to connect.
+
+```bash
+fizzy-mcp
+```
+
+## Configuration File
+
+Fizzy MCP stores configuration in `~/.config/fizzy-mcp/config.json`:
+
+```json
+{
+  "accessToken": "fz_xxxxxxxxxxxxx",
+  "accountSlug": "/your-organization",
+  "baseUrl": "https://app.fizzy.do"
+}
+```
+
+<Aside type="caution">
+  The config file is created with mode 600 (owner read/write only) to protect your access token.
+</Aside>
+
+## Environment Variables
+
+You can also configure Fizzy MCP using environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `FIZZY_ACCESS_TOKEN` | Your Personal Access Token |
+| `FIZZY_ACCOUNT_SLUG` | Account slug (e.g., `/my-org`) |
+| `FIZZY_BASE_URL` | API base URL (default: `https://app.fizzy.do`) |
+
+Environment variables take precedence over the config file.
+
+## Next Steps
+
+After installation, proceed to [Authentication](/getting-started/authentication/) to set up your access token.

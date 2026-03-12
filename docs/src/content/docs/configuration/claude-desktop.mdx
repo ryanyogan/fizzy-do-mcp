@@ -1,0 +1,168 @@
+---
+title: Claude Desktop
+description: Configure Fizzy MCP for Claude Desktop
+---
+
+import { Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Claude Desktop Configuration
+
+This guide covers setting up Fizzy MCP with [Claude Desktop](https://claude.ai/download), Anthropic's official desktop application.
+
+## Auto-Configuration
+
+The easiest way to configure Claude Desktop is through the Fizzy MCP auth command:
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+When prompted, select Claude Desktop for automatic configuration.
+
+## Manual Configuration
+
+If auto-configuration doesn't work, follow these steps:
+
+<Steps>
+
+1. **Locate the configuration file**
+
+   <Tabs>
+     <TabItem label="macOS">
+       ```
+       ~/Library/Application Support/Claude/claude_desktop_config.json
+       ```
+     </TabItem>
+     <TabItem label="Windows">
+       ```
+       %APPDATA%\Claude\claude_desktop_config.json
+       ```
+     </TabItem>
+     <TabItem label="Linux">
+       ```
+       ~/.config/Claude/claude_desktop_config.json
+       ```
+     </TabItem>
+   </Tabs>
+
+2. **Create or edit the file**
+
+   If the file doesn't exist, create it. Add the Fizzy MCP server:
+
+   ```json
+   {
+     "mcpServers": {
+       "fizzy": {
+         "command": "npx",
+         "args": ["-y", "fizzy-do-mcp@latest"]
+       }
+     }
+   }
+   ```
+
+3. **Restart Claude Desktop**
+
+   Completely close and reopen Claude Desktop to load the new configuration.
+
+</Steps>
+
+## Verifying the Connection
+
+After restarting Claude Desktop:
+
+1. Start a new conversation
+2. Look for the MCP tools icon (usually a wrench or plugin icon)
+3. You should see "fizzy" listed as a connected server
+
+Try asking Claude:
+
+> "What Fizzy boards do I have access to?"
+
+## Configuration Options
+
+### Using a Global Installation
+
+If you installed Fizzy MCP globally:
+
+```json
+{
+  "mcpServers": {
+    "fizzy": {
+      "command": "fizzy-mcp"
+    }
+  }
+}
+```
+
+### Authentication
+
+After configuring Claude Desktop, authenticate with Fizzy:
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+This stores your credentials securely in `~/.config/fizzy-mcp/config.json` (mode 0600). No need to put tokens in your MCP config.
+
+### Multiple MCP Servers
+
+You can run Fizzy alongside other MCP servers:
+
+```json
+{
+  "mcpServers": {
+    "fizzy": {
+      "command": "npx",
+      "args": ["-y", "fizzy-do-mcp@latest"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["@github/mcp-server"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem"]
+    }
+  }
+}
+```
+
+## Troubleshooting
+
+### Tools not appearing
+
+1. Check that the config file is valid JSON
+2. Verify the file is in the correct location
+3. Ensure you've restarted Claude Desktop completely
+4. Check Claude Desktop logs for MCP connection errors
+
+### "Not authenticated" errors
+
+Run `fizzy-mcp auth` to set up or refresh your credentials:
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+### Connection timeouts
+
+If you see timeout errors:
+
+1. Check your internet connection
+2. Verify Fizzy API is accessible: `curl https://app.fizzy.do/api/health`
+3. Try increasing the timeout in Claude Desktop settings
+
+### Server crashes
+
+Check the server logs. You can run the server manually to see errors:
+
+```bash
+npx fizzy-do-mcp
+```
+
+## Best Practices
+
+1. **Use `npx`** for automatic updates to the latest version
+2. **Keep credentials in** `~/.config/fizzy-mcp/config.json` rather than the Claude config
+3. **Restart Claude Desktop** after any configuration changes
+4. **Check `fizzy-mcp status`** if you encounter authentication issues

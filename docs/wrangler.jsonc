@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "fizzy-docs",
+  // Set to today's date
+  "compatibility_date": "2026-03-11",
+  
+  // Static site - no Worker script needed
+  "assets": {
+    "directory": "./dist"
+  },
+  
+  // Custom domain configuration
+  "routes": [
+    {
+      "pattern": "fizzy.yogan.dev",
+      "custom_domain": true
+    }
+  ],
+  
+  // Enable observability for monitoring
+  "observability": {
+    "enabled": true
+  }
+}

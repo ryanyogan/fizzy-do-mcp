@@ -1,0 +1,81 @@
+---
+title: fizzy_create_comment
+description: Add a comment to a card
+---
+
+# fizzy_create_comment
+
+Add a comment to a Fizzy card.
+
+## Description
+
+Creates a new comment on the specified card. Comments support rich text formatting via Markdown or HTML.
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `card_number` | `number` | Yes | The card number |
+| `body` | `string` | Yes | The comment body (supports Markdown or HTML) |
+
+## Returns
+
+```typescript
+{
+  id: string;
+  body: {
+    plain_text: string;
+    html: string;
+  };
+  creator: { id: string; name: string };
+  created_at: string;
+}
+```
+
+## Examples
+
+### Simple comment
+
+```
+fizzy_create_comment({
+  card_number: 42,
+  body: "This looks good to me!"
+})
+```
+
+### Comment with Markdown formatting
+
+```
+fizzy_create_comment({
+  card_number: 42,
+  body: "## Review Notes\n\n- Code looks clean\n- Tests pass\n- **Ready for merge**"
+})
+```
+
+### Status update
+
+```
+fizzy_create_comment({
+  card_number: 42,
+  body: "Completed the following:\n\n1. Fixed the login bug\n2. Added unit tests\n3. Updated documentation"
+})
+```
+
+## Markdown Support
+
+Comments support the same Markdown features as card descriptions:
+
+| Feature | Syntax | Example |
+|---------|--------|---------|
+| Bold | `**text**` | **important** |
+| Italic | `_text_` | _emphasis_ |
+| Links | `[text](url)` | [link](https://example.com) |
+| Lists | `- item` | Bullet points |
+| Code | `` `code` `` | `variable` |
+| Blockquotes | `> quote` | Quoted text |
+
+## Related Tools
+
+- [`fizzy_list_comments`](/tools/comments/list-comments/) - List all comments on a card
+- [`fizzy_update_comment`](/tools/comments/update-comment/) - Edit a comment
+- [`fizzy_delete_comment`](/tools/comments/delete-comment/) - Remove a comment

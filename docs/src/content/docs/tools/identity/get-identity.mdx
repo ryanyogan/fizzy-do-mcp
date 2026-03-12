@@ -1,0 +1,89 @@
+---
+title: fizzy_get_identity
+description: Get the current user identity and accessible accounts
+---
+
+# fizzy_get_identity
+
+Get the current user identity and list of accessible Fizzy accounts.
+
+## Description
+
+Use this tool to discover available accounts and verify authentication. It returns information about the authenticated user and all accounts they have access to.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+```typescript
+{
+  accounts: Array<{
+    id: string;
+    slug: string;
+    name: string;
+    cards_count: number;
+    auto_postpone_period_in_days: number | null;
+    user: {
+      id: string;
+      name: string;
+      email_address: string;
+      avatar_url: string | null;
+    };
+  }>;
+}
+```
+
+## Example
+
+**Request:**
+```
+fizzy_get_identity()
+```
+
+**Response:**
+```json
+{
+  "accounts": [
+    {
+      "id": "abc123",
+      "slug": "/ryan",
+      "name": "Personal",
+      "cards_count": 42,
+      "auto_postpone_period_in_days": 14,
+      "user": {
+        "id": "user123",
+        "name": "Ryan Carniato",
+        "email_address": "ryan@example.com",
+        "avatar_url": "https://..."
+      }
+    },
+    {
+      "id": "def456",
+      "slug": "/acme",
+      "name": "Acme Corp",
+      "cards_count": 156,
+      "auto_postpone_period_in_days": 7,
+      "user": {
+        "id": "user123",
+        "name": "Ryan Carniato",
+        "email_address": "ryan@example.com",
+        "avatar_url": "https://..."
+      }
+    }
+  ]
+}
+```
+
+## Use Cases
+
+- Verify authentication is working
+- List available accounts to switch between
+- Get user information for display
+- Check card counts across accounts
+
+## Related Tools
+
+- [`fizzy_get_account`](/tools/identity/get-account/) - Get detailed account settings
+- [`fizzy_list_boards`](/tools/boards/list-boards/) - List boards in current account

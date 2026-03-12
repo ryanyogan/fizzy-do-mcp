@@ -1,0 +1,171 @@
+---
+title: Quick Start
+description: Get up and running with Fizzy MCP in minutes
+---
+
+import { Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Quick Start
+
+This guide gets you from zero to managing Fizzy tasks with your AI assistant in under 5 minutes.
+
+## Prerequisites
+
+- Node.js 20 or higher
+- A Fizzy account with a Personal Access Token
+- An MCP-compatible AI agent (Claude Desktop, Cursor, or OpenCode)
+
+<Steps>
+
+1. **Install and Authenticate**
+
+   ```bash
+   npx @fizzy-mcp/server auth
+   ```
+
+   Follow the prompts to enter your token and select an account.
+
+2. **Auto-Configure Your AI Agent**
+
+   When prompted, select your AI agent(s) to configure:
+
+   ```
+   Would you like to configure Fizzy for these agents? [Y/n] y
+   
+   ✔ Configured Claude Desktop
+     → ~/.config/Claude/claude_desktop_config.json
+   ```
+
+3. **Restart Your AI Agent**
+
+   Close and reopen your AI agent (Claude Desktop, Cursor, etc.) to load the new MCP server.
+
+4. **Start Using Fizzy!**
+
+   Try these commands with your AI:
+
+   > "Show me my Fizzy boards"
+   
+   > "Create a card on the Engineering board called 'Fix login bug'"
+   
+   > "What cards are assigned to me?"
+
+</Steps>
+
+## Example Conversations
+
+### Viewing Boards
+
+**You:** "What boards do I have access to?"
+
+**Claude:** I'll check your Fizzy boards.
+
+```json
+[
+  { "id": "abc123", "name": "Engineering", "cards_count": 24 },
+  { "id": "def456", "name": "Design", "cards_count": 12 },
+  { "id": "ghi789", "name": "Marketing", "cards_count": 8 }
+]
+```
+
+You have access to 3 boards: Engineering (24 cards), Design (12 cards), and Marketing (8 cards).
+
+### Creating Cards
+
+**You:** "Create a high-priority card for 'Implement OAuth login' on the Engineering board"
+
+**Claude:** I'll create that card for you.
+
+Created card #142: "Implement OAuth login" on the Engineering board.
+
+### Managing Workflow
+
+**You:** "Move card #142 to the 'In Progress' column"
+
+**Claude:** Done! Card #142 has been moved to the "In Progress" column.
+
+### Working with Tags
+
+**You:** "Tag card #142 with 'urgent' and 'backend'"
+
+**Claude:** I've added both tags to card #142:
+- #urgent
+- #backend
+
+### Assigning Cards
+
+**You:** "Assign card #142 to Sarah"
+
+**Claude:** Card #142 has been assigned to Sarah.
+
+## Manual Configuration
+
+If auto-configuration doesn't work, you can manually add Fizzy MCP to your agent:
+
+<Tabs>
+  <TabItem label="Claude Desktop">
+    Edit `~/.config/Claude/claude_desktop_config.json`:
+    
+    ```json
+    {
+      "mcpServers": {
+        "fizzy": {
+          "command": "npx",
+          "args": ["@fizzy-mcp/server"]
+        }
+      }
+    }
+    ```
+  </TabItem>
+  <TabItem label="Cursor">
+    Edit `~/.cursor/mcp.json`:
+    
+    ```json
+    {
+      "mcpServers": {
+        "fizzy": {
+          "command": "npx",
+          "args": ["@fizzy-mcp/server"]
+        }
+      }
+    }
+    ```
+  </TabItem>
+  <TabItem label="OpenCode">
+    Edit `~/.config/opencode/opencode.json`:
+    
+    ```json
+    {
+      "mcp": {
+        "fizzy": {
+          "type": "local",
+          "command": "npx",
+          "args": ["@fizzy-mcp/server"]
+        }
+      }
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Troubleshooting
+
+### "fizzy" tools not appearing
+
+1. Verify authentication: `fizzy-mcp status`
+2. Check the config was added to your agent's config file
+3. Restart your AI agent completely (not just refresh)
+
+### "Not authenticated" errors
+
+Run `fizzy-mcp auth` again to re-authenticate.
+
+### Slow responses
+
+The first call may take a few seconds as the server starts. Subsequent calls are faster.
+
+## Next Steps
+
+- [Tools Reference](/tools/overview/) - Explore all 40 available tools
+- [Working with Boards](/guides/boards/) - Learn board management
+- [Managing Cards](/guides/cards/) - Master card workflows

@@ -50,3 +50,6 @@ export {
 
 // All Zod schemas and types
 export * from './schemas/index.js';
+
+// Markdown utilities for rich text fields
+export { markdownToHtml, isHtml, toRichText } from './markdown.js';

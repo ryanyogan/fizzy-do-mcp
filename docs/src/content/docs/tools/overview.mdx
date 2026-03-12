@@ -1,0 +1,171 @@
+---
+title: Tools Overview
+description: Complete reference of all 40 Fizzy MCP tools
+---
+
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+# Tools Overview
+
+Fizzy MCP provides **40 tools** across 7 categories for comprehensive task management.
+
+## Tool Categories
+
+<CardGrid>
+  <Card title="Identity (2 tools)" icon="seti:key">
+    Account discovery and settings
+  </Card>
+  <Card title="Boards (7 tools)" icon="seti:folder">
+    Board CRUD and publishing
+  </Card>
+  <Card title="Cards (18 tools)" icon="seti:todo">
+    Card lifecycle and workflow
+  </Card>
+  <Card title="Comments (5 tools)" icon="seti:text">
+    Discussion threads
+  </Card>
+  <Card title="Columns (5 tools)" icon="seti:project">
+    Workflow stages
+  </Card>
+  <Card title="Tags (1 tool)" icon="seti:tag">
+    Label management
+  </Card>
+  <Card title="Users (2 tools)" icon="seti:group">
+    Team information
+  </Card>
+</CardGrid>
+
+## All Tools
+
+### Identity
+
+| Tool | Description |
+|------|-------------|
+| [`fizzy_get_identity`](/tools/identity/get-identity/) | Get current user identity and accessible accounts |
+| [`fizzy_get_account`](/tools/identity/get-account/) | Get account settings |
+
+### Boards
+
+| Tool | Description |
+|------|-------------|
+| [`fizzy_list_boards`](/tools/boards/list-boards/) | List all accessible boards |
+| [`fizzy_get_board`](/tools/boards/get-board/) | Get board details by ID |
+| [`fizzy_create_board`](/tools/boards/create-board/) | Create a new board |
+| [`fizzy_update_board`](/tools/boards/update-board/) | Update board settings |
+| [`fizzy_delete_board`](/tools/boards/delete-board/) | Delete a board |
+| [`fizzy_publish_board`](/tools/boards/publish-board/) | Make board publicly accessible |
+| [`fizzy_unpublish_board`](/tools/boards/unpublish-board/) | Remove public access |
+
+### Cards
+
+| Tool | Description |
+|------|-------------|
+| [`fizzy_list_cards`](/tools/cards/list-cards/) | List cards with filters |
+| [`fizzy_get_card`](/tools/cards/get-card/) | Get card details by number |
+| [`fizzy_create_card`](/tools/cards/create-card/) | Create a new card |
+| [`fizzy_update_card`](/tools/cards/update-card/) | Update card content |
+| [`fizzy_delete_card`](/tools/cards/delete-card/) | Delete a card |
+| [`fizzy_close_card`](/tools/cards/close-card/) | Mark card as done |
+| [`fizzy_reopen_card`](/tools/cards/reopen-card/) | Reopen a closed card |
+| [`fizzy_postpone_card`](/tools/cards/postpone-card/) | Move to "Not Now" |
+| [`fizzy_triage_card`](/tools/cards/triage-card/) | Move to a column |
+| [`fizzy_untriage_card`](/tools/cards/untriage-card/) | Remove from column |
+| [`fizzy_tag_card`](/tools/cards/tag-card/) | Toggle tag on card |
+| [`fizzy_assign_card`](/tools/cards/assign-card/) | Toggle user assignment |
+| [`fizzy_watch_card`](/tools/cards/watch-card/) | Subscribe to notifications |
+| [`fizzy_unwatch_card`](/tools/cards/unwatch-card/) | Unsubscribe |
+| [`fizzy_pin_card`](/tools/cards/pin-card/) | Pin for quick access |
+| [`fizzy_unpin_card`](/tools/cards/unpin-card/) | Unpin card |
+| [`fizzy_mark_golden`](/tools/cards/mark-golden/) | Mark as important |
+| [`fizzy_unmark_golden`](/tools/cards/unmark-golden/) | Remove golden status |
+
+### Comments
+
+| Tool | Description |
+|------|-------------|
+| [`fizzy_list_comments`](/tools/comments/list-comments/) | List comments on a card |
+| [`fizzy_get_comment`](/tools/comments/get-comment/) | Get comment details |
+| [`fizzy_create_comment`](/tools/comments/create-comment/) | Add a comment |
+| [`fizzy_update_comment`](/tools/comments/update-comment/) | Edit a comment |
+| [`fizzy_delete_comment`](/tools/comments/delete-comment/) | Delete a comment |
+
+### Columns
+
+| Tool | Description |
+|------|-------------|
+| [`fizzy_list_columns`](/tools/columns/list-columns/) | List columns on a board |
+| [`fizzy_get_column`](/tools/columns/get-column/) | Get column details |
+| [`fizzy_create_column`](/tools/columns/create-column/) | Create a new column |
+| [`fizzy_update_column`](/tools/columns/update-column/) | Update column settings |
+| [`fizzy_delete_column`](/tools/columns/delete-column/) | Delete a column |
+
+### Tags
+
+| Tool | Description |
+|------|-------------|
+| [`fizzy_list_tags`](/tools/tags/list-tags/) | List all tags in the account |
+
+### Users
+
+| Tool | Description |
+|------|-------------|
+| [`fizzy_list_users`](/tools/users/list-users/) | List all active users |
+| [`fizzy_get_user`](/tools/users/get-user/) | Get user details |
+
+## Tool Naming Convention
+
+All Fizzy MCP tools follow a consistent naming pattern:
+
+```
+fizzy_{action}_{resource}
+```
+
+- **action**: `list`, `get`, `create`, `update`, `delete`, or specific verbs like `close`, `triage`
+- **resource**: `board`, `card`, `comment`, `column`, `tag`, `user`
+
+## Common Patterns
+
+### Listing Resources
+
+List tools accept optional filter parameters:
+
+```
+fizzy_list_cards({
+  board_ids: ["abc123"],
+  tag_ids: ["def456"],
+  indexed_by: "golden",
+  sorted_by: "newest"
+})
+```
+
+### Getting Single Resources
+
+Get tools require an identifier:
+
+```
+fizzy_get_card({ card_number: 42 })
+fizzy_get_board({ board_id: "abc123" })
+```
+
+### Modifying Resources
+
+Create/update tools accept content parameters:
+
+```
+fizzy_create_card({
+  board_id: "abc123",
+  title: "New feature",
+  description: "Details here..."
+})
+```
+
+## Error Handling
+
+All tools return consistent error structures:
+
+```
+Error: Card not found
+Code: NOT_FOUND_ERROR
+```
+
+See [Error Handling](/api/errors/) for details.

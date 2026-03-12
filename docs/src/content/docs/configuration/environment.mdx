@@ -1,0 +1,115 @@
+---
+title: Environment Variables
+description: Configure Fizzy MCP using environment variables
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+# Environment Variables
+
+Fizzy MCP can be configured using environment variables, which take precedence over the config file.
+
+## Available Variables
+
+| Variable | Required | Description | Default |
+|----------|----------|-------------|---------|
+| `FIZZY_ACCESS_TOKEN` | Yes* | Personal Access Token | From config file |
+| `FIZZY_ACCOUNT_SLUG` | No | Account slug (e.g., `/my-org`) | Auto-detect |
+| `FIZZY_BASE_URL` | No | API base URL | `https://app.fizzy.do` |
+
+<Aside>
+  *Required if not configured via `fizzy-mcp auth`
+</Aside>
+
+## Usage
+
+### Shell Export
+
+```bash
+export FIZZY_ACCESS_TOKEN=fz_xxxxxxxxxxxxx
+export FIZZY_ACCOUNT_SLUG=/my-org
+```
+
+### In AI Agent Config
+
+Most MCP clients support an `env` field:
+
+```json
+{
+  "mcpServers": {
+    "fizzy": {
+      "command": "npx",
+      "args": ["@fizzy-mcp/server"],
+      "env": {
+        "FIZZY_ACCESS_TOKEN": "fz_xxxxxxxxxxxxx",
+        "FIZZY_ACCOUNT_SLUG": "/my-org"
+      }
+    }
+  }
+}
+```
+
+### dotenv Files
+
+For development, you can use a `.env` file in your project:
+
+```bash
+# .env
+FIZZY_ACCESS_TOKEN=fz_xxxxxxxxxxxxx
+FIZZY_ACCOUNT_SLUG=/my-org
+```
+
+<Aside type="caution">
+  Never commit `.env` files with tokens to version control!
+</Aside>
+
+## Precedence Order
+
+Configuration is resolved in this order (highest priority first):
+
+1. Environment variables
+2. Config file (`~/.config/fizzy-mcp/config.json`)
+3. Default values
+
+## CI/CD Usage
+
+For automated deployments, set environment variables in your CI system:
+
+### GitHub Actions
+
+```yaml
+- name: Run with Fizzy
+  env:
+    FIZZY_ACCESS_TOKEN: ${{ secrets.FIZZY_TOKEN }}
+    FIZZY_ACCOUNT_SLUG: /my-org
+  run: |
+    npx @fizzy-mcp/server status
+```
+
+### Docker
+
+```dockerfile
+ENV FIZZY_ACCESS_TOKEN=fz_xxxxxxxxxxxxx
+ENV FIZZY_ACCOUNT_SLUG=/my-org
+```
+
+Or at runtime:
+
+```bash
+docker run -e FIZZY_ACCESS_TOKEN=fz_xxx my-app
+```
+
+## Custom Base URL
+
+For enterprise deployments with a custom Fizzy instance:
+
+```bash
+export FIZZY_BASE_URL=https://fizzy.mycompany.com
+```
+
+## Security Considerations
+
+- Never log or print access tokens
+- Use secrets management in CI/CD
+- Rotate tokens regularly
+- Prefer config file auth for local development

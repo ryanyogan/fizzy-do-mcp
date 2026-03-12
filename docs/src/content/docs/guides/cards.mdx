@@ -1,0 +1,264 @@
+---
+title: Managing Cards
+description: Complete guide to card operations in Fizzy MCP
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+# Managing Cards
+
+Cards are the core work items in Fizzy. This guide covers the full card lifecycle.
+
+## Card Lifecycle
+
+```
+Created → Triaged → In Progress → Closed
+             ↓
+        Postponed ("Not Now")
+```
+
+## Creating Cards
+
+Basic card creation:
+
+```
+fizzy_create_card({
+  board_id: "board_eng",
+  title: "Implement OAuth login"
+})
+```
+
+With full details using Markdown:
+
+```
+fizzy_create_card({
+  board_id: "board_eng",
+  title: "Fix mobile navigation bug",
+  description: "**Issue:** Menu doesn't close on tap outside\n\n- Affects iOS Safari\n- Reported by 3 users",
+  tag_ids: ["tag_bug", "tag_mobile"]
+})
+```
+
+<Aside type="tip">
+  Card descriptions support **Markdown** formatting. Use bold, lists, links, code blocks, and more. The Markdown is automatically converted to HTML before being sent to Fizzy.
+</Aside>
+
+## Triaging Cards
+
+Move a card into a workflow column:
+
+```
+fizzy_triage_card({
+  card_number: 42,
+  column_id: "col_in_progress"
+})
+```
+
+Send back to triage (remove from column):
+
+```
+fizzy_untriage_card({
+  card_number: 42
+})
+```
+
+## Completing Work
+
+Close a card when done:
+
+```
+fizzy_close_card({
+  card_number: 42
+})
+```
+
+Reopen if needed:
+
+```
+fizzy_reopen_card({
+  card_number: 42
+})
+```
+
+## Postponing Cards
+
+Move cards to "Not Now" for later:
+
+```
+fizzy_postpone_card({
+  card_number: 42
+})
+```
+
+<Aside type="tip">
+  Use postpone for cards that are valid but not a priority right now. They won't clutter your active views.
+</Aside>
+
+## Working with Tags
+
+Toggle a tag on/off:
+
+```
+fizzy_tag_card({
+  card_number: 42,
+  tag_title: "urgent"
+})
+```
+
+<Aside>
+  If the tag doesn't exist, it will be created automatically.
+</Aside>
+
+## Assignments
+
+Assign a user to a card:
+
+```
+fizzy_assign_card({
+  card_number: 42,
+  assignee_id: "user_sarah"
+})
+```
+
+Calling again removes the assignment (toggle behavior).
+
+## Golden Cards
+
+Mark important cards:
+
+```
+fizzy_mark_golden({
+  card_number: 42
+})
+```
+
+Find all golden cards:
+
+```
+fizzy_list_cards({
+  indexed_by: "golden"
+})
+```
+
+## Watching and Pinning
+
+### Watch for notifications
+
+```
+fizzy_watch_card({ card_number: 42 })
+fizzy_unwatch_card({ card_number: 42 })
+```
+
+### Pin for quick access
+
+```
+fizzy_pin_card({ card_number: 42 })
+fizzy_unpin_card({ card_number: 42 })
+```
+
+## Searching Cards
+
+Find cards by various criteria:
+
+```
+// By board
+fizzy_list_cards({ board_ids: ["board_eng"] })
+
+// By assignee
+fizzy_list_cards({ assignee_ids: ["user_me"] })
+
+// By state
+fizzy_list_cards({ indexed_by: "stalled" })
+
+// By search terms
+fizzy_list_cards({ terms: ["login", "oauth"] })
+
+// Combined
+fizzy_list_cards({
+  board_ids: ["board_eng"],
+  tag_ids: ["tag_urgent"],
+  sorted_by: "newest"
+})
+```
+
+## Updating Cards
+
+Modify card content:
+
+```
+fizzy_update_card({
+  card_number: 42,
+  title: "Updated title",
+  description: "## Progress\n\n- [x] Step 1 complete\n- [ ] Step 2 in progress",
+  tag_ids: ["tag_new"]
+})
+```
+
+<Aside type="caution">
+  Setting `tag_ids` replaces all existing tags. Include all desired tags.
+</Aside>
+
+## Deleting Cards
+
+<Aside type="danger">
+  Deletion is permanent!
+</Aside>
+
+```
+fizzy_delete_card({
+  card_number: 42
+})
+```
+
+Only the card creator or board admins can delete cards.
+
+## Common Workflows
+
+### Daily Standup Check
+
+```
+// What's in progress?
+fizzy_list_cards({
+  assignee_ids: ["user_me"],
+  indexed_by: "all"
+})
+```
+
+### Sprint Planning
+
+<Steps>
+
+1. List all cards on a board
+   ```
+   fizzy_list_cards({ board_ids: ["board_sprint"] })
+   ```
+
+2. Mark priorities as golden
+   ```
+   fizzy_mark_golden({ card_number: 42 })
+   ```
+
+3. Assign to team members
+   ```
+   fizzy_assign_card({ card_number: 42, assignee_id: "user_dev1" })
+   ```
+
+4. Move to sprint column
+   ```
+   fizzy_triage_card({ card_number: 42, column_id: "col_sprint" })
+   ```
+
+</Steps>
+
+### Weekly Cleanup
+
+```
+// Find stalled cards
+fizzy_list_cards({ indexed_by: "stalled" })
+
+// Postpone non-urgent ones
+fizzy_postpone_card({ card_number: 123 })
+
+// Close completed work
+fizzy_close_card({ card_number: 456 })
+```

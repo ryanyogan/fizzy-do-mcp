@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { FizzyClient } from '@fizzy-mcp/client';
+import { toRichText } from '@fizzy-mcp/shared';
 import { wrapToolOperation } from '../utils.js';
 
 /**
@@ -46,11 +47,14 @@ export function registerCommentTools(server: McpServer, client: FizzyClient): vo
     'Add a comment to a Fizzy card.',
     {
       card_number: z.number().describe('The card number'),
-      body: z.string().min(1).describe('The comment body (supports HTML)'),
+      body: z
+        .string()
+        .min(1)
+        .describe('The comment body. Supports markdown (bold, italic, links, lists, code) or HTML.'),
     },
     async ({ card_number, body }) => {
       return wrapToolOperation(
-        () => client.comments.create(card_number, { body }),
+        () => client.comments.create(card_number, { body: toRichText(body) }),
         () => `Created comment on card #${card_number}`,
       );
     },
@@ -63,11 +67,14 @@ export function registerCommentTools(server: McpServer, client: FizzyClient): vo
     {
       card_number: z.number().describe('The card number'),
       comment_id: z.string().describe('The comment ID'),
-      body: z.string().min(1).describe('The new comment body (supports HTML)'),
+      body: z
+        .string()
+        .min(1)
+        .describe('The new comment body. Supports markdown (bold, italic, links, lists, code) or HTML.'),
     },
     async ({ card_number, comment_id, body }) => {
       return wrapToolOperation(
-        () => client.comments.update(card_number, comment_id, { body }),
+        () => client.comments.update(card_number, comment_id, { body: toRichText(body) }),
         'Comment updated',
       );
     },

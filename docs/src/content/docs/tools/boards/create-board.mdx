@@ -1,0 +1,16 @@
+---
+title: fizzy_create_board
+description: Create a new board
+---
+# fizzy_create_board
+Create a new Fizzy board.
+## Parameters
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | `string` | Yes | The name of the board |
+| `all_access` | `boolean` | No | Whether all account users can access (default: true) |
+| `auto_postpone_period_in_days` | `number` | No | Days before auto-postpone |
+## Example
+```
+fizzy_create_board({ name: "New Project", all_access: true })
+```

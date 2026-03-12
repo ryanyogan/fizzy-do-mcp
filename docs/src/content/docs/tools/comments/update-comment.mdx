@@ -1,0 +1,66 @@
+---
+title: fizzy_update_comment
+description: Update an existing comment
+---
+
+# fizzy_update_comment
+
+Update an existing comment on a Fizzy card.
+
+## Description
+
+Modify a comment's body. Only the comment creator can update their own comments.
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `card_number` | `number` | Yes | The card number |
+| `comment_id` | `string` | Yes | The comment ID |
+| `body` | `string` | Yes | The new comment body (supports Markdown or HTML) |
+
+## Returns
+
+The updated comment object.
+
+## Examples
+
+### Update comment text
+
+```
+fizzy_update_comment({
+  card_number: 42,
+  comment_id: "comment_abc123",
+  body: "Updated: This is now ready for review."
+})
+```
+
+### Update with Markdown
+
+```
+fizzy_update_comment({
+  card_number: 42,
+  comment_id: "comment_abc123",
+  body: "## Updated Status\n\n- [x] First task\n- [x] Second task\n- [x] **All complete!**"
+})
+```
+
+## Permissions
+
+Only the original comment creator can update their comments. Attempting to update another user's comment will result in a 403 Forbidden error.
+
+## Markdown Support
+
+The body field supports Markdown formatting:
+
+- **Bold**: `**text**`
+- _Italic_: `_text_`
+- Links: `[text](url)`
+- Lists: `- item` or `1. item`
+- Code: `` `code` ``
+
+## Related Tools
+
+- [`fizzy_get_comment`](/tools/comments/get-comment/) - Get comment details
+- [`fizzy_create_comment`](/tools/comments/create-comment/) - Create a new comment
+- [`fizzy_delete_comment`](/tools/comments/delete-comment/) - Remove a comment

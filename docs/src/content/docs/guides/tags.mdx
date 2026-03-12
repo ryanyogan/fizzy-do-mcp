@@ -1,0 +1,79 @@
+---
+title: Using Tags
+description: Organize and filter work with tags
+---
+
+# Using Tags
+
+Tags help categorize and filter cards across boards.
+
+## Listing Tags
+
+Get all tags in the account:
+
+```
+fizzy_list_tags()
+```
+
+Response:
+```json
+[
+  { "id": "tag_bug", "title": "bug" },
+  { "id": "tag_feature", "title": "feature" },
+  { "id": "tag_urgent", "title": "urgent" }
+]
+```
+
+## Applying Tags
+
+Toggle a tag on a card:
+
+```
+fizzy_tag_card({
+  card_number: 42,
+  tag_title: "urgent"
+})
+```
+
+- If the tag exists on the card, it's removed
+- If the tag doesn't exist, it's added
+- If the tag doesn't exist in the account, it's created
+
+## Filtering by Tags
+
+Find all cards with a specific tag:
+
+```
+fizzy_list_cards({
+  tag_ids: ["tag_urgent"]
+})
+```
+
+Multiple tags (AND logic):
+
+```
+fizzy_list_cards({
+  tag_ids: ["tag_bug", "tag_urgent"]
+})
+```
+
+## Tag Strategies
+
+### By Type
+- `bug`, `feature`, `docs`, `refactor`
+
+### By Priority
+- `urgent`, `high`, `low`
+
+### By Area
+- `frontend`, `backend`, `mobile`, `infra`
+
+### By Status
+- `blocked`, `needs-review`, `ready`
+
+## Best Practices
+
+1. **Keep tags simple** - Use lowercase, no spaces
+2. **Be consistent** - Use the same tags across boards
+3. **Don't over-tag** - 2-4 tags per card is usually enough
+4. **Clean up unused tags** periodically

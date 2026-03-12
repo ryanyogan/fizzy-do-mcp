@@ -1,10 +1,18 @@
 import { defineConfig, type Options } from 'tsup';
 
+// Bundle workspace packages so they don't need to be published separately
+const noExternal = [
+  '@fizzy-mcp/shared',
+  '@fizzy-mcp/client',
+  '@fizzy-mcp/tools',
+];
+
 const baseConfig: Options = {
   format: ['esm'],
   dts: true,
   sourcemap: true,
   target: 'es2022',
+  noExternal,
 };
 
 export default defineConfig([

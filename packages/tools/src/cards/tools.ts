@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { FizzyClient } from '@fizzy-mcp/client';
+import { toRichText } from '@fizzy-mcp/shared';
 import { wrapToolOperation } from '../utils.js';
 
 /**
@@ -51,7 +52,10 @@ export function registerCardTools(server: McpServer, client: FizzyClient): void 
     {
       board_id: z.string().describe('The board ID to create the card on'),
       title: z.string().min(1).describe('The card title'),
-      description: z.string().optional().describe('Card description (supports HTML)'),
+      description: z
+        .string()
+        .optional()
+        .describe('Card description. Supports markdown (bold, italic, links, lists, code) or HTML.'),
       status: z
         .enum(['drafted', 'published'])
         .optional()
@@ -64,7 +68,7 @@ export function registerCardTools(server: McpServer, client: FizzyClient): void 
         () =>
           client.cards.create(board_id, {
             title,
-            description,
+            description: description ? toRichText(description) : undefined,
             status,
             tag_ids,
           }),
@@ -80,7 +84,10 @@ export function registerCardTools(server: McpServer, client: FizzyClient): void 
     {
       card_number: z.number().describe('The card number'),
       title: z.string().min(1).optional().describe('New title for the card'),
-      description: z.string().optional().describe('New description (supports HTML)'),
+      description: z
+        .string()
+        .optional()
+        .describe('New description. Supports markdown (bold, italic, links, lists, code) or HTML.'),
       status: z.enum(['drafted', 'published']).optional().describe('Card status'),
       tag_ids: z.array(z.string()).optional().describe('Tag IDs to set on the card'),
     },
@@ -89,7 +96,7 @@ export function registerCardTools(server: McpServer, client: FizzyClient): void 
         () =>
           client.cards.update(card_number, {
             title,
-            description,
+            description: description ? toRichText(description) : undefined,
             status,
             tag_ids,
           }),

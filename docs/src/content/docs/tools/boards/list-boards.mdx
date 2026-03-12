@@ -1,0 +1,77 @@
+---
+title: fizzy_list_boards
+description: List all accessible boards
+---
+
+# fizzy_list_boards
+
+List all Fizzy boards you have access to in the current account.
+
+## Description
+
+Returns an array of all boards the authenticated user can access. This is typically the first step when working with boards.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+```typescript
+Array<{
+  id: string;
+  name: string;
+  cards_count: number;
+  columns_count: number;
+  all_access: boolean;
+  auto_postpone_period_in_days: number | null;
+  published: boolean;
+  public_url: string | null;
+}>
+```
+
+## Example
+
+**Request:**
+```
+fizzy_list_boards()
+```
+
+**Response:**
+```json
+[
+  {
+    "id": "board_abc123",
+    "name": "Engineering",
+    "cards_count": 24,
+    "columns_count": 4,
+    "all_access": true,
+    "auto_postpone_period_in_days": 7,
+    "published": false,
+    "public_url": null
+  },
+  {
+    "id": "board_def456",
+    "name": "Design",
+    "cards_count": 12,
+    "columns_count": 3,
+    "all_access": true,
+    "auto_postpone_period_in_days": null,
+    "published": true,
+    "public_url": "https://app.fizzy.do/p/xyz789"
+  }
+]
+```
+
+## Use Cases
+
+- Get an overview of available boards
+- Find a board ID for subsequent operations
+- Check board card counts
+- Identify published boards
+
+## Related Tools
+
+- [`fizzy_get_board`](/tools/boards/get-board/) - Get detailed board information
+- [`fizzy_create_board`](/tools/boards/create-board/) - Create a new board
+- [`fizzy_list_cards`](/tools/cards/list-cards/) - List cards, optionally filtered by board

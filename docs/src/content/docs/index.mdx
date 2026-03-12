@@ -1,0 +1,107 @@
+---
+title: Fizzy MCP
+description: AI-powered task management with Model Context Protocol
+template: splash
+hero:
+  title: Fizzy MCP
+  tagline: Connect your AI assistant to Fizzy for seamless task management
+  image:
+    alt: Fizzy MCP logo with bubbles
+    file: ../../assets/fizzy-logo-dark.svg
+  actions:
+    - text: Get Started
+      link: /getting-started/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/ryanyogan/fizzy-mcp
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What is Fizzy MCP?
+
+Fizzy MCP is a **Model Context Protocol (MCP)** server that connects AI assistants like Claude, Cursor, and OpenCode to [Fizzy](https://app.fizzy.do) - the AI-powered task management platform.
+
+With Fizzy MCP, your AI can:
+
+- Create, update, and manage cards and boards
+- Triage work into workflow columns
+- Assign tasks to team members
+- Track progress with tags and golden cards
+- Collaborate through comments
+
+<CardGrid stagger>
+  <Card title="40 MCP Tools" icon="rocket">
+    Complete API coverage with tools for boards, cards, columns, comments, tags, and users.
+  </Card>
+  <Card title="Auto-Configuration" icon="setting">
+    Automatically detect and configure Claude Desktop, Cursor, and OpenCode after authentication.
+  </Card>
+  <Card title="Type-Safe" icon="approve-check">
+    Built with TypeScript and Zod for reliable, validated API interactions.
+  </Card>
+  <Card title="Retry Logic" icon="random">
+    Automatic exponential backoff with jitter for resilient API calls.
+  </Card>
+</CardGrid>
+
+## Quick Install
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+This will:
+1. Prompt for your Fizzy Personal Access Token
+2. Validate the token with the Fizzy API
+3. Offer to auto-configure detected AI agents
+
+## Supported AI Agents
+
+| Agent | Status | Configuration |
+|-------|--------|---------------|
+| Claude Desktop | Supported | [Setup Guide](/configuration/claude-desktop/) |
+| Cursor | Supported | [Setup Guide](/configuration/cursor/) |
+| OpenCode | Supported | [Setup Guide](/configuration/opencode/) |
+
+## Example Usage
+
+Once configured, your AI assistant can interact with Fizzy naturally:
+
+> "Create a new card on the Engineering board titled 'Implement user authentication'"
+
+> "Show me all cards assigned to me that are marked as golden"
+
+> "Move card #42 to the 'In Progress' column"
+
+> "Add a comment to card #123 with my status update"
+
+## Architecture
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   AI Agent      │────▶│   Fizzy MCP     │────▶│   Fizzy API     │
+│ (Claude, etc.)  │◀────│    Server       │◀────│ (app.fizzy.do)  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+        │                       │
+        │                       │
+        ▼                       ▼
+   MCP Protocol          TypeScript Client
+   (JSON-RPC)            (Result types)
+```
+
+## Next Steps
+
+<CardGrid>
+  <Card title="Installation" icon="laptop">
+    Learn how to install and configure Fizzy MCP.
+    [Read the guide →](/getting-started/installation/)
+  </Card>
+  <Card title="Tools Reference" icon="document">
+    Explore all 40 available MCP tools.
+    [Browse tools →](/tools/overview/)
+  </Card>
+</CardGrid>

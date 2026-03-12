@@ -1,0 +1,147 @@
+---
+title: Introduction
+description: Learn about Fizzy MCP and how it connects AI assistants to Fizzy
+---
+
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+# Introduction to Fizzy MCP
+
+Fizzy MCP is a **Model Context Protocol (MCP)** server that enables AI assistants to interact with [Fizzy](https://app.fizzy.do), the AI-powered task management platform built for modern teams.
+
+## What is MCP?
+
+The [Model Context Protocol](https://modelcontextprotocol.io) is an open standard developed by Anthropic that allows AI applications to securely connect to external data sources and tools. It provides a standardized way for AI assistants to:
+
+- **Access data** from external systems
+- **Execute actions** through well-defined tools
+- **Maintain context** across conversations
+
+## Why Fizzy MCP?
+
+Fizzy MCP bridges the gap between your AI assistant and your task management workflow:
+
+<CardGrid>
+  <Card title="Natural Language Control" icon="comment">
+    Manage tasks using conversational commands instead of clicking through UIs.
+  </Card>
+  <Card title="Context Awareness" icon="information">
+    Your AI understands your boards, cards, and team structure.
+  </Card>
+  <Card title="Automation Ready" icon="rocket">
+    Chain multiple operations together for complex workflows.
+  </Card>
+  <Card title="Secure by Design" icon="approve-check">
+    Uses Personal Access Tokens with configurable permissions.
+  </Card>
+</CardGrid>
+
+## Features
+
+### 40 MCP Tools
+
+Fizzy MCP provides comprehensive API coverage across 7 categories:
+
+| Category | Tools | Description |
+|----------|-------|-------------|
+| Identity | 2 | Account discovery and settings |
+| Boards | 7 | Board CRUD and publishing |
+| Cards | 18 | Card lifecycle, assignments, tags |
+| Comments | 5 | Discussion threads on cards |
+| Columns | 5 | Workflow stage management |
+| Tags | 1 | Label management |
+| Users | 2 | Team member information |
+
+### Auto-Configuration
+
+After authentication, Fizzy MCP can automatically detect and configure:
+
+- **Claude Desktop** - Anthropic's official desktop app
+- **Cursor** - AI-powered code editor
+- **OpenCode** - Open-source AI coding assistant
+
+### Type-Safe Client
+
+Built with TypeScript and Zod validation:
+
+```typescript
+import { FizzyClient } from '@fizzy-mcp/client';
+
+const client = new FizzyClient({
+  accessToken: 'your-token',
+  accountSlug: '/your-org',
+});
+
+// Fully typed responses
+const result = await client.cards.list({ board_ids: ['abc123'] });
+if (result.ok) {
+  console.log(`Found ${result.value.length} cards`);
+}
+```
+
+### Resilient API Calls
+
+Automatic retry logic with exponential backoff:
+
+- Retries on network errors and 5xx responses
+- Respects rate limit headers
+- Configurable retry count and delays
+
+## How It Works
+
+```
+┌─────────────────┐
+│   You (Human)   │
+│                 │
+│  "Create a new  │
+│   card called   │
+│   Fix login"    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   AI Assistant  │
+│ (Claude, etc.)  │
+│                 │
+│  Understands    │
+│  your request   │
+└────────┬────────┘
+         │
+         ▼ MCP Protocol
+┌─────────────────┐
+│   Fizzy MCP     │
+│    Server       │
+│                 │
+│  fizzy_create_  │
+│  card tool      │
+└────────┬────────┘
+         │
+         ▼ HTTPS
+┌─────────────────┐
+│   Fizzy API     │
+│                 │
+│  Creates card   │
+│  Returns data   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   AI Assistant  │
+│                 │
+│  "Created card  │
+│   #42: Fix      │
+│   login bug"    │
+└─────────────────┘
+```
+
+## Prerequisites
+
+Before getting started, you'll need:
+
+1. **A Fizzy account** - Sign up at [app.fizzy.do](https://app.fizzy.do)
+2. **Node.js 20+** - Required for running the MCP server
+3. **An MCP-compatible AI agent** - Claude Desktop, Cursor, or OpenCode
+
+## Next Steps
+
+Ready to get started? Head to the [Installation guide](/getting-started/installation/) to set up Fizzy MCP.

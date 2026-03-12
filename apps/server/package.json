@@ -1,8 +1,19 @@
 {
-  "name": "@fizzy-mcp/server",
-  "version": "0.1.0",
-  "description": "MCP server for integrating AI agents with Fizzy",
+  "name": "fizzy-do-mcp",
+  "version": "0.1.2",
+  "description": "MCP server for integrating AI agents with Fizzy, Basecamp's task management tool",
+  "author": "Ryan Yogan <ryan@yogan.dev>",
+  "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanyogan/fizzy-mcp.git",
+    "directory": "apps/server"
+  },
+  "homepage": "https://fizzy.yogan.dev",
+  "bugs": {
+    "url": "https://github.com/ryanyogan/fizzy-mcp/issues"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
@@ -14,7 +25,14 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -22,17 +40,23 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist .turbo"
+    "clean": "rm -rf dist .turbo",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@fizzy-mcp/client": "workspace:*",
-    "@fizzy-mcp/shared": "workspace:*",
-    "@fizzy-mcp/tools": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.11.0",
+    "boxen": "^8.0.1",
+    "chalk": "^5.6.2",
     "commander": "^12.1.0",
+    "figlet": "^1.11.0",
+    "ora": "^9.3.0",
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@fizzy-mcp/client": "workspace:*",
+    "@fizzy-mcp/shared": "workspace:*",
+    "@fizzy-mcp/tools": "workspace:*",
+    "@types/figlet": "^1.7.0",
     "@types/node": "^22.10.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0",
@@ -45,7 +69,9 @@
     "basecamp",
     "ai",
     "claude",
-    "llm"
-  ],
-  "license": "MIT"
+    "cursor",
+    "llm",
+    "task-management",
+    "project-management"
+  ]
 }

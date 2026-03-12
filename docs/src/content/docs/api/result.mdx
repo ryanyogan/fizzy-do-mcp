@@ -1,0 +1,138 @@
+---
+title: Result Type
+description: Understanding the Result type for explicit error handling
+---
+
+# Result Type
+
+Fizzy MCP uses a Rust-inspired `Result` type for explicit error handling.
+
+## Why Result?
+
+Instead of throwing exceptions, functions return either:
+
+- `Ok(value)` - Success with a value
+- `Err(error)` - Failure with an error
+
+This makes error handling explicit and type-safe.
+
+## Type Definition
+
+```typescript
+type Result<T, E = Error> =
+  | { readonly ok: true; readonly value: T }
+  | { readonly ok: false; readonly error: E };
+```
+
+## Basic Usage
+
+```typescript
+import { Ok, Err, type Result } from '@fizzy-mcp/shared';
+
+function divide(a: number, b: number): Result<number, string> {
+  if (b === 0) {
+    return Err('Division by zero');
+  }
+  return Ok(a / b);
+}
+
+const result = divide(10, 2);
+
+if (result.ok) {
+  console.log(`Result: ${result.value}`); // 5
+} else {
+  console.log(`Error: ${result.error}`);
+}
+```
+
+## Helper Functions
+
+### Type Guards
+
+```typescript
+import { isOk, isErr } from '@fizzy-mcp/shared';
+
+if (isOk(result)) {
+  // TypeScript knows result.value exists
+  console.log(result.value);
+}
+
+if (isErr(result)) {
+  // TypeScript knows result.error exists
+  console.log(result.error);
+}
+```
+
+### Unwrapping
+
+```typescript
+import { unwrap, unwrapOr } from '@fizzy-mcp/shared';
+
+// Throws if error
+const value = unwrap(result);
+
+// Returns default if error
+const value = unwrapOr(result, 0);
+```
+
+### Transforming
+
+```typescript
+import { map, mapErr, andThen } from '@fizzy-mcp/shared';
+
+// Transform the success value
+const doubled = map(result, (x) => x * 2);
+
+// Transform the error
+const mapped = mapErr(result, (e) => new Error(e));
+
+// Chain Result-returning functions
+const chained = andThen(result, (x) => 
+  x > 0 ? Ok(x) : Err('Must be positive')
+);
+```
+
+### From Promises/Try
+
+```typescript
+import { fromPromise, fromTry } from '@fizzy-mcp/shared';
+
+// Wrap a promise that might reject
+const result = await fromPromise(fetch('/api'));
+
+// Wrap a function that might throw
+const result = fromTry(() => JSON.parse(data));
+
+// With custom error mapping
+const result = await fromPromise(
+  fetch('/api'),
+  (error) => new FizzyNetworkError(String(error))
+);
+```
+
+## With Fizzy Client
+
+All client methods return `Promise<Result<T, FizzyError>>`:
+
+```typescript
+const result = await client.cards.list();
+
+if (result.ok) {
+  for (const card of result.value) {
+    console.log(card.title);
+  }
+} else {
+  console.error(`Error (${result.error.code}): ${result.error.message}`);
+  
+  if (result.error.retryable) {
+    // Safe to retry
+  }
+}
+```
+
+## Benefits
+
+1. **No unexpected exceptions** - Errors are always handled
+2. **Type safety** - TypeScript knows exactly what can fail
+3. **Composable** - Chain operations with `andThen`
+4. **Explicit** - Error handling is visible in the code

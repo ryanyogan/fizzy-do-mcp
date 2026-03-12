@@ -1,0 +1,60 @@
+---
+title: fizzy_get_account
+description: Get current account settings
+---
+
+# fizzy_get_account
+
+Get the current Fizzy account settings including name, card count, and auto-postpone settings.
+
+## Description
+
+Returns detailed settings for the currently selected account. Use this to check account configuration and understand the auto-postpone behavior.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+```typescript
+{
+  id: string;
+  slug: string;
+  name: string;
+  cards_count: number;
+  auto_postpone_period_in_days: number | null;
+}
+```
+
+## Example
+
+**Request:**
+```
+fizzy_get_account()
+```
+
+**Response:**
+```json
+{
+  "id": "abc123",
+  "slug": "/ryan",
+  "name": "Personal",
+  "cards_count": 42,
+  "auto_postpone_period_in_days": 14
+}
+```
+
+## Fields
+
+| Field | Description |
+|-------|-------------|
+| `id` | Unique account identifier |
+| `slug` | URL-friendly account path (e.g., `/my-org`) |
+| `name` | Display name of the account |
+| `cards_count` | Total number of cards in the account |
+| `auto_postpone_period_in_days` | Days before inactive cards auto-postpone, or null if disabled |
+
+## Related Tools
+
+- [`fizzy_get_identity`](/tools/identity/get-identity/) - Get all accessible accounts

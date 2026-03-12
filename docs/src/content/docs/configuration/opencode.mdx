@@ -1,0 +1,107 @@
+---
+title: OpenCode
+description: Configure Fizzy MCP for OpenCode
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+# OpenCode Configuration
+
+This guide covers setting up Fizzy MCP with [OpenCode](https://opencode.ai), the open-source AI coding assistant.
+
+## Auto-Configuration
+
+The easiest way to configure OpenCode is through the Fizzy MCP auth command:
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+When prompted, select OpenCode for automatic configuration.
+
+## Manual Configuration
+
+<Steps>
+
+1. **Locate the configuration file**
+
+   OpenCode configuration is at:
+
+   ```
+   ~/.config/opencode/opencode.json
+   ```
+
+2. **Add MCP configuration**
+
+   OpenCode uses a slightly different format with a `type` field and `command` as an array:
+
+   ```json
+   {
+     "mcp": {
+       "fizzy": {
+         "type": "local",
+         "command": ["npx", "-y", "fizzy-do-mcp@latest"]
+       }
+     }
+   }
+   ```
+
+3. **Restart OpenCode**
+
+   Reload or restart OpenCode to apply the configuration.
+
+</Steps>
+
+## OpenCode-Specific Format
+
+Note that OpenCode's MCP configuration differs from Claude Desktop and Cursor:
+
+| Feature | OpenCode | Claude/Cursor |
+|---------|----------|---------------|
+| Config key | `mcp` | `mcpServers` |
+| Type field | Required (`"type": "local"`) | Not used |
+| Command format | Array: `["npx", "-y", "pkg"]` | String + args: `"npx"` + `["-y", "pkg"]` |
+| Server name | Under `mcp` object | Under `mcpServers` object |
+
+## Verifying the Connection
+
+After configuration:
+
+1. Start OpenCode
+2. Check the MCP status indicator
+3. Test with: "List my Fizzy boards"
+
+## Authentication
+
+After configuring OpenCode, authenticate with Fizzy:
+
+```bash
+npx fizzy-do-mcp auth
+```
+
+This stores your credentials securely in `~/.config/fizzy-mcp/config.json` (mode 0600). No need to put tokens in your MCP config.
+
+## Configuration Options
+
+### With Global Install
+
+```json
+{
+  "mcp": {
+    "fizzy": {
+      "type": "local",
+      "command": ["fizzy-mcp"]
+    }
+  }
+}
+```
+
+## Troubleshooting
+
+### Server not connecting
+
+1. Verify the config file location
+2. Check the `type: "local"` is present
+3. Test server manually: `npx fizzy-do-mcp status`
+
+

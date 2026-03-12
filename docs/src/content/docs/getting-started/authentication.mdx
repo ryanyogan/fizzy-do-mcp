@@ -1,0 +1,189 @@
+---
+title: Authentication
+description: How to authenticate Fizzy MCP with your Fizzy account
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+# Authentication
+
+Fizzy MCP uses Personal Access Tokens (PATs) to authenticate with the Fizzy API.
+
+## Getting a Personal Access Token
+
+<Steps>
+
+1. **Open Fizzy**
+   
+   Go to [app.fizzy.do](https://app.fizzy.do) and sign in to your account.
+
+2. **Navigate to API Settings**
+   
+   Click your avatar in the top-right corner, then go to **Profile** → **API**.
+
+3. **Create a New Token**
+   
+   Click **Create Token** and give it a descriptive name (e.g., "Claude Desktop MCP").
+
+4. **Copy the Token**
+   
+   Copy the generated token. It starts with `fz_` and won't be shown again.
+
+</Steps>
+
+<Aside type="caution">
+  Store your token securely! It provides full access to your Fizzy account and cannot be retrieved after creation.
+</Aside>
+
+## Running Authentication
+
+Once you have your token, run the auth command:
+
+```bash
+npx @fizzy-mcp/server auth
+```
+
+You'll see:
+
+```
+  _____ _               
+ |  ___(_)_________   _ 
+ | |_  | |_  /_  / | | |
+ |  _| | |/ / / /| |_| |
+ |_|   |_/___/___|\__, |
+                  |___/ 
+AI-powered task management for the modern team
+v0.1.0
+
+┌─ Authentication ──────────────────────────────────────┐
+│                                                       │
+│ To authenticate, you need a Personal Access Token.   │
+│                                                       │
+│ 1. Go to https://app.fizzy.do                        │
+│ 2. Click your avatar → Profile → API                 │
+│ 3. Create a new Personal Access Token                │
+│                                                       │
+└───────────────────────────────────────────────────────┘
+
+Enter your access token: ********
+```
+
+After entering your token:
+
+```
+✔ Validated token
+✔ Welcome, Ryan Carniato!
+
+Account: ryan
+
+┌─ Detected AI Agents ──────────────────────────────────┐
+│                                                       │
+│ • Claude Desktop                                      │
+│ • Cursor                                              │
+│ • OpenCode ✓                                          │
+│                                                       │
+└───────────────────────────────────────────────────────┘
+
+Would you like to configure Fizzy for these agents? [Y/n]
+```
+
+## Account Selection
+
+If you have access to multiple Fizzy accounts, you'll be prompted to select one:
+
+```
+Available accounts:
+  - Personal (/ryan)
+  - Acme Corp (/acme)
+  - Side Project (/side-project)
+
+Which account would you like to use?
+(Press Enter to auto-detect at runtime, or enter the account slug)
+Account slug: /acme
+```
+
+<Aside type="tip">
+  If you leave this blank, Fizzy MCP will auto-detect the account at runtime, which is useful if you switch between accounts frequently.
+</Aside>
+
+## Verifying Authentication
+
+Check your authentication status:
+
+```bash
+fizzy-mcp whoami
+```
+
+Output:
+
+```
+Name: Ryan Carniato
+Email: ryan@example.com
+Avatar: https://...
+
+Accounts:
+  - Personal (/ryan) (active)
+  - Acme Corp (/acme)
+```
+
+## Token Security
+
+Fizzy MCP stores your token securely:
+
+- **File permissions**: Config file is created with mode `600` (owner-only read/write)
+- **Hidden input**: Token is not displayed when typing
+- **No logging**: Tokens are never logged or transmitted except to the Fizzy API
+
+### Where Tokens Are Stored
+
+| Platform | Location |
+|----------|----------|
+| macOS/Linux | `~/.config/fizzy-mcp/config.json` |
+| Windows | `%USERPROFILE%\.config\fizzy-mcp\config.json` |
+
+## Revoking Tokens
+
+To revoke a token:
+
+1. Go to [app.fizzy.do](https://app.fizzy.do)
+2. Navigate to **Profile** → **API**
+3. Find the token and click **Revoke**
+
+Then clear local credentials:
+
+```bash
+fizzy-mcp logout
+```
+
+## Using Environment Variables
+
+For CI/CD or server deployments, use environment variables:
+
+```bash
+export FIZZY_ACCESS_TOKEN=fz_xxxxxxxxxxxxx
+export FIZZY_ACCOUNT_SLUG=/my-org
+```
+
+These take precedence over the config file.
+
+## Troubleshooting
+
+### "Invalid access token"
+
+- Ensure the token is copied correctly (no extra spaces)
+- Check that the token hasn't been revoked
+- Verify you're using a PAT, not another type of credential
+
+### "No accessible accounts"
+
+- Your token may not have access to any accounts
+- Contact your Fizzy administrator to grant access
+
+### "Authentication failed"
+
+- Check your internet connection
+- Verify the Fizzy API is accessible: `curl https://app.fizzy.do/api/health`
+
+## Next Steps
+
+With authentication complete, proceed to [Quick Start](/getting-started/quickstart/) to begin using Fizzy MCP.

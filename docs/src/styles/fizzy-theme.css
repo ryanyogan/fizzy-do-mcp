@@ -1,0 +1,184 @@
+/**
+ * Fizzy MCP Documentation Theme
+ *
+ * Based on Fizzy.do brand colors:
+ * - Primary: Cyan (#22d3ee)
+ * - Background: Dark teal (#0d181d)
+ */
+
+/* Dark mode (default) */
+:root {
+  /* Accent colors - Fizzy cyan */
+  --sl-color-accent-low: #0e3a4d;
+  --sl-color-accent: #22d3ee;
+  --sl-color-accent-high: #67e8f9;
+  
+  /* Background colors - Fizzy dark teal */
+  --sl-color-bg: #0d181d;
+  --sl-color-bg-nav: #0a1215;
+  --sl-color-bg-sidebar: #0d181d;
+  --sl-color-bg-inline-code: #1a2d35;
+  
+  /* Text colors */
+  --sl-color-text: #e2e8f0;
+  --sl-color-text-accent: #22d3ee;
+  
+  /* Border colors */
+  --sl-color-hairline: #1e3a45;
+  --sl-color-hairline-light: #2d4a55;
+  
+  /* Code block styling */
+  --sl-color-code-bg: #0f1f26;
+  
+  /* Font configuration */
+  --sl-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  
+  /* Content width */
+  --sl-content-width: 70ch;
+}
+
+/* Light mode overrides */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #cffafe;
+  --sl-color-accent: #0891b2;
+  --sl-color-accent-high: #164e63;
+  
+  --sl-color-bg: #f8fafc;
+  --sl-color-bg-nav: #ffffff;
+  --sl-color-bg-sidebar: #f1f5f9;
+  --sl-color-bg-inline-code: #e2e8f0;
+  
+  --sl-color-text: #0f172a;
+  --sl-color-text-accent: #0891b2;
+  
+  --sl-color-hairline: #cbd5e1;
+  --sl-color-hairline-light: #e2e8f0;
+}
+
+/* Hero section styling */
+.hero {
+  background: linear-gradient(135deg, #0d181d 0%, #0a1215 100%);
+  border-bottom: 1px solid var(--sl-color-hairline);
+}
+
+.hero h1 {
+  background: linear-gradient(135deg, #22d3ee 0%, #67e8f9 50%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Code block enhancements */
+.expressive-code {
+  border-radius: 0.75rem;
+  border: 1px solid var(--sl-color-hairline);
+}
+
+/* Sidebar styling */
+.sidebar-content {
+  border-right: 1px solid var(--sl-color-hairline);
+}
+
+/* Card styling for feature boxes */
+.sl-card {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.05) 0%, rgba(167, 139, 250, 0.05) 100%);
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 0.75rem;
+}
+
+.sl-card:hover {
+  border-color: var(--sl-color-accent);
+}
+
+/* Link styling */
+a:not([class]) {
+  color: var(--sl-color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+a:not([class]):hover {
+  border-bottom-color: var(--sl-color-accent);
+}
+
+/* Badge styling */
+.sl-badge {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent);
+  border: 1px solid var(--sl-color-accent);
+}
+
+/* Table styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  background: var(--sl-color-bg-sidebar);
+  border-bottom: 2px solid var(--sl-color-accent);
+}
+
+td, th {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--sl-color-hairline);
+}
+
+tr:hover {
+  background: var(--sl-color-bg-sidebar);
+}
+
+/* Callout/admonition styling */
+.starlight-aside {
+  border-radius: 0.75rem;
+  border-left-width: 4px;
+}
+
+.starlight-aside--tip {
+  border-left-color: #22d3ee;
+  background: rgba(34, 211, 238, 0.1);
+}
+
+.starlight-aside--note {
+  border-left-color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.starlight-aside--caution {
+  border-left-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.starlight-aside--danger {
+  border-left-color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+/* Button styling */
+.sl-button {
+  background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sl-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3);
+}
+
+/* Search styling */
+.search-input {
+  background: var(--sl-color-bg-sidebar);
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 0.5rem;
+}
+
+.search-input:focus {
+  border-color: var(--sl-color-accent);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+}

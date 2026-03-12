@@ -13,7 +13,10 @@
     "typecheck": "turbo run typecheck",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build",
+    "docs:deploy": "pnpm --filter docs deploy"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
