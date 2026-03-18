@@ -1,263 +1,230 @@
-# Fizzy MCP Server
+# Fizzy Do MCP
 
-An MCP (Model Context Protocol) server that enables AI agents to interact with [Fizzy](https://fizzy.do), Basecamp's task management tool.
+<p align="center">
+  <img src="docs/public/logo.svg" width="120" alt="Fizzy Do MCP Logo">
+</p>
 
-## Features
+<p align="center">
+  <strong>AI-Native Task Management with Model Context Protocol</strong>
+</p>
 
-- **40 MCP tools** covering all major Fizzy operations
-- **Type-safe** TypeScript implementation with Zod validation
-- **Retry with exponential backoff** for rate limits and transient errors
-- **Auto-detection** of Fizzy account on first run
-- **Secure credential storage** in `~/.config/fizzy-mcp/config.json`
-- **Environment variable support** for CI/CD and containerized deployments
-- **Two deployment modes**: Local (stdio) or Remote (hosted service)
+<p align="center">
+  Connect your AI assistant to <a href="https://fizzy.do">Fizzy</a> for intelligent, context-aware project management.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/fizzy-do-mcp"><img src="https://img.shields.io/npm/v/fizzy-do-mcp.svg" alt="npm version"></a>
+  <a href="https://github.com/ryanyogan/fizzy-do-mcp/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/fizzy-do-mcp.svg" alt="license"></a>
+</p>
+
+<p align="center">
+  <a href="https://fizzy.yogan.dev">Documentation</a> •
+  <a href="https://fizzy.yogan.dev/getting-started/installation">Quick Start</a> •
+  <a href="https://github.com/ryanyogan/fizzy-do-mcp/issues">Issues</a>
+</p>
+
+---
+
+## What is Fizzy Do MCP?
+
+Fizzy Do MCP is a **free, open-source** [Model Context Protocol](https://modelcontextprotocol.io) server that enables AI assistants to interact with [Fizzy](https://fizzy.do), Basecamp's task management tool.
+
+**No limits. No subscriptions. Just connect and go.**
+
+With Fizzy Do MCP, your AI can:
+
+- **Read your boards and cards** - Get full context about your projects
+- **Create new cards** - Add tasks directly from conversation
+- **Update existing cards** - Modify descriptions, tags, and status
+- **Move cards** - Triage cards to columns, postpone, or close them
+- **Add comments** - Leave notes and updates on cards
+- **Manage columns and tags** - Organize your workflow
 
 ## Quick Start
 
-```bash
-# Install globally
-npm install -g fizzy-do-mcp
+### Option 1: Local Server (Recommended)
 
-# Run the setup wizard
-fizzy-mcp auth
-```
-
-The CLI will guide you through:
-1. **Choosing a mode** - Remote (recommended) or Local
-2. **Getting your Fizzy token** - Press Enter to open the Fizzy API page in your browser
-3. **Optional API key** - For higher rate limits on the hosted service
-
-## Deployment Modes
-
-### Remote Mode (Recommended)
-
-Uses our hosted MCP service. No local server needed.
-- **Endpoint**: `https://fizzy-mcp-hosted.ryanyogan.workers.dev/mcp`
-- **Rate Limits**: 100 writes/day (free), 1,000/day (with API key)
-
-### Local Mode
-
-Runs the MCP server locally via stdio transport.
-- Full control over your environment
-- No rate limits
-- Requires Node.js
-
-## Getting a Fizzy Access Token
-
-When you run `fizzy-mcp auth`, pressing Enter at the token prompt will automatically open your browser to the Fizzy API settings page:
-
-1. The browser opens [app.fizzy.do/my/profile/api](https://app.fizzy.do/my/profile/api)
-2. Click **New Personal Access Token**
-3. Give it a name and copy the token
-4. Paste it back in the CLI
-
-## CLI Commands
+Run the interactive setup wizard:
 
 ```bash
-# Interactive setup wizard
-fizzy-mcp auth
-
-# Setup with specific mode
-fizzy-mcp auth --mode remote
-fizzy-mcp auth --mode local
-
-# Setup with all options
-fizzy-mcp auth --mode remote --token <token> --api-key <fmcp_key>
-
-# Check current configuration
-fizzy-mcp status
-
-# Show your Fizzy identity and accounts
-fizzy-mcp whoami
-
-# Auto-configure AI agents
-fizzy-mcp configure
-
-# Clear stored credentials
-fizzy-mcp logout
-
-# Run the local MCP server (only in local mode)
-fizzy-mcp
+npx fizzy-do-mcp configure
 ```
 
-## Configuration for AI Agents
+The wizard will:
+1. Detect your installed editors (Claude Desktop, Cursor, Claude Code, etc.)
+2. Prompt for your Fizzy API token
+3. Configure each editor automatically
 
-### Remote Mode (HTTP transport)
+**Or configure manually:**
+
+Add to your editor's MCP configuration:
 
 ```json
 {
   "mcpServers": {
     "fizzy": {
-      "transport": "http",
-      "url": "https://fizzy-mcp-hosted.ryanyogan.workers.dev/mcp",
-      "headers": {
-        "X-Fizzy-Token": "<your-fizzy-token>",
-        "X-API-Key": "<optional-api-key>"
+      "command": "npx",
+      "args": ["-y", "fizzy-do-mcp"],
+      "env": {
+        "FIZZY_TOKEN": "your-fizzy-api-token"
       }
     }
   }
 }
 ```
 
-### Local Mode (stdio transport)
+> **Tip:** You can also use the `fdm` alias: `npx fdm configure`
 
-**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+### Option 2: Remote Server
 
-```json
-{
-  "mcpServers": {
-    "fizzy": {
-      "command": "npx",
-      "args": ["-y", "fizzy-do-mcp@latest"]
-    }
-  }
-}
-```
-
-**OpenCode** (`~/.config/opencode/opencode.json`):
-
-```json
-{
-  "mcp": {
-    "fizzy": {
-      "type": "local",
-      "command": ["npx", "-y", "fizzy-do-mcp@latest"]
-    }
-  }
-}
-```
-
-**Cursor** (`~/.cursor/mcp.json`):
+For environments where `npx` isn't available (like web-based AI tools), use the hosted proxy:
 
 ```json
 {
   "mcpServers": {
     "fizzy": {
-      "command": "npx",
-      "args": ["-y", "fizzy-do-mcp@latest"]
+      "url": "https://mcp.fizzy.yogan.dev/sse",
+      "headers": {
+        "X-Fizzy-Token": "your-fizzy-api-token"
+      }
     }
   }
 }
+```
+
+The remote server is **free with no rate limits** - same as local.
+
+## Supported Editors
+
+| Editor | Status | Configuration |
+|--------|--------|---------------|
+| Claude Desktop | ✅ Full support | [Guide](https://fizzy.yogan.dev/configuration/claude-desktop) |
+| Claude Code | ✅ Full support | [Guide](https://fizzy.yogan.dev/configuration/claude-code) |
+| Cursor | ✅ Full support | [Guide](https://fizzy.yogan.dev/configuration/cursor) |
+| OpenCode | ✅ Full support | [Guide](https://fizzy.yogan.dev/configuration/opencode) |
+| Windsurf | ✅ Full support | [Guide](https://fizzy.yogan.dev/configuration/windsurf) |
+| Continue | ✅ Full support | [Guide](https://fizzy.yogan.dev/configuration/continue) |
+
+## Example Usage
+
+```
+You: What's on my Engineering board?
+
+AI: I found 12 open cards on your Engineering board:
+
+In Progress:
+- #234 "Implement user authentication" (assigned to you)
+- #235 "API rate limiting"
+
+Needs Triage:
+- #240 "Database migration script"
+- #241 "Update dependencies"
+
+You: Create a card for adding dark mode support
+
+AI: Created card #242 "Add dark mode support" on the Engineering board.
+    Would you like me to add any tags or assign it to someone?
 ```
 
 ## Available Tools
 
-### Identity & Account (2 tools)
-| Tool | Description |
-|------|-------------|
-| `fizzy_get_identity` | Get current user and list accessible accounts |
-| `fizzy_get_account` | Get account settings (name, card count, auto-postpone) |
+Fizzy Do MCP provides 40+ tools covering all major Fizzy operations:
 
-### Boards (7 tools)
-| Tool | Description |
-|------|-------------|
-| `fizzy_list_boards` | List all boards in the account |
-| `fizzy_get_board` | Get a specific board by ID |
-| `fizzy_create_board` | Create a new board |
-| `fizzy_update_board` | Update board name or settings |
-| `fizzy_delete_board` | Delete a board |
-| `fizzy_publish_board` | Publish board (make public) |
-| `fizzy_unpublish_board` | Unpublish board |
+| Category | Tools |
+|----------|-------|
+| **Identity** | `fizzy_get_identity`, `fizzy_get_account` |
+| **Boards** | `fizzy_list_boards`, `fizzy_get_board`, `fizzy_create_board`, `fizzy_update_board`, `fizzy_delete_board`, `fizzy_publish_board`, `fizzy_unpublish_board` |
+| **Cards** | `fizzy_list_cards`, `fizzy_get_card`, `fizzy_create_card`, `fizzy_update_card`, `fizzy_delete_card`, `fizzy_close_card`, `fizzy_reopen_card`, `fizzy_postpone_card`, `fizzy_triage_card`, `fizzy_untriage_card`, `fizzy_tag_card`, `fizzy_assign_card`, `fizzy_watch_card`, `fizzy_unwatch_card`, `fizzy_pin_card`, `fizzy_unpin_card`, `fizzy_mark_golden`, `fizzy_unmark_golden` |
+| **Comments** | `fizzy_list_comments`, `fizzy_get_comment`, `fizzy_create_comment`, `fizzy_update_comment`, `fizzy_delete_comment` |
+| **Columns** | `fizzy_list_columns`, `fizzy_get_column`, `fizzy_create_column`, `fizzy_update_column`, `fizzy_delete_column` |
+| **Tags & Users** | `fizzy_list_tags`, `fizzy_list_users`, `fizzy_get_user` |
 
-### Cards (18 tools)
-| Tool | Description |
-|------|-------------|
-| `fizzy_list_cards` | List cards with optional filters |
-| `fizzy_get_card` | Get a card by number |
-| `fizzy_create_card` | Create a new card |
-| `fizzy_update_card` | Update card title, description, or tags |
-| `fizzy_delete_card` | Delete a card |
-| `fizzy_close_card` | Close (complete) a card |
-| `fizzy_reopen_card` | Reopen a closed card |
-| `fizzy_postpone_card` | Move card to "Not Now" |
-| `fizzy_triage_card` | Move card to a column |
-| `fizzy_untriage_card` | Remove card from column (back to triage) |
-| `fizzy_tag_card` | Toggle a tag on a card |
-| `fizzy_assign_card` | Toggle user assignment on a card |
-| `fizzy_watch_card` | Subscribe to card notifications |
-| `fizzy_unwatch_card` | Unsubscribe from card notifications |
-| `fizzy_pin_card` | Pin a card for quick access |
-| `fizzy_unpin_card` | Unpin a card |
-| `fizzy_mark_golden` | Mark a card as golden (important) |
-| `fizzy_unmark_golden` | Remove golden status |
+See the [Tools Reference](https://fizzy.yogan.dev/tools/overview) for complete documentation.
 
-### Comments (5 tools)
-| Tool | Description |
-|------|-------------|
-| `fizzy_list_comments` | List comments on a card |
-| `fizzy_get_comment` | Get a specific comment |
-| `fizzy_create_comment` | Add a comment to a card |
-| `fizzy_update_comment` | Update a comment |
-| `fizzy_delete_comment` | Delete a comment |
-
-### Columns (5 tools)
-| Tool | Description |
-|------|-------------|
-| `fizzy_list_columns` | List columns on a board |
-| `fizzy_get_column` | Get a specific column |
-| `fizzy_create_column` | Create a new column |
-| `fizzy_update_column` | Update column name or color |
-| `fizzy_delete_column` | Delete a column |
-
-### Tags (1 tool)
-| Tool | Description |
-|------|-------------|
-| `fizzy_list_tags` | List all tags in the account |
-
-### Users (2 tools)
-| Tool | Description |
-|------|-------------|
-| `fizzy_list_users` | List all active users |
-| `fizzy_get_user` | Get a specific user's details |
-
-## Configuration
-
-### Config File
-
-Stored at `~/.config/fizzy-mcp/config.json` with mode 600:
-
-```json
-{
-  "mode": "remote",
-  "accessToken": "your-fizzy-token",
-  "accountSlug": "/897362094",
-  "hostedApiKey": "fmcp_..."
-}
-```
-
-### Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `FIZZY_ACCESS_TOKEN` | Personal access token (required) |
-| `FIZZY_ACCOUNT_SLUG` | Account slug (optional, auto-detected) |
-| `FIZZY_BASE_URL` | API base URL (default: `https://app.fizzy.do`) |
-| `FIZZY_MCP_MODE` | Server mode: `remote` or `local` |
-| `FIZZY_MCP_API_KEY` | Hosted service API key |
-
-## Development
+## CLI Commands
 
 ```bash
-# Install dependencies
-pnpm install
+# Interactive setup wizard
+npx fizzy-do-mcp configure
 
-# Build
-pnpm build
+# Check current identity
+npx fizzy-do-mcp whoami
 
-# Run locally
-node dist/cli.js auth
-node dist/cli.js status
-node dist/index.js
+# View configuration status
+npx fizzy-do-mcp status
+
+# Clear stored credentials
+npx fizzy-do-mcp logout
+
+# Run as MCP server (default)
+npx fizzy-do-mcp
 ```
 
 ## Architecture
 
-This package is part of the fizzy-mcp monorepo:
+```
+fizzy-do-mcp/
+├── packages/
+│   ├── @fizzy-do-mcp/shared/   # Types, schemas, Result type
+│   ├── @fizzy-do-mcp/client/   # Type-safe HTTP client for Fizzy API
+│   └── @fizzy-do-mcp/tools/    # MCP tool definitions
+├── apps/
+│   ├── server/                  # CLI and MCP server (npm: fizzy-do-mcp)
+│   └── hosted/                  # Hosted proxy service (Cloudflare Workers)
+└── docs/                        # Documentation site (VitePress)
+```
 
-- **@fizzy-mcp/shared** - Core types, Zod schemas, Result type
-- **@fizzy-mcp/client** - Fizzy API client with retry logic
-- **@fizzy-mcp/tools** - MCP tool definitions
-- **fizzy-do-mcp** - This package: CLI and local MCP server
+### Local vs Remote
+
+| Feature | Local Server | Remote Server |
+|---------|--------------|---------------|
+| Privacy | Tokens stay on your machine | Tokens sent via HTTPS header |
+| Rate Limits | None | None |
+| Setup | Requires Node.js | Works anywhere |
+| Offline | Works offline after install | Requires internet |
+| Cost | Free | Free |
+
+**We recommend local** for maximum privacy, but both options are fully supported and free.
+
+## Development
+
+```bash
+# Clone the repo
+git clone https://github.com/ryanyogan/fizzy-do-mcp.git
+cd fizzy-do-mcp
+
+# Install dependencies
+pnpm install
+
+# Run checks (format, lint, typecheck)
+pnpm check
+
+# Run tests
+pnpm test
+
+# Build all packages
+pnpm build
+
+# Develop the CLI
+cd apps/server && pnpm dev
+
+# Develop docs
+cd docs && pnpm dev
+```
+
+## Requirements
+
+- **Node.js 20+** - For running the local MCP server
+- **Fizzy Account** - Sign up free at [fizzy.do](https://fizzy.do)
+- **API Token** - Generate from your Fizzy account settings
+- **MCP-Compatible Editor** - Claude Desktop, Cursor, Claude Code, etc.
+
+## Getting Your API Token
+
+1. Log in to [Fizzy](https://fizzy.do)
+2. Go to **Account Settings** → **API Tokens**
+3. Click **Generate New Token**
+4. Copy the token and use it during configuration
 
 ## License
 
@@ -265,4 +232,12 @@ MIT
 
 ## Credits
 
-Built for use with [Claude](https://claude.ai) and the [Model Context Protocol](https://modelcontextprotocol.io).
+- Built for [Claude](https://claude.ai) and the [Model Context Protocol](https://modelcontextprotocol.io)
+- Connects to [Fizzy](https://fizzy.do), Basecamp's task management tool
+- Developed by [Ryan Yogan](https://github.com/ryanyogan)
+
+---
+
+<p align="center">
+  <strong>Free forever. No limits. Open source.</strong>
+</p>
