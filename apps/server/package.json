@@ -17,8 +17,8 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "fizzy-do-mcp": "./dist/cli.js",
-    "fdm": "./dist/cli.js"
+    "fizzy-do-mcp": "dist/cli.js",
+    "fdm": "dist/cli.js"
   },
   "exports": {
     ".": {
