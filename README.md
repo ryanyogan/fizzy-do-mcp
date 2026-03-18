@@ -1,7 +1,7 @@
-# Fizzy MCP
+# Fizzy Do MCP
 
 <p align="center">
-  <img src="docs/public/logo.svg" width="120" alt="Fizzy MCP Logo">
+  <img src="docs/public/logo.svg" width="120" alt="Fizzy Do MCP Logo">
 </p>
 
 <p align="center">
@@ -13,6 +13,11 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/fizzy-do-mcp"><img src="https://img.shields.io/npm/v/fizzy-do-mcp.svg" alt="npm version"></a>
+  <a href="https://github.com/ryanyogan/fizzy-do-mcp/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/fizzy-do-mcp.svg" alt="license"></a>
+</p>
+
+<p align="center">
   <a href="https://fizzy.yogan.dev">Documentation</a> •
   <a href="https://fizzy.yogan.dev/getting-started/installation">Quick Start</a> •
   <a href="https://github.com/ryanyogan/fizzy-do-mcp/issues">Issues</a>
@@ -20,37 +25,46 @@
 
 ---
 
-## What is Fizzy MCP?
+## What is Fizzy Do MCP?
 
-Fizzy MCP is an open-source [Model Context Protocol](https://modelcontextprotocol.io) server that enables AI assistants to interact with [Fizzy](https://fizzy.do), Basecamp's task management tool.
+Fizzy Do MCP is a **free, open-source** [Model Context Protocol](https://modelcontextprotocol.io) server that enables AI assistants to interact with [Fizzy](https://fizzy.do), Basecamp's task management tool.
 
-With Fizzy MCP, your AI can:
+**No limits. No subscriptions. Just connect and go.**
+
+With Fizzy Do MCP, your AI can:
 
 - **Read your boards and cards** - Get full context about your projects
 - **Create new cards** - Add tasks directly from conversation
 - **Update existing cards** - Modify descriptions, tags, and status
 - **Move cards** - Triage cards to columns, postpone, or close them
 - **Add comments** - Leave notes and updates on cards
+- **Manage columns and tags** - Organize your workflow
 
 ## Quick Start
 
+### Option 1: Local Server (Recommended)
+
+Run the interactive setup wizard:
+
 ```bash
-npx fizzy-do-mcp@latest configure
+npx fizzy-do-mcp configure
 ```
 
 The wizard will:
-1. Detect your installed editors (Claude Desktop, Cursor, etc.)
+1. Detect your installed editors (Claude Desktop, Cursor, Claude Code, etc.)
 2. Prompt for your Fizzy API token
 3. Configure each editor automatically
 
 **Or configure manually:**
+
+Add to your editor's MCP configuration:
 
 ```json
 {
   "mcpServers": {
     "fizzy": {
       "command": "npx",
-      "args": ["-y", "fizzy-do-mcp@latest"],
+      "args": ["-y", "fizzy-do-mcp"],
       "env": {
         "FIZZY_TOKEN": "your-fizzy-api-token"
       }
@@ -58,6 +72,27 @@ The wizard will:
   }
 }
 ```
+
+> **Tip:** You can also use the `fdm` alias: `npx fdm configure`
+
+### Option 2: Remote Server
+
+For environments where `npx` isn't available (like web-based AI tools), use the hosted proxy:
+
+```json
+{
+  "mcpServers": {
+    "fizzy": {
+      "url": "https://mcp.fizzy.yogan.dev/sse",
+      "headers": {
+        "X-Fizzy-Token": "your-fizzy-api-token"
+      }
+    }
+  }
+}
+```
+
+The remote server is **free with no rate limits** - same as local.
 
 ## Supported Editors
 
@@ -93,7 +128,7 @@ AI: Created card #242 "Add dark mode support" on the Engineering board.
 
 ## Available Tools
 
-Fizzy MCP provides 40+ tools covering all major Fizzy operations:
+Fizzy Do MCP provides 40+ tools covering all major Fizzy operations:
 
 | Category | Tools |
 |----------|-------|
@@ -106,62 +141,90 @@ Fizzy MCP provides 40+ tools covering all major Fizzy operations:
 
 See the [Tools Reference](https://fizzy.yogan.dev/tools/overview) for complete documentation.
 
+## CLI Commands
+
+```bash
+# Interactive setup wizard
+npx fizzy-do-mcp configure
+
+# Check current identity
+npx fizzy-do-mcp whoami
+
+# View configuration status
+npx fizzy-do-mcp status
+
+# Clear stored credentials
+npx fizzy-do-mcp logout
+
+# Run as MCP server (default)
+npx fizzy-do-mcp
+```
+
 ## Architecture
 
 ```
 fizzy-do-mcp/
 ├── packages/
-│   ├── shared/      # Types, schemas, Result type
-│   ├── client/      # Type-safe HTTP client for Fizzy API
-│   └── tools/       # MCP tool definitions
+│   ├── @fizzy-do-mcp/shared/   # Types, schemas, Result type
+│   ├── @fizzy-do-mcp/client/   # Type-safe HTTP client for Fizzy API
+│   └── @fizzy-do-mcp/tools/    # MCP tool definitions
 ├── apps/
-│   ├── server/      # CLI and MCP server (npm: fizzy-do-mcp)
-│   └── hosted/      # Hosted proxy service (Cloudflare Workers)
-└── docs/            # Documentation site (VitePress)
+│   ├── server/                  # CLI and MCP server (npm: fizzy-do-mcp)
+│   └── hosted/                  # Hosted proxy service (Cloudflare Workers)
+└── docs/                        # Documentation site (VitePress)
 ```
 
-### Deployment Options
+### Local vs Remote
 
-**Local Server (Recommended)**
-- Run via `npx fizzy-do-mcp@latest`
-- Maximum privacy - tokens stay on your machine
-- No rate limits
+| Feature | Local Server | Remote Server |
+|---------|--------------|---------------|
+| Privacy | Tokens stay on your machine | Tokens sent via HTTPS header |
+| Rate Limits | None | None |
+| Setup | Requires Node.js | Works anywhere |
+| Offline | Works offline after install | Requires internet |
+| Cost | Free | Free |
 
-**Hosted Proxy**
-- Available at `https://mcp.fizzy.yogan.dev`
-- Use `X-Fizzy-Token` header for authentication
-- Useful for environments where npx isn't available
+**We recommend local** for maximum privacy, but both options are fully supported and free.
 
 ## Development
 
 ```bash
+# Clone the repo
+git clone https://github.com/ryanyogan/fizzy-do-mcp.git
+cd fizzy-do-mcp
+
 # Install dependencies
 pnpm install
+
+# Run checks (format, lint, typecheck)
+pnpm check
+
+# Run tests
+pnpm test
 
 # Build all packages
 pnpm build
 
-# Run type checker
-pnpm typecheck
-
-# Run linter
-pnpm lint
-
 # Develop the CLI
-cd apps/server
-pnpm dev
+cd apps/server && pnpm dev
 
 # Develop docs
-cd docs
-pnpm dev
+cd docs && pnpm dev
 ```
 
 ## Requirements
 
 - **Node.js 20+** - For running the local MCP server
-- **Fizzy Account** - Sign up at [fizzy.do](https://fizzy.do)
+- **Fizzy Account** - Sign up free at [fizzy.do](https://fizzy.do)
 - **API Token** - Generate from your Fizzy account settings
-- **MCP-Compatible Editor** - Claude Desktop, Cursor, etc.
+- **MCP-Compatible Editor** - Claude Desktop, Cursor, Claude Code, etc.
+
+## Getting Your API Token
+
+1. Log in to [Fizzy](https://fizzy.do)
+2. Go to **Account Settings** → **API Tokens**
+3. Click **Generate New Token**
+4. Copy the token and use it during configuration
 
 ## License
 
@@ -172,3 +235,9 @@ MIT
 - Built for [Claude](https://claude.ai) and the [Model Context Protocol](https://modelcontextprotocol.io)
 - Connects to [Fizzy](https://fizzy.do), Basecamp's task management tool
 - Developed by [Ryan Yogan](https://github.com/ryanyogan)
+
+---
+
+<p align="center">
+  <strong>Free forever. No limits. Open source.</strong>
+</p>
