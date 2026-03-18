@@ -1,6 +1,6 @@
 {
   "name": "fizzy-do-mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "MCP server for integrating AI agents with Fizzy, Basecamp's task management tool",
   "author": "Ryan Yogan <ryan@yogan.dev>",
   "license": "MIT",
