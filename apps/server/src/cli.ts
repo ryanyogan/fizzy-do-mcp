@@ -33,7 +33,9 @@ program
   .name('fizzy-do-mcp')
   .alias('fdm')
   .description('MCP server for Fizzy - AI-powered task management')
-  .version(VERSION);
+  .version(VERSION)
+  .option('--vibe', 'Enable vibe coding mode - autonomous AI project manager')
+  .option('--board <id>', 'Board ID to work on (vibe mode)');
 
 /**
  * Prompts for user input from stdin.
@@ -400,11 +402,19 @@ program
   });
 
 /**
- * Default command (no subcommand) - run the server
+ * Default command (no subcommand) - run the server or vibe mode
  */
 program.action(async () => {
-  // Import and run the server
-  await import('./index.js');
+  const opts = program.opts<{ vibe?: boolean; board?: string }>();
+
+  if (opts.vibe) {
+    // Import and run vibe mode
+    const { startVibeMode } = await import('./vibe/index.js');
+    await startVibeMode({ boardId: opts.board });
+  } else {
+    // Import and run the server
+    await import('./index.js');
+  }
 });
 
 // Parse and execute

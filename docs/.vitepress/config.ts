@@ -1,17 +1,17 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  title: 'FIZZY MCP',
-  description: 'AI-powered task management with Model Context Protocol',
+  title: 'Fizzy Do',
+  description: 'AI-powered project management with Model Context Protocol',
 
   head: [
-    ['meta', { name: 'theme-color', content: '#22d3ee' }],
+    ['meta', { name: 'theme-color', content: '#3b82f6' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     [
       'link',
       {
-        href: 'https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600;700&display=swap',
         rel: 'stylesheet',
       },
     ],
@@ -32,6 +32,7 @@ export default defineConfig({
     sidebar: [
       {
         text: 'Getting Started',
+        collapsed: true,
         items: [
           { text: 'Introduction', link: '/getting-started/introduction' },
           { text: 'Installation', link: '/getting-started/installation' },
@@ -40,7 +41,7 @@ export default defineConfig({
       },
       {
         text: 'Configuration',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: 'Claude Desktop', link: '/configuration/claude-desktop' },
           { text: 'Claude Code', link: '/configuration/claude-code' },
@@ -53,11 +54,22 @@ export default defineConfig({
       },
       {
         text: 'Workflows',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: 'AI-Driven Tasks', link: '/workflows/ai-driven-tasks' },
           { text: 'Project Management', link: '/workflows/project-management' },
           { text: 'Team Collaboration', link: '/workflows/team-collaboration' },
+        ],
+      },
+      {
+        text: 'Vibe Coding',
+        collapsed: false,
+        items: [
+          { text: 'Overview', link: '/vibe-coding/' },
+          { text: 'Setup Guide', link: '/vibe-coding/setup' },
+          { text: 'Config Card', link: '/vibe-coding/config-card' },
+          { text: 'Workflow Columns', link: '/vibe-coding/columns' },
+          { text: 'Troubleshooting', link: '/vibe-coding/troubleshooting' },
         ],
       },
       {

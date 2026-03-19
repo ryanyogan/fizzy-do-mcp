@@ -116,3 +116,66 @@ export {
   type CreateStepInput,
   type UpdateStepInput,
 } from './steps.js';
+
+// Webhook schemas
+export {
+  WebhookEventSchema,
+  WebhookSchema,
+  WebhookListSchema,
+  CreateWebhookInputSchema,
+  UpdateWebhookInputSchema,
+  WebhookTestResponseSchema,
+  WEBHOOK_EVENTS,
+  type WebhookEvent,
+  type Webhook,
+  type WebhookList,
+  type CreateWebhookInput,
+  type UpdateWebhookInput,
+  type WebhookTestResponse,
+} from './webhooks.js';
+
+// Reaction schemas
+export {
+  ReactionEmojiSchema,
+  ReactionSchema,
+  ReactionListSchema,
+  CreateReactionInputSchema,
+  ReactionSummarySchema,
+  REACTION_EMOJIS,
+  type ReactionEmoji,
+  type Reaction,
+  type ReactionList,
+  type CreateReactionInput,
+  type ReactionSummary,
+} from './reactions.js';
+
+// Notification schemas
+export {
+  NotificationTypeSchema,
+  NotificationSchema,
+  NotificationListSchema,
+  NotificationCountSchema,
+  type NotificationType,
+  type Notification,
+  type NotificationList,
+  type NotificationCount,
+} from './notifications.js';
+
+// Vibe Coding schemas
+export {
+  VIBE_COLUMNS,
+  AI_WORK_MODES,
+  VibeConfigSchema,
+  VibeConfigCardSchema,
+  BoardVibeStatusSchema,
+  VibeSessionSchema,
+  CONFIG_CARD_TEMPLATE,
+  CONFIG_CARD_TITLE,
+  CONFIG_CARD_TAG,
+  type VibeColumnName,
+  type AiWorkMode,
+  type VibeConfig,
+  type VibeConfigCard,
+  type BoardVibeStatus,
+  type VibeSession,
+} from './vibe-config.js';

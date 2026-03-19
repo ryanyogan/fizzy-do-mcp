@@ -56,3 +56,6 @@ export * from './schemas/index.js';
 
 // Markdown utilities for rich text fields
 export { markdownToHtml, isHtml, toRichText } from './markdown.js';
+
+// Vibe Coding WebSocket protocol
+export * from './vibe/index.js';

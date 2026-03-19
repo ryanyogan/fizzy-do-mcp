@@ -2,9 +2,9 @@
 layout: home
 
 hero:
-  name: "FIZZY MCP"
-  text: "AI-Native Task Management"
-  tagline: Connect your AI assistant to Fizzy for intelligent, context-aware project management
+  name: "Fizzy Do"
+  text: "AI Project Manager"
+  tagline: A fairly eager Product Manager that loves to Vibe Code
   image:
     src: /logo.svg
     alt: Fizzy MCP
@@ -116,7 +116,7 @@ AI: Created card #242 "Add dark mode support" on the Engineering board.
 | Claude Desktop | Full support | JSON (`mcpServers`) |
 | Claude Code | Full support | CLI command |
 | Cursor | Full support | JSON (`mcpServers`) |
-| OpenCode | Full support | TOML (`mcp`) |
+| OpenCode | Full support | JSON (`mcp`) |
 | Windsurf | Full support | JSON (`mcpServers`) |
 | Continue | Full support | YAML/JSON array |
 

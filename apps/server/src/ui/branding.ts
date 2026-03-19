@@ -1,9 +1,10 @@
 /**
- * Branding utilities for the Fizzy MCP CLI.
+ * Branding utilities for the Fizzy Do CLI.
  *
- * Provides consistent styling with the Fizzy brand colors:
- * - Primary gradient: Cyan (#22d3ee) → Light Cyan (#67e8f9)
- * - Background: Dark teal (#0d181d)
+ * Provides consistent styling with the Fizzy.do brand colors:
+ * - Primary: Blue (oklch 57.02% 0.1895 260.46 → #3b82f6)
+ * - Light mode accent: (oklch 50% 0.2 260 → #2563eb)
+ * - Dark mode accent: (oklch 74% 0.1293 256 → #60a5fa)
  */
 
 import chalk from 'chalk';
@@ -12,31 +13,31 @@ import boxen from 'boxen';
 import gradient from 'gradient-string';
 
 /**
- * Fizzy brand gradient - cyan to light cyan
+ * Fizzy Do brand gradient - blue spectrum
  */
-const fizzyGradient = gradient(['#22d3ee', '#67e8f9']);
+const fizzyGradient = gradient(['#3b82f6', '#60a5fa', '#93c5fd']);
 
 /**
- * Fizzy brand colors.
+ * Fizzy Do brand colors.
  */
 export const colors = {
-  primary: chalk.hex('#22d3ee'),
-  primaryBright: chalk.hex('#67e8f9'),
-  secondary: chalk.hex('#14b8a6'),
-  accent: chalk.hex('#a78bfa'),
-  success: chalk.hex('#4ade80'),
-  warning: chalk.hex('#fbbf24'),
-  error: chalk.hex('#f87171'),
-  muted: chalk.hex('#64748b'),
-  text: chalk.hex('#e2e8f0'),
+  primary: chalk.hex('#3b82f6'),
+  primaryBright: chalk.hex('#60a5fa'),
+  secondary: chalk.hex('#2563eb'),
+  accent: chalk.hex('#8b5cf6'),
+  success: chalk.hex('#22c55e'),
+  warning: chalk.hex('#f59e0b'),
+  error: chalk.hex('#ef4444'),
+  muted: chalk.hex('#6b7280'),
+  text: chalk.hex('#f3f4f6'),
 } as const;
 
 /**
- * ASCII art logo for Fizzy MCP with gradient coloring.
+ * ASCII art logo for Fizzy Do with gradient coloring.
  */
 export function getLogo(): string {
   try {
-    const logo = figlet.textSync('FIZZY', {
+    const logo = figlet.textSync('Fizzy Do', {
       font: 'ANSI Shadow',
       horizontalLayout: 'default',
     });
@@ -44,7 +45,7 @@ export function getLogo(): string {
   } catch {
     // Fallback with simpler font
     try {
-      const logo = figlet.textSync('FIZZY', {
+      const logo = figlet.textSync('Fizzy Do', {
         font: 'Standard',
         horizontalLayout: 'default',
       });
@@ -52,12 +53,12 @@ export function getLogo(): string {
     } catch {
       // Final fallback - manual ASCII art
       const fallback = `
- ███████╗██╗███████╗███████╗██╗   ██╗
- ██╔════╝██║╚══███╔╝╚══███╔╝╚██╗ ██╔╝
- █████╗  ██║  ███╔╝   ███╔╝  ╚████╔╝ 
- ██╔══╝  ██║ ███╔╝   ███╔╝    ╚██╔╝  
- ██║     ██║███████╗███████╗   ██║   
- ╚═╝     ╚═╝╚══════╝╚══════╝   ╚═╝   
+ ███████╗██╗███████╗███████╗██╗   ██╗    ██████╗  ██████╗ 
+ ██╔════╝██║╚══███╔╝╚══███╔╝╚██╗ ██╔╝    ██╔══██╗██╔═══██╗
+ █████╗  ██║  ███╔╝   ███╔╝  ╚████╔╝     ██║  ██║██║   ██║
+ ██╔══╝  ██║ ███╔╝   ███╔╝    ╚██╔╝      ██║  ██║██║   ██║
+ ██║     ██║███████╗███████╗   ██║       ██████╔╝╚██████╔╝
+ ╚═╝     ╚═╝╚══════╝╚══════╝   ╚═╝       ╚═════╝  ╚═════╝ 
 `;
       return fizzyGradient.multiline(fallback);
     }
@@ -70,20 +71,20 @@ export function getLogo(): string {
 export function getCompactLogo(): string {
   const logo = `
 ╭─────────────────────────────────────╮
-│  ⚡ FIZZY MCP                       │
-│  AI-Powered Task Management         │
+│  ⚡ Fizzy Do                        │
+│  Your AI Works While You Sleep      │
 ╰─────────────────────────────────────╯`;
   return fizzyGradient.multiline(logo);
 }
 
 /**
- * Displays the Fizzy MCP banner with gradient logo and tagline.
+ * Displays the Fizzy Do banner with gradient logo and tagline.
  */
 export function showBanner(): void {
   console.error('');
   console.error(getLogo());
   console.error('');
-  console.error(colors.muted('  AI-powered task management for the modern team'));
+  console.error(colors.muted('  Your AI works while you sleep'));
   console.error(colors.muted(`  v${process.env.npm_package_version || '0.2.0'}`));
   console.error('');
 }
@@ -103,7 +104,7 @@ export function box(
     padding: options?.padding ?? 1,
     margin: { top: 0, bottom: 1, left: 0, right: 0 },
     borderStyle: 'round',
-    borderColor: options?.borderColor ?? '#22d3ee',
+    borderColor: options?.borderColor ?? '#3b82f6',
     ...(options?.title !== undefined && { title: options.title }),
     titleAlignment: 'left',
   });
@@ -184,7 +185,7 @@ export function showWelcome(userName: string, accountName: string): void {
     keyValue('Account', accountName),
   ].join('\n');
 
-  console.error(box(welcome, { title: 'Authenticated', borderColor: '#4ade80' }));
+  console.error(box(welcome, { title: 'Authenticated', borderColor: '#22c55e' }));
 }
 
 /**

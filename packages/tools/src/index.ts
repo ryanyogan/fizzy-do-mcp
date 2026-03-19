@@ -33,6 +33,12 @@ export { registerCommentTools } from './comments/index.js';
 export { registerColumnTools } from './columns/index.js';
 export { registerTagTools } from './tags/index.js';
 export { registerUserTools } from './users/index.js';
+export { registerWebhookTools } from './webhooks/index.js';
+export { registerReactionTools } from './reactions/index.js';
+export { registerStepTools } from './steps/index.js';
+export { registerNotificationTools } from './notifications/index.js';
+export { registerProjectManagerTools } from './project-manager/index.js';
+export { registerVibeTools } from './vibe/index.js';
 
 // Utilities
 export { formatToolSuccess, formatToolError, wrapToolOperation } from './utils.js';

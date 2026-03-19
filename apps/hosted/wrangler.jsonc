@@ -15,6 +15,18 @@
     "ENVIRONMENT": "production",
   },
 
+  // Durable Objects for vibe coding
+  "durable_objects": {
+    "bindings": [
+      { "name": "SESSION_REGISTRY", "class_name": "SessionRegistry" },
+      { "name": "WORK_QUEUE", "class_name": "WorkQueue" },
+      { "name": "CARD_LOCK", "class_name": "CardLock" },
+    ],
+  },
+
+  // Durable Object migrations
+  "migrations": [{ "tag": "v1", "new_classes": ["SessionRegistry", "WorkQueue", "CardLock"] }],
+
   // Custom domain configuration - MCP proxy endpoint
   "routes": [
     {
