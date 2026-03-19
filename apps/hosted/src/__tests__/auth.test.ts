@@ -82,9 +82,7 @@ describe('WebSocket Auth', () => {
 
   describe('validateFizzyToken', () => {
     it('returns user info for valid token', async () => {
-      const mockFetch = vi.fn().mockResolvedValue(
-        createMockResponse(validIdentityResponse),
-      );
+      const mockFetch = vi.fn().mockResolvedValue(createMockResponse(validIdentityResponse));
       const config: AuthConfig = {
         baseUrl: 'https://test.fizzy.do',
         httpClient: createMockHttpClient(mockFetch),
@@ -99,16 +97,15 @@ describe('WebSocket Auth', () => {
         accountSlug: '/123456',
         accountId: 'account-123',
       });
-      expect(mockFetch).toHaveBeenCalledWith(
-        'https://test.fizzy.do/my/identity',
-        { headers: createAuthHeaders('valid-token') },
-      );
+      expect(mockFetch).toHaveBeenCalledWith('https://test.fizzy.do/my/identity', {
+        headers: createAuthHeaders('valid-token'),
+      });
     });
 
     it('returns null for invalid token (401)', async () => {
-      const mockFetch = vi.fn().mockResolvedValue(
-        createMockResponse({ error: 'unauthorized' }, false, 401),
-      );
+      const mockFetch = vi
+        .fn()
+        .mockResolvedValue(createMockResponse({ error: 'unauthorized' }, false, 401));
       const config: AuthConfig = {
         baseUrl: 'https://test.fizzy.do',
         httpClient: createMockHttpClient(mockFetch),
@@ -132,9 +129,7 @@ describe('WebSocket Auth', () => {
     });
 
     it('returns null for malformed response', async () => {
-      const mockFetch = vi.fn().mockResolvedValue(
-        createMockResponse({ invalid: 'data' }),
-      );
+      const mockFetch = vi.fn().mockResolvedValue(createMockResponse({ invalid: 'data' }));
       const config: AuthConfig = {
         baseUrl: 'https://test.fizzy.do',
         httpClient: createMockHttpClient(mockFetch),
@@ -146,9 +141,7 @@ describe('WebSocket Auth', () => {
     });
 
     it('returns null for empty accounts array', async () => {
-      const mockFetch = vi.fn().mockResolvedValue(
-        createMockResponse({ accounts: [] }),
-      );
+      const mockFetch = vi.fn().mockResolvedValue(createMockResponse({ accounts: [] }));
       const config: AuthConfig = {
         baseUrl: 'https://test.fizzy.do',
         httpClient: createMockHttpClient(mockFetch),
@@ -171,9 +164,7 @@ describe('WebSocket Auth', () => {
           },
         ],
       };
-      const mockFetch = vi.fn().mockResolvedValue(
-        createMockResponse(multiAccountResponse),
-      );
+      const mockFetch = vi.fn().mockResolvedValue(createMockResponse(multiAccountResponse));
       const config: AuthConfig = {
         baseUrl: 'https://test.fizzy.do',
         httpClient: createMockHttpClient(mockFetch),
@@ -188,62 +179,46 @@ describe('WebSocket Auth', () => {
 
   describe('validateBoardAccess', () => {
     it('returns true when user has board access', async () => {
-      const mockFetch = vi.fn().mockResolvedValue(
-        createMockResponse({ id: 'board-123', name: 'Test Board' }),
-      );
+      const mockFetch = vi
+        .fn()
+        .mockResolvedValue(createMockResponse({ id: 'board-123', name: 'Test Board' }));
       const config: AuthConfig = {
         baseUrl: 'https://test.fizzy.do',
         httpClient: createMockHttpClient(mockFetch),
       };
 
-      const result = await validateBoardAccess(
-        'valid-token',
-        'board-123',
-        '/123456',
-        config,
-      );
+      const result = await validateBoardAccess('valid-token', 'board-123', '/123456', config);
 
       expect(result).toBe(true);
-      expect(mockFetch).toHaveBeenCalledWith(
-        'https://test.fizzy.do/123456/boards/board-123',
-        { headers: createAuthHeaders('valid-token') },
-      );
+      expect(mockFetch).toHaveBeenCalledWith('https://test.fizzy.do/123456/boards/board-123', {
+        headers: createAuthHeaders('valid-token'),
+      });
     });
 
     it('returns false when board not found (404)', async () => {
-      const mockFetch = vi.fn().mockResolvedValue(
-        createMockResponse({ error: 'not_found' }, false, 404),
-      );
+      const mockFetch = vi
+        .fn()
+        .mockResolvedValue(createMockResponse({ error: 'not_found' }, false, 404));
       const config: AuthConfig = {
         baseUrl: 'https://test.fizzy.do',
         httpClient: createMockHttpClient(mockFetch),
       };
 
-      const result = await validateBoardAccess(
-        'token',
-        'nonexistent-board',
-        '/123456',
-        config,
-      );
+      const result = await validateBoardAccess('token', 'nonexistent-board', '/123456', config);
 
       expect(result).toBe(false);
     });
 
     it('returns false when access denied (403)', async () => {
-      const mockFetch = vi.fn().mockResolvedValue(
-        createMockResponse({ error: 'forbidden' }, false, 403),
-      );
+      const mockFetch = vi
+        .fn()
+        .mockResolvedValue(createMockResponse({ error: 'forbidden' }, false, 403));
       const config: AuthConfig = {
         baseUrl: 'https://test.fizzy.do',
         httpClient: createMockHttpClient(mockFetch),
       };
 
-      const result = await validateBoardAccess(
-        'token',
-        'private-board',
-        '/123456',
-        config,
-      );
+      const result = await validateBoardAccess('token', 'private-board', '/123456', config);
 
       expect(result).toBe(false);
     });
@@ -255,12 +230,7 @@ describe('WebSocket Auth', () => {
         httpClient: createMockHttpClient(mockFetch),
       };
 
-      const result = await validateBoardAccess(
-        'token',
-        'board-123',
-        '/123456',
-        config,
-      );
+      const result = await validateBoardAccess('token', 'board-123', '/123456', config);
 
       expect(result).toBe(false);
     });

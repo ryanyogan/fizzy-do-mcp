@@ -88,8 +88,26 @@ If using a custom `pr_template`, check for syntax errors in the YAML.
 
 **If reconnection fails**:
 1. Check your internet connection
-2. Verify Fizzy is accessible: `curl https://fizzy.do/api/health`
+2. Verify Fizzy is accessible: `curl https://app.fizzy.do`
 3. Restart Vibe Coding
+
+## Webhooks Not Working
+
+**Problem**: Cards aren't automatically picked up when moved to "To Do" column.
+
+**Checklist**:
+- [ ] Webhook URL is configured in Fizzy account settings
+- [ ] URL is `https://mcp.fizzy.yogan.dev/webhooks/fizzy`
+- [ ] Card events are enabled (card_triaged, card_published, comment_created)
+
+**Test the webhook endpoint**:
+```bash
+curl -X POST https://mcp.fizzy.yogan.dev/webhooks/health
+```
+
+Should return: `{"status":"ok","service":"webhooks"}`
+
+**Note**: Webhooks are optional — the CLI mode still works by polling for work when connected via WebSocket.
 
 ## Claude Code Errors
 

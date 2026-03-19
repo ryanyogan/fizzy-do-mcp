@@ -21,7 +21,7 @@ import {
   type VibeConfig,
   type VibeColumnName,
 } from '@fizzy-do-mcp/shared';
-import { resolveConfig, isConfigured } from '../credentials.js';
+import { resolveConfig, isConfigured, readStoredConfig, saveConfig } from '../credentials.js';
 import { withSpinner, showSuccess, showInfo, showWarning } from '../ui/spinner.js';
 import { colors } from '../ui/branding.js';
 import {
@@ -43,6 +43,7 @@ import {
   formatNoMoreCards,
   formatQueueStatus,
 } from './continuation.js';
+import { checkWebhookStatus, runWebhookSetup, displayWebhookStatus } from './webhook-setup.js';
 
 /**
  * Options for starting vibe mode.
@@ -286,6 +287,46 @@ export async function startVibeMode(options: VibeOptions = {}): Promise<void> {
   if (!config) {
     displayVibeError('Invalid configuration', 'Run "fizzy-do-mcp configure" to reconfigure.');
     process.exit(1);
+  }
+
+  // Check webhook configuration
+  const storedConfig = readStoredConfig();
+  let webhookConfigured = storedConfig.webhookConfigured === true;
+
+  if (!webhookConfigured) {
+    // Check server for webhook status
+    const webhookStatus = await withSpinner('Checking webhook configuration...', async () => {
+      return await checkWebhookStatus(config.accessToken);
+    });
+
+    if (webhookStatus?.configured) {
+      // Already configured on server, update local cache
+      webhookConfigured = true;
+      saveConfig({
+        ...storedConfig,
+        webhookConfigured: true,
+        webhookConfiguredAt: webhookStatus.updated_at ?? new Date().toISOString(),
+      });
+      displayWebhookStatus(webhookStatus);
+    } else {
+      // Not configured - run setup wizard
+      console.error('');
+      const setupSuccess = await runWebhookSetup(config.accessToken);
+      if (!setupSuccess) {
+        displayVibeError(
+          'Webhook setup required',
+          'Vibe mode requires webhook configuration. Please complete the setup.',
+        );
+        process.exit(1);
+      }
+
+      // Update local cache after successful setup
+      saveConfig({
+        ...storedConfig,
+        webhookConfigured: true,
+        webhookConfiguredAt: new Date().toISOString(),
+      });
+    }
   }
 
   // Detect git repository

@@ -5,11 +5,7 @@
  * Designed for testability with dependency injection.
  */
 
-import {
-  DEFAULT_CONFIG,
-  IdentityResponseSchema,
-  type Account,
-} from '@fizzy-do-mcp/shared';
+import { DEFAULT_CONFIG, IdentityResponseSchema, type Account } from '@fizzy-do-mcp/shared';
 
 /**
  * User info returned from token validation
@@ -85,10 +81,9 @@ export async function validateFizzyToken(
   config: AuthConfig = defaultAuthConfig,
 ): Promise<ValidatedUser | null> {
   try {
-    const response = await config.httpClient.fetch(
-      `${config.baseUrl}/my/identity`,
-      { headers: createAuthHeaders(token) },
-    );
+    const response = await config.httpClient.fetch(`${config.baseUrl}/my/identity`, {
+      headers: createAuthHeaders(token),
+    });
 
     if (!response.ok) {
       return null;

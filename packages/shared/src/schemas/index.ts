@@ -125,6 +125,9 @@ export {
   CreateWebhookInputSchema,
   UpdateWebhookInputSchema,
   WebhookTestResponseSchema,
+  WebhookSecretEntrySchema,
+  WebhookStatusResponseSchema,
+  StoreWebhookSecretInputSchema,
   WEBHOOK_EVENTS,
   type WebhookEvent,
   type Webhook,
@@ -132,6 +135,9 @@ export {
   type CreateWebhookInput,
   type UpdateWebhookInput,
   type WebhookTestResponse,
+  type WebhookSecretEntry,
+  type WebhookStatusResponse,
+  type StoreWebhookSecretInput,
 } from './webhooks.js';
 
 // Reaction schemas

@@ -18,6 +18,7 @@ import {
   serverMessage,
   ERROR_CODES,
   type ServerMessage,
+  VibeConfigSchema,
 } from '@fizzy-do-mcp/shared';
 
 /**
@@ -106,7 +107,10 @@ export class SessionRegistry extends DurableObject<Env> {
     const url = new URL(request.url);
 
     // Handle WebSocket upgrades for /connect (case-insensitive per HTTP spec)
-    if (request.headers.get('Upgrade')?.toLowerCase() === 'websocket' && url.pathname === '/connect') {
+    if (
+      request.headers.get('Upgrade')?.toLowerCase() === 'websocket' &&
+      url.pathname === '/connect'
+    ) {
       return this.handleWebSocketConnect(request);
     }
 
@@ -500,13 +504,16 @@ export class SessionRegistry extends DurableObject<Env> {
           repository: string;
           default_branch?: string;
           branch_pattern?: string;
-          pr_template?: string;
+          pr_template?: 'minimal' | 'default' | 'detailed';
           auto_assign_pr?: boolean;
         };
         depth: number;
       };
 
       if (data.card) {
+        // Parse config to apply defaults
+        const config = VibeConfigSchema.parse(data.config);
+
         // Acquire lock on the card
         const lockId = this.env.CARD_LOCK.idFromName('global');
         const lock = this.env.CARD_LOCK.get(lockId);
@@ -528,7 +535,7 @@ export class SessionRegistry extends DurableObject<Env> {
             body: JSON.stringify({
               card: data.card,
               mode: data.mode,
-              config: data.config,
+              config,
               priority: 50, // Higher priority for re-enqueued items
             }),
           });
@@ -551,7 +558,7 @@ export class SessionRegistry extends DurableObject<Env> {
               type: 'work_assigned',
               card: data.card,
               mode: data.mode,
-              config: data.config,
+              config,
             }),
           ),
         );

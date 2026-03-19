@@ -21,6 +21,9 @@ export interface Env {
   SESSION_REGISTRY: DurableObjectNamespace<SessionRegistry>;
   WORK_QUEUE: DurableObjectNamespace<WorkQueue>;
   CARD_LOCK: DurableObjectNamespace<CardLock>;
+
+  // KV namespace for webhook secrets (per-account)
+  WEBHOOK_SECRETS: KVNamespace;
 }
 
 /**

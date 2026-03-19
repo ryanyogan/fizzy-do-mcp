@@ -6,6 +6,7 @@ import { apiRoutes } from './api';
 import { mcpRoutes } from './mcp/handler';
 import { vibeRoutes } from './websocket/handler';
 import { webhookRoutes } from './webhooks';
+import { accountRoutes } from './accounts';
 import { fizzyTokenMiddleware } from './middleware/fizzy-token';
 import { loggingMiddleware, errorLoggingMiddleware } from './middleware/logging';
 
@@ -51,6 +52,7 @@ export function createApp() {
         mcp: '/mcp',
         vibe: '/vibe/ws',
         webhooks: '/webhooks/fizzy',
+        accounts: '/accounts/webhook-secret',
         health: '/health',
         docs: 'https://fizzy.yogan.dev',
       },
@@ -63,6 +65,7 @@ export function createApp() {
   app.route('/mcp', mcpRoutes);
   app.route('/vibe', vibeRoutes);
   app.route('/webhooks', webhookRoutes);
+  app.route('/accounts', accountRoutes);
 
   // 404 handler
   app.notFound((c) => {

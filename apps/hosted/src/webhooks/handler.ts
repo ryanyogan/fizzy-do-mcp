@@ -11,7 +11,7 @@ import type { Context } from 'hono';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import type { HonoEnv } from '../types';
-import type { CardWorkItem, VibeConfig } from '@fizzy-do-mcp/shared';
+import type { CardWorkItem, VibeConfig, WebhookSecretEntry } from '@fizzy-do-mcp/shared';
 import { WebhookEventSchema, VibeConfigSchema } from '@fizzy-do-mcp/shared';
 import {
   shouldProcessCard,
@@ -78,25 +78,21 @@ type WebhookPayload = z.infer<typeof WebhookPayloadSchema>;
 export const webhookRoutes = new Hono<HonoEnv>();
 
 /**
- * Verify webhook signature (optional security measure).
+ * Verify webhook signature using per-account secrets from KV.
  *
- * If a webhook secret is configured, validate the X-Fizzy-Webhook-Signature header.
+ * Validates the X-Webhook-Signature header against the stored secret.
+ * Returns verification result with reason for logging.
  *
- * @internal Exported for testing; currently called when WEBHOOK_SECRET is set
+ * @internal Exported for testing
  */
 export async function verifyWebhookSignature(
   request: Request,
   body: string,
-  secret?: string,
-): Promise<boolean> {
-  if (!secret) {
-    // No secret configured, skip verification
-    return true;
-  }
-
-  const signature = request.headers.get('X-Fizzy-Webhook-Signature');
+  secret: string,
+): Promise<{ valid: boolean; reason?: string }> {
+  const signature = request.headers.get('X-Webhook-Signature');
   if (!signature) {
-    return false;
+    return { valid: false, reason: 'Missing X-Webhook-Signature header' };
   }
 
   // Compute expected signature (HMAC-SHA256)
@@ -114,8 +110,35 @@ export async function verifyWebhookSignature(
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
 
-  // Compare signatures (timing-safe comparison would be better)
-  return signature === `sha256=${expectedSignature}`;
+  // Fizzy sends signature as hex string (no prefix based on user's description)
+  // Try both formats: with and without sha256= prefix
+  const signatureHex = signature.startsWith('sha256=') ? signature.slice(7) : signature;
+
+  // Timing-safe comparison
+  if (signatureHex.length !== expectedSignature.length) {
+    return { valid: false, reason: 'Signature length mismatch' };
+  }
+
+  let match = true;
+  for (let i = 0; i < signatureHex.length; i++) {
+    if (signatureHex[i] !== expectedSignature[i]) {
+      match = false;
+    }
+  }
+
+  if (!match) {
+    return { valid: false, reason: 'Signature mismatch' };
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Look up webhook secret from KV for a given account.
+ */
+async function getWebhookSecret(kv: KVNamespace, accountSlug: string): Promise<string | null> {
+  const entry = await kv.get<WebhookSecretEntry>(accountSlug, 'json');
+  return entry?.secret ?? null;
 }
 
 /**
@@ -152,19 +175,13 @@ function getDefaultVibeConfig(): VibeConfig {
  * POST /webhooks/fizzy
  *
  * Receives Fizzy webhook payloads and processes them.
+ * Requires valid webhook signature for the account.
  */
 webhookRoutes.post('/fizzy', async (c) => {
   // Read raw body for signature verification
   const rawBody = await c.req.text();
 
-  // Optional: Verify webhook signature
-  // const webhookSecret = c.env.WEBHOOK_SECRET;
-  // const isValid = await verifyWebhookSignature(c.req.raw, rawBody, webhookSecret);
-  // if (!isValid) {
-  //   return c.json({ error: 'invalid_signature', message: 'Webhook signature verification failed' }, 401);
-  // }
-
-  // Parse the payload
+  // Parse the payload first to get account_slug for secret lookup
   let payload: WebhookPayload;
   try {
     const json: unknown = JSON.parse(rawBody);
@@ -188,6 +205,36 @@ webhookRoutes.post('/fizzy', async (c) => {
         message: 'Failed to parse webhook payload',
       },
       400,
+    );
+  }
+
+  // Verify webhook signature using per-account secret from KV
+  const kv = c.env.WEBHOOK_SECRETS;
+  const secret = await getWebhookSecret(kv, payload.account_slug);
+
+  if (!secret) {
+    console.warn(`Webhook rejected: No secret configured for account ${payload.account_slug}`);
+    return c.json(
+      {
+        error: 'unauthorized',
+        message:
+          'No webhook secret configured for this account. Set up webhook authentication first.',
+      },
+      401,
+    );
+  }
+
+  const verification = await verifyWebhookSignature(c.req.raw, rawBody, secret);
+  if (!verification.valid) {
+    console.warn(
+      `Webhook signature verification failed for account ${payload.account_slug}: ${verification.reason}`,
+    );
+    return c.json(
+      {
+        error: 'invalid_signature',
+        message: `Webhook signature verification failed: ${verification.reason}`,
+      },
+      401,
     );
   }
 

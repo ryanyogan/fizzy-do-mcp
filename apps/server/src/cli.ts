@@ -402,6 +402,84 @@ program
   });
 
 /**
+ * Webhooks command - manage webhook configuration
+ */
+program
+  .command('webhooks')
+  .description('Manage webhook configuration')
+  .argument('[action]', 'Action: status (default), setup, delete')
+  .action(async (action?: string) => {
+    if (!isConfigured()) {
+      showFailure('Not authenticated');
+      console.error(colors.muted('Run "fizzy-do-mcp configure" first.'));
+      process.exit(1);
+    }
+
+    const config = resolveConfig();
+    if (!config) {
+      showFailure('Invalid configuration');
+      process.exit(1);
+    }
+
+    const { checkWebhookStatus, runWebhookSetup, deleteWebhookSecret, displayWebhookStatus } =
+      await import('./vibe/webhook-setup.js');
+
+    switch (action) {
+      case 'setup': {
+        const setupSuccess = await runWebhookSetup(config.accessToken);
+        if (setupSuccess) {
+          // Update local cache
+          const stored = readStoredConfig();
+          saveConfig({
+            ...stored,
+            webhookConfigured: true,
+            webhookConfiguredAt: new Date().toISOString(),
+          });
+        } else {
+          process.exit(1);
+        }
+        break;
+      }
+
+      case 'delete': {
+        const deleted = await withSpinner('Deleting webhook secret...', async () => {
+          return await deleteWebhookSecret(config.accessToken);
+        });
+
+        if (deleted) {
+          showSuccess('Webhook secret deleted');
+          // Update local cache
+          const stored = readStoredConfig();
+          saveConfig({
+            ...stored,
+            webhookConfigured: false,
+            webhookConfiguredAt: undefined,
+          });
+        } else {
+          showFailure('Failed to delete webhook secret');
+          process.exit(1);
+        }
+        break;
+      }
+
+      case 'status':
+      default: {
+        const status = await withSpinner('Checking webhook status...', async () => {
+          return await checkWebhookStatus(config.accessToken);
+        });
+
+        if (status) {
+          displayWebhookStatus(status);
+        } else {
+          showFailure('Failed to fetch webhook status');
+          process.exit(1);
+        }
+        break;
+      }
+    }
+  });
+
+/**
  * Default command (no subcommand) - run the server or vibe mode
  */
 program.action(async () => {

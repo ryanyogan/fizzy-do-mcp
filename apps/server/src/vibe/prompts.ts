@@ -112,14 +112,17 @@ export async function runBoardSelection(
   repoUrl: string | null,
   requestedBoardId?: string,
 ): Promise<BoardSelectionResult | null> {
-  // If board ID was provided via flag, find it
+  // If board ID or name was provided via flag, find it
   if (requestedBoardId) {
-    const board = boards.find((b) => b.id === requestedBoardId);
+    // Try matching by ID first, then by name (case-insensitive)
+    const board =
+      boards.find((b) => b.id === requestedBoardId) ??
+      boards.find((b) => b.name.toLowerCase() === requestedBoardId.toLowerCase());
     if (board) {
       return { board, matchedByRepo: false };
     }
     // Board not found - fall through to selection
-    console.error(colors.warning(`Board ID "${requestedBoardId}" not found or not configured`));
+    console.error(colors.warning(`Board "${requestedBoardId}" not found or not configured`));
   }
 
   // If we have a repo URL, try to match boards

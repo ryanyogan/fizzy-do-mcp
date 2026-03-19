@@ -27,6 +27,15 @@
   // Durable Object migrations
   "migrations": [{ "tag": "v1", "new_classes": ["SessionRegistry", "WorkQueue", "CardLock"] }],
 
+  // KV namespaces for webhook secrets (per-account storage)
+  "kv_namespaces": [
+    {
+      "binding": "WEBHOOK_SECRETS",
+      "id": "1b9bec287286424a82292f2f46723d8e",
+      "preview_id": "3359d3301b214906bba25b908ee84da3",
+    },
+  ],
+
   // Custom domain configuration - MCP proxy endpoint
   "routes": [
     {

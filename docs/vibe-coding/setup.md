@@ -79,13 +79,40 @@ Use for larger tasks that need breakdown:
 
 Add the tag and move the card to "Accepted" when ready.
 
-## Step 5: Start Vibe Mode
+## Step 5: Configure Webhooks (Optional)
+
+For automatic card pickup when cards are moved or tagged, configure Fizzy webhooks:
+
+1. Go to your Fizzy account settings
+2. Navigate to **Integrations** or **Webhooks**
+3. Add a new webhook with:
+   - **URL**: `https://mcp.fizzy.yogan.dev/webhooks/fizzy`
+   - **Events**: Select all card events (card_triaged, card_published, card_closed, etc.)
+   - **Secret** (optional): Generate a secret for signature verification
+
+::: info Webhook Events
+The webhook handler processes these events:
+- `card_triaged` — Card moved to a column (triggers work if moved to "To Do"/"Accepted")
+- `card_published` — New card created with AI tags
+- `comment_created` — Detects `@ai start` commands
+- `card_closed` / `card_postponed` — Cancels pending work
+:::
+
+Without webhooks, Vibe Coding still works — the CLI will poll for available work when connected.
+
+## Step 6: Start Vibe Mode
 
 Navigate to your repository and run:
 
 ```bash
 cd /path/to/your/repo
 npx fizzy-do-mcp --vibe
+```
+
+You can also specify a board directly:
+
+```bash
+npx fizzy-do-mcp --vibe --board "board-name-or-id"
 ```
 
 ### Interactive Board Selection

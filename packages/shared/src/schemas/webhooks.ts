@@ -79,3 +79,50 @@ export const WebhookTestResponseSchema = z.object({
 });
 
 export type WebhookTestResponse = z.infer<typeof WebhookTestResponseSchema>;
+
+// ============================================================================
+// Webhook Secret Storage (for multi-tenant signature verification)
+// ============================================================================
+
+/**
+ * Schema for webhook secret entry stored in KV.
+ * Key is the account_slug (e.g., "/6099243").
+ */
+export const WebhookSecretEntrySchema = z.object({
+  /** The HMAC secret for verifying webhook signatures */
+  secret: z.string().min(1),
+  /** ISO timestamp when the secret was first stored */
+  created_at: z.string(),
+  /** ISO timestamp when the secret was last updated */
+  updated_at: z.string(),
+});
+
+export type WebhookSecretEntry = z.infer<typeof WebhookSecretEntrySchema>;
+
+/**
+ * Schema for webhook status response from the API.
+ */
+export const WebhookStatusResponseSchema = z.object({
+  /** Whether a webhook secret is configured for this account */
+  configured: z.boolean(),
+  /** The account slug this status is for */
+  account_slug: z.string(),
+  /** The account name for display */
+  account_name: z.string(),
+  /** ISO timestamp when the secret was created (if configured) */
+  created_at: z.string().optional(),
+  /** ISO timestamp when the secret was last updated (if configured) */
+  updated_at: z.string().optional(),
+});
+
+export type WebhookStatusResponse = z.infer<typeof WebhookStatusResponseSchema>;
+
+/**
+ * Schema for storing a webhook secret.
+ */
+export const StoreWebhookSecretInputSchema = z.object({
+  /** The webhook secret from Fizzy */
+  secret: z.string().min(8, 'Webhook secret must be at least 8 characters'),
+});
+
+export type StoreWebhookSecretInput = z.infer<typeof StoreWebhookSecretInputSchema>;
