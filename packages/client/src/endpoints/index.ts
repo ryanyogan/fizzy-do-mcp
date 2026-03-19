@@ -13,3 +13,7 @@ export { CommentsEndpoint } from './comments.js';
 export { TagsEndpoint } from './tags.js';
 export { UsersEndpoint } from './users.js';
 export { PinsEndpoint } from './pins.js';
+export { WebhooksEndpoint } from './webhooks.js';
+export { ReactionsEndpoint } from './reactions.js';
+export { StepsEndpoint } from './steps.js';
+export { NotificationsEndpoint } from './notifications.js';

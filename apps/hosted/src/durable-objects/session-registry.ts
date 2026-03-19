@@ -485,16 +485,83 @@ export class SessionRegistry extends DurableObject<Env> {
     });
 
     if (response.ok) {
-      const data = (await response.json()) as { card?: unknown };
+      const data = (await response.json()) as {
+        card: {
+          number: number;
+          title: string;
+          description: string | null;
+          tags: string[];
+          board_id: string;
+          board_name: string;
+          steps: Array<{ id: string; content: string; completed: boolean }>;
+        } | null;
+        mode: 'ai-code' | 'ai-plan';
+        config: {
+          repository: string;
+          default_branch?: string;
+          branch_pattern?: string;
+          pr_template?: string;
+          auto_assign_pr?: boolean;
+        };
+        depth: number;
+      };
+
       if (data.card) {
-        // Assign work to the session
-        // This would need the full card info and config from the board
-        // For now, we'll send a queue status update
+        // Acquire lock on the card
+        const lockId = this.env.CARD_LOCK.idFromName('global');
+        const lock = this.env.CARD_LOCK.get(lockId);
+
+        const lockResponse = await lock.fetch('https://internal/acquire', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cardNumber: data.card.number,
+            sessionId: session.sessionId,
+          }),
+        });
+
+        if (!lockResponse.ok) {
+          // Failed to acquire lock, re-enqueue and notify
+          await queue.fetch('https://internal/enqueue', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              card: data.card,
+              mode: data.mode,
+              config: data.config,
+              priority: 50, // Higher priority for re-enqueued items
+            }),
+          });
+
+          session.ws.send(
+            serializeMessage(
+              serverMessage({
+                type: 'queue_status',
+                cards_waiting: data.depth + 1,
+              }),
+            ),
+          );
+          return;
+        }
+
+        // Send work assignment to the session
+        session.ws.send(
+          serializeMessage(
+            serverMessage({
+              type: 'work_assigned',
+              card: data.card,
+              mode: data.mode,
+              config: data.config,
+            }),
+          ),
+        );
+
+        // Also send queue status for remaining items
         session.ws.send(
           serializeMessage(
             serverMessage({
               type: 'queue_status',
-              cards_waiting: 0,
+              cards_waiting: data.depth,
             }),
           ),
         );

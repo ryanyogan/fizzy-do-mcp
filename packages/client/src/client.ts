@@ -10,6 +10,10 @@ import {
   TagsEndpoint,
   UsersEndpoint,
   PinsEndpoint,
+  WebhooksEndpoint,
+  ReactionsEndpoint,
+  StepsEndpoint,
+  NotificationsEndpoint,
 } from './endpoints/index.js';
 
 /**
@@ -124,6 +128,27 @@ export class FizzyClient {
   readonly pins: PinsEndpoint;
 
   /**
+   * Webhooks endpoint for managing webhooks.
+   * Requires admin privileges.
+   */
+  readonly webhooks: WebhooksEndpoint;
+
+  /**
+   * Reactions endpoint for managing reactions on cards and comments.
+   */
+  readonly reactions: ReactionsEndpoint;
+
+  /**
+   * Steps endpoint for managing checklist items on cards.
+   */
+  readonly steps: StepsEndpoint;
+
+  /**
+   * Notifications endpoint for managing user notifications.
+   */
+  readonly notifications: NotificationsEndpoint;
+
+  /**
    * The account slug used by this client.
    */
   readonly accountSlug: string;
@@ -165,6 +190,10 @@ export class FizzyClient {
     this.tags = new TagsEndpoint(context);
     this.users = new UsersEndpoint(context);
     this.pins = new PinsEndpoint(http);
+    this.webhooks = new WebhooksEndpoint(context);
+    this.reactions = new ReactionsEndpoint(context);
+    this.steps = new StepsEndpoint(context);
+    this.notifications = new NotificationsEndpoint(context);
   }
 
   /**

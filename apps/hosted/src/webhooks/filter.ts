@@ -17,8 +17,16 @@ const AI_CONFIG_TAG = 'ai-config';
 
 /**
  * Columns where AI work should be triggered.
+ * Includes standard vibe column name plus common alternatives.
  */
-const WORK_TRIGGER_COLUMNS = [VIBE_COLUMNS.Accepted.name];
+const WORK_TRIGGER_COLUMNS = [
+  VIBE_COLUMNS.Accepted.name,
+  'To Do',
+  'Todo',
+  'Ready',
+  'Ready for Work',
+  'Backlog',
+];
 
 /**
  * Columns where AI work should be ignored.
@@ -130,13 +138,16 @@ export function shouldProcessCard(card: CardData, columnName?: string): boolean 
 }
 
 /**
- * Check if a column name matches the "Accepted" column.
+ * Check if a column name matches a work trigger column.
+ *
+ * Accepts the standard "Accepted" column plus common alternatives.
  *
  * @param columnName - Column name to check
- * @returns True if the column is the Accepted column
+ * @returns True if the column triggers AI work
  */
 export function isAcceptedColumn(columnName: string): boolean {
-  return columnName.toLowerCase() === VIBE_COLUMNS.Accepted.name.toLowerCase();
+  const normalized = columnName.toLowerCase();
+  return WORK_TRIGGER_COLUMNS.some((col) => col.toLowerCase() === normalized);
 }
 
 /**

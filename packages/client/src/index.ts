@@ -51,6 +51,7 @@ export { CommentsEndpoint } from './endpoints/comments.js';
 export { TagsEndpoint } from './endpoints/tags.js';
 export { UsersEndpoint } from './endpoints/users.js';
 export { PinsEndpoint } from './endpoints/pins.js';
+export { WebhooksEndpoint } from './endpoints/webhooks.js';
 
 // Re-export commonly used types from shared
 export type {
@@ -83,6 +84,10 @@ export type {
   Tag,
   TagList,
   Step,
+  Webhook,
+  WebhookList,
+  WebhookEvent,
+  WebhookTestResponse,
   // Input types
   CreateBoardInput,
   UpdateBoardInput,
@@ -93,4 +98,6 @@ export type {
   ListCardsParams,
   CreateCommentInput,
   UpdateCommentInput,
+  CreateWebhookInput,
+  UpdateWebhookInput,
 } from '@fizzy-do-mcp/shared';

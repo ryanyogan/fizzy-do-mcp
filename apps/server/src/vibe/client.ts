@@ -97,6 +97,7 @@ export class VibeClient extends EventEmitter {
   private ws: WebSocket | null = null;
   private _sessionId: string | null = null;
   private _isConnected = false;
+  private _isWorking = false;
   private reconnectAttempt = 0;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private shouldReconnect = true;
@@ -212,6 +213,7 @@ export class VibeClient extends EventEmitter {
    * @param prUrl - Optional URL of the created PR (for ai-code mode)
    */
   sendWorkCompleted(cardNumber: number, summary: string, prUrl?: string): void {
+    this._isWorking = false;
     this.send(
       clientMessage({
         type: 'work_completed',
@@ -230,6 +232,7 @@ export class VibeClient extends EventEmitter {
    * @param details - Optional detailed error information
    */
   sendWorkFailed(cardNumber: number, error: string, details?: string): void {
+    this._isWorking = false;
     this.send(
       clientMessage({
         type: 'work_failed',
@@ -355,6 +358,10 @@ export class VibeClient extends EventEmitter {
         break;
       case 'queue_status':
         this.emit('queue', msg.cards_waiting, msg.position);
+        // Auto-request work if cards are waiting and we're idle
+        if (msg.cards_waiting > 0 && !this._isWorking) {
+          this.sendReady();
+        }
         break;
       case 'error':
         this.handleErrorMessage(msg);
@@ -387,6 +394,7 @@ export class VibeClient extends EventEmitter {
    * Internal: Handles the 'work_assigned' message.
    */
   private handleWorkAssigned(msg: Extract<ServerMessage, { type: 'work_assigned' }>): void {
+    this._isWorking = true;
     this.emit('work', msg.card, msg.mode, msg.config);
     this.onWork?.(msg.card, msg.mode, msg.config);
   }
