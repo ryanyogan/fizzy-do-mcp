@@ -5,10 +5,11 @@ The config card is a special card on your board that links it to a GitHub reposi
 ## What is the Config Card?
 
 Every vibe-enabled board needs exactly one config card. It's a regular Fizzy card with:
-- Title: `vibe config` (case-insensitive)
+- Title containing `config` (e.g., "Vibe Config", "AI Configuration")
+- Tag: `#ai-config`
 - Description: YAML configuration
 
-The config card can live in any column — Vibe Coding will find it automatically.
+The config card can live in any column — it's identified by its tag, not its position.
 
 ## Basic Configuration
 
@@ -74,7 +75,7 @@ The GitHub repository in `owner/repo` format.
 repository: acme/my-application
 ```
 
-**Validation**: Vibe Coding verifies this matches the git remote of your current directory.
+**Validation**: Should match the git remote of the working directory where the AI processes cards.
 
 ### `default_branch`
 
@@ -194,14 +195,13 @@ Useful if you want to review AI changes before requesting team review.
 
 ## Validation Rules
 
-When Vibe Coding starts, it validates the config card:
+The AI validates the config card when processing work:
 
 | Rule | Error |
 |------|-------|
 | Config card must exist | "No config card found on board" |
 | Repository must be specified | "Missing required field: repository" |
-| Repository format must be owner/repo | "Invalid repository format" |
-| Repository must match current directory | "Repository mismatch" |
+| Repository format must be owner/repo or full URL | "Invalid repository format" |
 | YAML must be valid | "Invalid YAML in config card" |
 
 ## One Config Per Board

@@ -1,6 +1,6 @@
 # Tools Overview
 
-Fizzy MCP provides a comprehensive set of tools for managing your Fizzy boards, cards, and collaboration.
+Fizzy MCP provides 70+ tools for managing your Fizzy boards, cards, and collaboration.
 
 ## Tool Categories
 
@@ -73,6 +73,58 @@ Fizzy MCP provides a comprehensive set of tools for managing your Fizzy boards, 
 | `fizzy_list_tags` | List all tags in the account |
 | `fizzy_list_users` | List all users in the account |
 | `fizzy_get_user` | Get user details |
+
+### Reactions
+
+| Tool | Description |
+|------|-------------|
+| `fizzy_list_reactions` | List reactions on a card or comment |
+| `fizzy_create_reaction` | Add a reaction to a card or comment |
+| `fizzy_delete_reaction` | Remove a reaction |
+
+### Steps
+
+| Tool | Description |
+|------|-------------|
+| `fizzy_list_steps` | List checklist steps on a card |
+| `fizzy_get_step` | Get step details |
+| `fizzy_create_step` | Add a checklist step to a card |
+| `fizzy_update_step` | Update step text or completion |
+| `fizzy_delete_step` | Delete a step |
+
+### Notifications
+
+| Tool | Description |
+|------|-------------|
+| `fizzy_list_notifications` | List user notifications |
+| `fizzy_get_notification` | Get notification details |
+| `fizzy_mark_read` | Mark a notification as read |
+| `fizzy_mark_all_read` | Mark all notifications as read |
+| `fizzy_unread_count` | Get count of unread notifications |
+
+### Webhooks
+
+| Tool | Description |
+|------|-------------|
+| `fizzy_list_webhooks` | List configured webhooks |
+| `fizzy_get_webhook` | Get webhook details |
+| `fizzy_create_webhook` | Create a new webhook |
+| `fizzy_update_webhook` | Update webhook settings |
+| `fizzy_delete_webhook` | Delete a webhook |
+| `fizzy_test_webhook` | Send a test event to a webhook |
+
+### Pending Work
+
+| Tool | Description |
+|------|-------------|
+| `fizzy_pending_work_list` | List work items in the AI queue |
+| `fizzy_pending_work_get` | Get details of a work item |
+| `fizzy_pending_work_claim` | Claim a work item for processing |
+| `fizzy_pending_work_complete` | Mark work as completed or failed |
+| `fizzy_pending_work_abandon` | Release a claimed work item |
+| `fizzy_pending_work_status` | Get queue status summary |
+
+See [Vibe Coding](/vibe-coding/) for how pending work tools enable autonomous AI coding.
 
 ## Common Parameters
 

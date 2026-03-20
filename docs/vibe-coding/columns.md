@@ -9,16 +9,31 @@ Four columns define the Vibe Coding workflow:
 ```mermaid
 flowchart LR
     Maybe["Maybe\n(Gray)"]
-    Accepted["Accepted\n(Blue)"]
+    ToDo["To Do\n(Blue)"]
     InProgress["In Progress\n(Yellow)"]
     Blocked["Blocked\n(Pink)"]
-    
-    Maybe -->|"Ready for AI"| Accepted
-    Accepted -->|"Picked up"| InProgress
+
+    Maybe -->|"Ready for AI"| ToDo
+    ToDo -->|"Claimed"| InProgress
     InProgress -->|"Success"| Closed([Closed])
     InProgress -->|"Failure"| Blocked
-    Blocked -->|"Fixed"| Accepted
+    Blocked -->|"Fixed"| ToDo
 ```
+
+### To Do (Blue)
+
+**Purpose**: Queue of cards ready for AI to pick up. This is the primary trigger column.
+
+Cards in To Do:
+- Must have `#ai-code` or `#ai-plan` tag
+- Are picked up in order (oldest first)
+- Move to "In Progress" when work is claimed
+
+**When to use**: Move cards here when requirements are clear and you want the AI to implement them.
+
+::: tip Alternative Trigger Columns
+`Ready` and `Accepted` also work as trigger columns. Use whichever name fits your workflow.
+:::
 
 ### Maybe (Gray)
 
@@ -31,24 +46,13 @@ Cards in Maybe are:
 
 **When to use**: Add cards here when brainstorming or when requirements aren't finalized.
 
-### Accepted (Blue)
-
-**Purpose**: Queue of cards ready for AI to pick up.
-
-Cards in Accepted:
-- Must have `#ai-code` or `#ai-plan` tag
-- Are picked up in order (oldest first)
-- Move to "In Progress" automatically when work begins
-
-**When to use**: Move cards here when requirements are clear and you want the AI to implement them.
-
 ### In Progress (Yellow)
 
 **Purpose**: Cards the AI is actively working on.
 
 Cards in In Progress:
-- Have an active Claude Code session
-- Should not be manually moved or edited
+- Have been claimed from the work queue
+- Have an active AI session implementing them
 - Include progress comments from the AI
 
 **When to use**: Don't manually move cards here — Vibe Coding manages this column.
@@ -62,7 +66,7 @@ Cards in Blocked:
 - Include diagnostic comments from the AI
 - Need manual review before retrying
 
-**When to use**: Review the card, fix issues, then move back to Accepted to retry.
+**When to use**: Review the card, fix issues, then move back to To Do to retry.
 
 ## Card Lifecycle
 
@@ -72,16 +76,17 @@ A card's journey through Vibe Coding:
 stateDiagram-v2
     [*] --> Triage: Card created
     Triage --> Maybe: Not ready
-    Triage --> Accepted: Tagged + ready
-    Maybe --> Accepted: Requirements finalized
-    
-    Accepted --> InProgress: AI picks up
+    Triage --> ToDo: Tagged + ready
+    Maybe --> ToDo: Requirements finalized
+
+    ToDo --> InProgress: AI claims work
     InProgress --> Closed: PR created
     InProgress --> Blocked: Error occurred
-    
-    Blocked --> Accepted: Issue resolved
+
+    Blocked --> ToDo: Issue resolved
     Closed --> [*]
-    
+
+    state "To Do" as ToDo
     state "In Progress" as InProgress
 ```
 
@@ -95,20 +100,20 @@ Create a card with clear requirements:
 ### 2. Triage Decision
 
 Decide when the card is ready:
-- **Not ready** → Move to Maybe
-- **Ready** → Move to Accepted
+- **Not ready** — Move to Maybe
+- **Ready** — Move to To Do
 
-### 3. AI Pickup
+### 3. AI Claims Work
 
-When Vibe Coding finds a ready card:
-1. Moves card to "In Progress"
-2. Adds comment: "Starting work on this card..."
-3. Creates feature branch
-4. Spawns Claude Code
+When your AI assistant checks the work queue:
+1. Finds the card via `fizzy_pending_work_list`
+2. Claims it via `fizzy_pending_work_claim`
+3. Moves card to "In Progress"
+4. Adds comment: "Starting work on this card..."
 
 ### 4. Implementation
 
-Claude Code works on the card:
+The AI works on the card:
 - Reads card description for requirements
 - Makes code changes
 - Runs tests
@@ -120,58 +125,42 @@ On successful implementation:
 1. Pushes branch to GitHub
 2. Creates pull request
 3. Adds comment with PR link
-4. Closes the card
+4. Marks work complete via `fizzy_pending_work_complete`
+5. Closes the card
 
 ### 6. Failure Handling
 
 If something goes wrong:
-1. Moves card to "Blocked"
-2. Adds comment with error details
-3. Continues to next card
+1. Marks work as failed or abandoned
+2. Moves card to "Blocked"
+3. Adds comment with error details
+4. Continues to next card
 
-## Auto-Column Creation
+## Work Queue Statuses
 
-If standard columns don't exist when you start Vibe Coding, they're created automatically:
+The underlying work queue tracks items through these statuses:
 
-```bash
-$ npx fizzy-do-mcp --vibe
-
-Creating missing columns...
-  ✓ Created "Maybe" (Gray)
-  ✓ Created "Accepted" (Blue)  
-  ✓ Created "In Progress" (Yellow)
-  ✓ Created "Blocked" (Pink)
-
-Ready to vibe!
-```
-
-Existing columns with matching names (case-insensitive) are reused.
+| Status | Meaning |
+|--------|---------|
+| `pending` | Queued, waiting to be claimed |
+| `claimed` | AI has picked up the work |
+| `completed` | Successfully finished |
+| `failed` | Error during processing |
+| `abandoned` | Released back to queue |
 
 ## Column Matching Rules
 
-Vibe Coding finds columns by name with fuzzy matching:
+Vibe Coding finds trigger columns by name (case-insensitive):
 
-| Looking for | Matches |
-|-------------|---------|
-| Maybe | "Maybe", "maybe", "MAYBE", "Maybe Later" |
-| Accepted | "Accepted", "accepted", "Ready", "To Do" |
-| In Progress | "In Progress", "in-progress", "Doing", "WIP" |
-| Blocked | "Blocked", "blocked", "Failed", "Needs Help" |
-
-::: tip Custom Names
-If you prefer different column names, the fuzzy matcher usually finds them. For guaranteed matching, use the exact standard names.
-:::
-
-## Column Colors
-
-Colors provide visual feedback on card status:
-
-| Column | Color | CSS Variable |
-|--------|-------|--------------|
-| Maybe | Gray | `var(--color-card-1)` |
-| Accepted | Blue | `var(--color-card-default)` |
-| In Progress | Yellow | `var(--color-card-3)` |
-| Blocked | Pink | `var(--color-card-8)` |
+| Column Name | Triggers Work? |
+|-------------|----------------|
+| To Do | Yes |
+| Todo | Yes |
+| Ready | Yes |
+| Accepted | Yes |
+| Maybe | No |
+| In Progress | No |
+| Blocked | No |
 
 ## Multiple AI Cards
 
@@ -180,7 +169,7 @@ By default, Vibe Coding processes one card at a time. This ensures:
 - No merge conflicts
 - Predictable behavior
 
-Cards wait in "Accepted" and are picked up in creation order (oldest first).
+Cards wait in the queue and are picked up in creation order (oldest first).
 
 ## Manual Intervention
 
@@ -189,8 +178,8 @@ You can always intervene in the workflow:
 ### Moving Cards Back
 
 If a card was picked up by mistake:
-1. Wait for current work to finish (or stop Vibe Coding)
-2. Move the card back to "Maybe" or "Accepted"
+1. Wait for current work to finish
+2. Move the card back to "Maybe"
 3. Remove the tag if needed
 
 ### Skipping Cards
@@ -205,4 +194,4 @@ When a card lands in "Blocked":
 1. Read the AI's diagnostic comment
 2. Fix the underlying issue (missing test, unclear requirements, etc.)
 3. Update the card description if needed
-4. Move back to "Accepted"
+4. Move back to "To Do"

@@ -2,19 +2,30 @@
 
 Common issues and solutions for Vibe Coding.
 
-## No Boards Found
+## No Cards Found
+
+**Problem**: AI says there are no pending work items.
+
+**Checklist**:
+- [ ] Card has `#ai-code` or `#ai-plan` tag
+- [ ] Card is in a trigger column (`To Do`, `Ready`, or `Accepted`)
+- [ ] Card is not a draft (status = published)
+- [ ] Card is not already closed
+
+## Config Card Not Found
 
 **Error**: "No boards with config cards found"
 
-**Cause**: Vibe Coding couldn't find any boards with a valid config card.
+**Cause**: The AI couldn't find a board with a valid config card.
 
 **Solutions**:
-1. Create a config card titled "vibe config" on your board
-2. Ensure the card has valid YAML in the description:
+1. Create a card titled "vibe config" on your board
+2. Tag it with `#ai-config`
+3. Ensure the card has valid YAML in the description:
    ```yaml
    repository: owner/repo-name
    ```
-3. Verify your API token has access to the board
+4. Verify your API token has access to the board
 
 ## Repository Mismatch
 
@@ -23,33 +34,12 @@ Common issues and solutions for Vibe Coding.
 **Cause**: The repository in your config card doesn't match the git remote of your current directory.
 
 **Solutions**:
-1. Navigate to the correct repository:
-   ```bash
-   cd /path/to/owner/repo
-   npx fizzy-do-mcp --vibe
-   ```
+1. Navigate to the correct repository
 2. Or update the config card to match your current directory
 3. Check your git remote:
    ```bash
    git remote -v
    ```
-
-## Card Not Picked Up
-
-**Problem**: Cards in "Accepted" aren't being picked up by Vibe Coding.
-
-**Checklist**:
-- [ ] Card has `#ai-code` or `#ai-plan` tag
-- [ ] Card is in the "Accepted" column (not Maybe, Triage, etc.)
-- [ ] Card is not a draft (status = published)
-- [ ] Vibe Coding is running and connected
-
-**Debug**:
-```bash
-npx fizzy-do-mcp --vibe --log-level debug
-```
-
-Look for "Scanning for cards..." in the output.
 
 ## PR Creation Failed
 
@@ -78,36 +68,28 @@ The branch name from `branch_pattern` already exists. Either:
 ### PR Template Error
 If using a custom `pr_template`, check for syntax errors in the YAML.
 
-## WebSocket Disconnected
+## Permission Prompts Interrupting Flow
 
-**Error**: "WebSocket connection lost" or "Reconnecting..."
+**Problem**: AI keeps asking for permission to use Fizzy tools.
 
-**Cause**: Network interruption or Fizzy service issue.
+**Solution**: Configure auto-accept for Fizzy MCP tools.
 
-**Behavior**: Vibe Coding automatically reconnects with exponential backoff.
-
-**If reconnection fails**:
-1. Check your internet connection
-2. Verify Fizzy is accessible: `curl https://app.fizzy.do`
-3. Restart Vibe Coding
-
-## Webhooks Not Working
-
-**Problem**: Cards aren't automatically picked up when moved to "To Do" column.
-
-**Checklist**:
-- [ ] Webhook URL is configured in Fizzy account settings
-- [ ] URL is `https://mcp.fizzy.yogan.dev/webhooks/fizzy`
-- [ ] Card events are enabled (card_triaged, card_published, comment_created)
-
-**Test the webhook endpoint**:
-```bash
-curl -X POST https://mcp.fizzy.yogan.dev/webhooks/health
+### Claude Code
+Add to `.claude/settings.json`:
+```json
+{
+  "permissions": {
+    "allow": ["mcp__fizzy__*"]
+  }
+}
 ```
 
-Should return: `{"status":"ok","service":"webhooks"}`
+### Claude Code (Headless)
+```bash
+claude -p "Start vibe coding" --allowedTools "mcp__fizzy__*"
+```
 
-**Note**: Webhooks are optional — the CLI mode still works by polling for work when connected via WebSocket.
+See the [Setup Guide](./setup#step-5-auto-accept-fizzy-tools-recommended) for more options.
 
 ## Claude Code Errors
 
@@ -118,7 +100,7 @@ Should return: `{"status":"ok","service":"webhooks"}`
 ### API Key Issues
 ```bash
 # Verify Claude Code works standalone
-claude-code --version
+claude --version
 ```
 
 ### Context Too Large
@@ -139,28 +121,27 @@ which git npm node
 
 **Cause**: The YAML in your config card has syntax errors.
 
-**Debug**:
+**Common YAML issues**:
+- Missing quotes around values with special characters
+- Incorrect indentation
+- Tabs instead of spaces
+
+**Validate your config**:
 ```bash
-# Copy your config and validate
 cat << 'EOF' | yq .
 repository: owner/repo
 default_branch: main
 EOF
 ```
 
-**Common YAML issues**:
-- Missing quotes around values with special characters
-- Incorrect indentation
-- Tabs instead of spaces
-
 ## Cards Stuck in Progress
 
-**Problem**: Cards stay in "In Progress" even though Vibe Coding stopped.
+**Problem**: Cards stay in "In Progress" even though the AI stopped working.
 
-**Cause**: Vibe Coding was terminated before completing the card.
+**Cause**: The AI session ended before completing the card.
 
 **Solution**:
-1. Manually move the card back to "Accepted"
+1. Manually move the card back to "To Do"
 2. Check for any partial branches:
    ```bash
    git branch -a | grep ai/
@@ -185,46 +166,19 @@ EOF
 - Mention specific files to modify
 - Add test expectations
 
-## Debug Mode
+## Webhooks Not Working
 
-Enable verbose logging for detailed diagnostics:
+**Problem**: Cards aren't automatically queued when moved to trigger columns.
 
-```bash
-npx fizzy-do-mcp --vibe --log-level debug
-```
+**Checklist**:
+- [ ] Webhook URL is configured in Fizzy account settings
+- [ ] Card events are enabled (card_triaged, card_published, card_closed)
 
-This shows:
-- WebSocket connection events
-- Card pickup decisions
-- Claude Code spawning
-- Git operations
-- API calls
-
-## Dry Run Mode
-
-Test configuration without processing cards:
-
-```bash
-npx fizzy-do-mcp --vibe --dry-run
-```
-
-Output includes:
-- Configuration validation
-- Columns that would be created
-- Cards that would be picked up
-- Repository verification
+**Note**: Webhooks are optional — your AI assistant can always check for work manually via MCP tools.
 
 ## Getting Help
 
 If you're still stuck:
 
-1. **Check the logs**: Run with `--log-level debug`
-2. **GitHub Issues**: [Report a bug](https://github.com/ryanyogan/fizzy-do-mcp/issues)
-3. **Discord**: Join the [Fizzy community](https://discord.gg/fizzy)
-
-When reporting issues, include:
-- Error message
-- Debug log output
-- Config card contents (redact sensitive info)
-- Node.js version (`node --version`)
-- Operating system
+1. **GitHub Issues**: [Report a bug](https://github.com/ryanyogan/fizzy-do-mcp/issues)
+2. **Check the card comments**: The AI leaves diagnostic info when work fails

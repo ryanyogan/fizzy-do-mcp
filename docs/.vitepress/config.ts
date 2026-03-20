@@ -11,7 +11,7 @@ export default defineConfig({
     [
       'link',
       {
-        href: 'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600;700&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&display=swap',
         rel: 'stylesheet',
       },
     ],
@@ -155,6 +155,13 @@ export default defineConfig({
             items: [
               { text: 'fizzy_list_users', link: '/tools/users/list-users' },
               { text: 'fizzy_get_user', link: '/tools/users/get-user' },
+            ],
+          },
+          {
+            text: 'Pending Work',
+            collapsed: true,
+            items: [
+              { text: 'Overview', link: '/tools/pending-work/overview' },
             ],
           },
         ],

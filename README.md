@@ -34,11 +34,11 @@ Fizzy Do MCP is a **free, open-source** [Model Context Protocol](https://modelco
 With Fizzy Do MCP, your AI can:
 
 - **Read your boards and cards** - Get full context about your projects
-- **Create new cards** - Add tasks directly from conversation
-- **Update existing cards** - Modify descriptions, tags, and status
-- **Move cards** - Triage cards to columns, postpone, or close them
-- **Add comments** - Leave notes and updates on cards
-- **Manage columns and tags** - Organize your workflow
+- **Create and update cards** - Add tasks, modify descriptions, tags, and status
+- **Move cards through workflows** - Triage to columns, postpone, or close them
+- **Add comments and reactions** - Leave notes, updates, and emoji reactions
+- **Manage columns, tags, and steps** - Organize your workflow with checklists
+- **Process AI work queues** - Autonomous vibe coding driven by tagged cards
 
 ## Quick Start
 
@@ -128,7 +128,7 @@ AI: Created card #242 "Add dark mode support" on the Engineering board.
 
 ## Available Tools
 
-Fizzy Do MCP provides 40+ tools covering all major Fizzy operations:
+Fizzy Do MCP provides 70+ tools covering all major Fizzy operations:
 
 | Category | Tools |
 |----------|-------|
@@ -138,8 +138,38 @@ Fizzy Do MCP provides 40+ tools covering all major Fizzy operations:
 | **Comments** | `fizzy_list_comments`, `fizzy_get_comment`, `fizzy_create_comment`, `fizzy_update_comment`, `fizzy_delete_comment` |
 | **Columns** | `fizzy_list_columns`, `fizzy_get_column`, `fizzy_create_column`, `fizzy_update_column`, `fizzy_delete_column` |
 | **Tags & Users** | `fizzy_list_tags`, `fizzy_list_users`, `fizzy_get_user` |
+| **Reactions** | `fizzy_list_reactions`, `fizzy_create_reaction`, `fizzy_delete_reaction` (on cards and comments) |
+| **Steps** | `fizzy_list_steps`, `fizzy_get_step`, `fizzy_create_step`, `fizzy_update_step`, `fizzy_delete_step` |
+| **Notifications** | `fizzy_list_notifications`, `fizzy_get_notification`, `fizzy_mark_read`, `fizzy_mark_all_read`, `fizzy_unread_count` |
+| **Webhooks** | `fizzy_list_webhooks`, `fizzy_get_webhook`, `fizzy_create_webhook`, `fizzy_update_webhook`, `fizzy_delete_webhook`, `fizzy_test_webhook` |
+| **Pending Work** | `fizzy_pending_work_list`, `fizzy_pending_work_get`, `fizzy_pending_work_claim`, `fizzy_pending_work_complete`, `fizzy_pending_work_abandon`, `fizzy_pending_work_status` |
 
 See the [Tools Reference](https://fizzy.yogan.dev/tools/overview) for complete documentation.
+
+## AI Work Queue
+
+Fizzy Do MCP includes a KV-backed work queue that enables autonomous AI coding:
+
+1. **Tag cards** with `#ai-code` (implementation) or `#ai-plan` (break down into steps)
+2. **Move cards** to a trigger column (`To Do`, `Ready`, or `Accepted`) to queue them
+3. **AI agents** claim work via `fizzy_pending_work_claim`, process it, and mark it complete
+
+Work items flow through statuses: `pending` → `claimed` → `completed` (or `failed` / `abandoned`).
+
+```
+You: Let's start vibe coding with Fizzy
+
+AI: [checks pending work queue]
+    Found 2 items ready for work:
+    - #253 "Update README" (ai-code, pending)
+    - #254 "Add dark mode" (ai-plan, pending)
+
+    Claiming #253...
+    [does the work, commits, opens PR]
+    Done! Marked #253 complete.
+```
+
+This enables "vibe coding" - tag your cards, and let AI handle them while you focus on high-level decisions.
 
 ## CLI Commands
 

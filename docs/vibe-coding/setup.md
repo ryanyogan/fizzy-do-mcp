@@ -10,8 +10,7 @@ Before starting, ensure you have:
 - **Fizzy API Token** — Generate from account settings
 - **GitHub Repository** — The codebase you want the AI to work on
 - **GitHub CLI** — Install with `brew install gh` or [see docs](https://cli.github.com/)
-- **Claude Code** — Install with `npm install -g @anthropic-ai/claude-code`
-- **Node.js 18+** — For running the Fizzy MCP CLI
+- **Fizzy MCP configured** — In your AI editor (Claude Code, Cursor, etc.)
 
 ## Step 1: Install and Configure
 
@@ -24,7 +23,7 @@ npx fizzy-do-mcp@latest configure
 This will:
 1. Prompt for your Fizzy API token (if not already set)
 2. Verify your token works
-3. Save configuration to `~/.config/fizzy/config.json`
+3. Configure your AI editor automatically
 
 ## Step 2: Create a Config Card
 
@@ -41,23 +40,24 @@ branch_pattern: ai/{card_number}-{slug}
 auto_assign_pr: true
 ```
 
-4. Save the card (it can stay in any column)
+4. Tag the card with `#ai-config`
+5. Save the card (it can stay in any column)
 
 See the [Config Card Reference](./config-card) for all available options.
 
-## Step 3: Set Up Standard Columns
+## Step 3: Set Up Columns
 
-Vibe Coding uses specific columns to track card status. Create these columns on your board:
+Vibe Coding uses board columns to track card status. Create these columns on your board:
 
 | Column | Color | Purpose |
 |--------|-------|---------|
-| Maybe | Gray | Ideas, not ready for AI |
-| Accepted | Blue | Ready for AI to pick up |
+| To Do | Blue | Ready for AI to pick up (trigger column) |
 | In Progress | Yellow | AI is currently working |
+| Maybe | Gray | Ideas, not ready for AI |
 | Blocked | Pink | Failed, needs human help |
 
-::: tip Auto-Creation
-If these columns don't exist when you start vibe mode, they'll be created automatically with the correct colors.
+::: tip Trigger Columns
+Cards in `To Do`, `Ready`, or `Accepted` columns are eligible for AI pickup. Use whichever name fits your workflow.
 :::
 
 ## Step 4: Tag Your Cards
@@ -77,68 +77,57 @@ Use for larger tasks that need breakdown:
 - Complex refactors
 - Tasks with unclear scope
 
-Add the tag and move the card to "Accepted" when ready.
+Tag the card and move it to your trigger column (`To Do`) when ready.
 
-## Step 5: Configure Webhooks (Optional)
+## Step 5: Auto-Accept Fizzy Tools (Recommended)
 
-For automatic card pickup when cards are moved or tagged, configure Fizzy webhooks:
+By default, your AI editor will prompt for permission on every Fizzy MCP tool call. For a smooth vibe coding experience, configure auto-accept:
 
-1. Go to your Fizzy account settings
-2. Navigate to **Integrations** or **Webhooks**
-3. Add a new webhook with:
-   - **URL**: `https://mcp.fizzy.yogan.dev/webhooks/fizzy`
-   - **Events**: Select all card events (card_triaged, card_published, card_closed, etc.)
-   - **Secret** (optional): Generate a secret for signature verification
+### Claude Code
 
-::: info Webhook Events
-The webhook handler processes these events:
-- `card_triaged` — Card moved to a column (triggers work if moved to "To Do"/"Accepted")
-- `card_published` — New card created with AI tags
-- `comment_created` — Detects `@ai start` commands
-- `card_closed` / `card_postponed` — Cancels pending work
-:::
+Add to your project's `.claude/settings.json`:
 
-Without webhooks, Vibe Coding still works — the CLI will poll for available work when connected.
+```json
+{
+  "permissions": {
+    "allow": ["mcp__fizzy__*"]
+  }
+}
+```
 
-## Step 6: Start Vibe Mode
+This auto-approves all Fizzy MCP tools without prompts.
 
-Navigate to your repository and run:
+For fully autonomous operation (CI/CD or scripted):
 
 ```bash
-cd /path/to/your/repo
-npx fizzy-do-mcp --vibe
+claude -p "Start vibe coding with Fizzy" --allowedTools "mcp__fizzy__*"
 ```
 
-You can also specify a board directly:
+### Other Editors
 
-```bash
-npx fizzy-do-mcp --vibe --board "board-name-or-id"
-```
+Check your editor's MCP documentation for permission configuration options.
 
-### Interactive Board Selection
+## Step 6: Start Vibe Coding
 
-If your account has multiple boards with config cards, you'll see a selection prompt:
+Tell your AI assistant to start processing work:
 
 ```
-? Select a board to vibe with:
-  ❯ my-app (owner/my-app)
-    side-project (owner/side-project)
-    experiments (owner/experiments)
+You: Let's start vibe coding with Fizzy
+
+AI: [checks for pending work tagged #ai-code or #ai-plan]
+    Found 3 items in the queue...
+    Claiming #42 "Add dark mode support"...
 ```
 
-### What Happens Next
+The AI will:
 
-Once started, Vibe Coding will:
-
-1. **Connect** to Fizzy via WebSocket for real-time updates
-2. **Verify** the config card and repository match your current directory
-3. **Scan** for cards tagged `#ai-code` or `#ai-plan` in "Accepted"
-4. **Pick up** the first available card
-5. **Move** it to "In Progress"
-6. **Spawn** Claude Code to implement the card
-7. **Create** a branch, commits, and pull request
-8. **Close** the card and link to the PR
-9. **Continue** to the next card
+1. **Check** for cards tagged `#ai-code` or `#ai-plan` in trigger columns
+2. **Claim** the first available work item
+3. **Read** the card description for requirements
+4. **Implement** the changes (code, tests, commits)
+5. **Create** a branch and pull request
+6. **Mark complete** and add a comment with the PR link
+7. **Continue** to the next card
 
 ## Environment Variables
 
@@ -147,26 +136,7 @@ You can also configure via environment variables:
 ```bash
 # Required
 export FIZZY_TOKEN="your-api-token"
-
-# Optional
-export FIZZY_BOARD_ID="specific-board-id"  # Skip board selection
-export FIZZY_LOG_LEVEL="debug"              # Enable debug logging
 ```
-
-## Verifying Setup
-
-Test your configuration without processing cards:
-
-```bash
-npx fizzy-do-mcp --vibe --dry-run
-```
-
-This validates:
-- API token is valid
-- Board has a config card
-- Repository matches current directory
-- Required columns exist
-- Shows cards that would be picked up
 
 ## Next Steps
 

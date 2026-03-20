@@ -1,6 +1,6 @@
 # Vibe Coding
 
-Vibe Coding is Fizzy Do's autonomous AI coding mode — a fairly eager Product Manager that loves to vibe code. Point it at a board, and it will continuously pick up cards, implement features, and create pull requests while you focus on other things.
+Vibe Coding is Fizzy Do's autonomous AI coding mode. Point it at a board, tag your cards, and let your AI assistant pick up work, implement features, and create pull requests while you focus on high-level decisions.
 
 ## What is Vibe Coding?
 
@@ -8,19 +8,19 @@ Traditional AI-assisted development requires constant interaction: you prompt, t
 
 The AI acts like an autonomous developer:
 
-1. **Monitors your board** for cards tagged `#ai-code` or `#ai-plan`
-2. **Picks up work** from the "Accepted" column
-3. **Implements changes** using Claude Code
+1. **Checks the work queue** for cards tagged `#ai-code` or `#ai-plan`
+2. **Claims work** from the pending queue
+3. **Implements changes** using your AI editor (Claude Code, Cursor, etc.)
 4. **Creates pull requests** with comprehensive documentation
-5. **Moves to the next card** and repeats
+5. **Marks work complete** and moves to the next card
 
 You stay in control through your board — prioritize cards, add context in descriptions, and review PRs when ready.
 
 ## Key Features
 
-### Autonomous Card Pickup
+### MCP-Native Workflow
 
-Vibe Coding continuously watches your board for work. When a card with `#ai-code` or `#ai-plan` lands in the "Accepted" column, it's automatically picked up and moved to "In Progress."
+Vibe Coding works directly through MCP tools — no separate CLI mode, no WebSocket connections. Your AI assistant uses the same Fizzy MCP tools it already has to claim and process work items.
 
 ### Two Operating Modes
 
@@ -37,12 +37,15 @@ Every PR includes:
 - Implementation notes
 - Test coverage details
 
-### Board Continuation
+### Work Queue Management
 
-Vibe Coding doesn't stop after one card. It continues processing your backlog until:
-- No more cards are available
-- A card fails and lands in "Blocked"
-- You stop the process
+Work items flow through clear statuses:
+
+```
+pending → claimed → completed (or failed / abandoned)
+```
+
+Cards wait in the queue and are processed one at a time, ensuring clean git history and no merge conflicts.
 
 ## Architecture
 
@@ -51,35 +54,34 @@ flowchart TB
     subgraph Fizzy["Fizzy Do"]
         Board[Board with Config Card]
         Cards[Cards with #ai-code / #ai-plan]
+        Queue[KV Work Queue]
     end
-    
+
     subgraph Local["Your Machine"]
-        CLI[fizzy-do-mcp --vibe]
-        Claude[Claude Code]
+        AI[AI Assistant + Fizzy MCP]
         Git[Git / GitHub CLI]
     end
-    
+
     subgraph GitHub["GitHub"]
         Repo[Repository]
         PR[Pull Requests]
     end
-    
-    Board -->|WebSocket| CLI
-    Cards -->|Real-time updates| CLI
-    CLI -->|Spawns| Claude
-    Claude -->|Commits| Git
+
+    Cards -->|Tag + triage| Queue
+    Queue -->|Claim via MCP| AI
+    AI -->|Commits| Git
     Git -->|Push + PR| Repo
     Repo --> PR
-    CLI -->|Updates card status| Board
+    AI -->|Updates card status| Board
 ```
 
 ## How It Works
 
 1. **Configuration**: Create a config card on your board linking it to a GitHub repository
 2. **Tagging**: Tag cards with `#ai-code` (implement) or `#ai-plan` (plan then implement)
-3. **Triaging**: Move tagged cards to the "Accepted" column when ready
-4. **Running**: Start vibe mode with `npx fizzy-do-mcp --vibe`
-5. **Monitoring**: Watch as cards move through columns and PRs appear
+3. **Triaging**: Move tagged cards to a trigger column (`To Do`, `Ready`, or `Accepted`)
+4. **Processing**: Tell your AI assistant to start vibe coding — it claims and processes work
+5. **Monitoring**: Watch as cards are completed and PRs appear
 
 ## When to Use Vibe Coding
 
@@ -100,10 +102,15 @@ flowchart TB
 
 Ready to try it? Follow the [Setup Guide](./setup) to configure your first vibe coding board.
 
-```bash
-# Install and configure
-npx fizzy-do-mcp@latest configure
+```
+You: Let's start vibe coding with Fizzy
 
-# Start vibe coding
-npx fizzy-do-mcp --vibe
+AI: [checks pending work queue]
+    Found 2 items ready:
+    - #42 "Add dark mode" (ai-code, pending)
+    - #43 "Refactor auth" (ai-plan, pending)
+
+    Claiming #42...
+    [implements, commits, opens PR]
+    Done! Marked #42 complete. Moving to #43...
 ```
