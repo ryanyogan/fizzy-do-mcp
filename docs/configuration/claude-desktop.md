@@ -98,3 +98,17 @@ Validate your JSON at [jsonlint.com](https://jsonlint.com). Common issues:
 - Trailing commas
 - Missing quotes around strings
 - Unclosed brackets
+
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Other Editors"
+  :items="[
+    { title: 'Claude Code', link: '/configuration/claude-code', description: 'CLI configuration' },
+    { title: 'Cursor', link: '/configuration/cursor', description: 'AI code editor setup' },
+    { title: 'Windsurf', link: '/configuration/windsurf', description: 'Codeium IDE setup' },
+    { title: 'Environment Variables', link: '/configuration/environment', description: 'Token management' },
+  ]"
+/>

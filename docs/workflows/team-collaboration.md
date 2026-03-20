@@ -313,8 +313,15 @@ AI: Blocked Dependencies:
 - Review team capacity weekly
 - Redistribute before overload
 
-## Next Steps
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-- [Project Management](/workflows/project-management) - Planning patterns
-- [AI-Driven Tasks](/workflows/ai-driven-tasks) - Individual workflows
-- [Tools Reference](/tools/overview) - Available operations
+<RelatedLinks
+  title="Related Workflows"
+  :items="[
+    { title: 'Vibe Coding', link: '/workflows/vibe-coding', description: 'Low-friction AI-first workflow' },
+    { title: 'Project Management', link: '/workflows/project-management', description: 'Sprint planning and releases' },
+    { title: 'AI-Driven Tasks', link: '/workflows/ai-driven-tasks', description: 'Individual productivity' },
+  ]"
+/>

@@ -234,8 +234,16 @@ Common error codes:
 - `INVALID_INPUT` - Bad parameters
 - `RATE_LIMITED` - Too many requests
 
-## Next Steps
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-- [Getting Started](/getting-started/introduction) - Initial setup
-- [Workflows](/workflows/ai-driven-tasks) - Real-world examples
-- [Configuration](/configuration/claude-desktop) - Editor setup
+<RelatedLinks
+  title="Learn More"
+  :items="[
+    { title: 'AI-Driven Workflows', link: '/workflows/ai-driven-tasks', description: 'Real-world usage patterns' },
+    { title: 'Project Management', link: '/workflows/project-management', description: 'Sprint planning and releases' },
+    { title: 'TypeScript Client', link: '/api/client', description: 'Programmatic API access' },
+    { title: 'Error Handling', link: '/api/errors', description: 'Error codes and recovery' },
+  ]"
+/>

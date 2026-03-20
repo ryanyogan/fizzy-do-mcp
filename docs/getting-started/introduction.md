@@ -51,8 +51,15 @@ Benefits of local installation:
 - **API Token** - Generate from your Fizzy account settings
 - **MCP-Compatible Editor** - Claude Desktop, Cursor, OpenCode, etc.
 
-## Next Steps
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-1. [Install Fizzy MCP](/getting-started/installation) - Set up the server
-2. [Quick Start](/getting-started/quickstart) - Your first AI-driven task
-3. [Configure Your Editor](/configuration/claude-desktop) - Editor-specific setup
+<RelatedLinks
+  title="Next Steps"
+  :items="[
+    { title: 'Installation', link: '/getting-started/installation', description: 'Set up Fizzy MCP in seconds' },
+    { title: 'Quick Start', link: '/getting-started/quickstart', description: 'Your first AI-driven task' },
+    { title: 'Configure Your Editor', link: '/configuration/claude-desktop', description: 'Claude, Cursor, VS Code setup' },
+  ]"
+/>

@@ -208,7 +208,15 @@ const combined = combine(results);
 3. **Use `match` for exhaustive handling**: Ensures both cases are handled
 4. **Chain with `flatMap`**: Compose operations that can fail
 
-## Related
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-- [Error Handling](/api/errors) - Error types and codes
-- [TypeScript Client](/api/client) - Client API reference
+<RelatedLinks
+  title="Related"
+  :items="[
+    { title: 'Error Handling', link: '/api/errors', description: 'Error types and codes' },
+    { title: 'TypeScript Client', link: '/api/client', description: 'Full API reference' },
+    { title: 'Tools Overview', link: '/tools/overview', description: 'All MCP tools' },
+  ]"
+/>

@@ -200,8 +200,15 @@ Total: 7 cards across 3 boards
 
 6. **Let AI summarize** - End of day, sprint reviews, standups
 
-## Next Steps
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-- [Project Management](/workflows/project-management) - Team workflows
-- [Team Collaboration](/workflows/team-collaboration) - Multi-person patterns
-- [Tools Reference](/tools/overview) - All available tools
+<RelatedLinks
+  title="Related Workflows"
+  :items="[
+    { title: 'Vibe Coding', link: '/workflows/vibe-coding', description: 'Low-friction AI-first workflow' },
+    { title: 'Project Management', link: '/workflows/project-management', description: 'Sprint planning and releases' },
+    { title: 'Team Collaboration', link: '/workflows/team-collaboration', description: 'Multi-person patterns' },
+  ]"
+/>

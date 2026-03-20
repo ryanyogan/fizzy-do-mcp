@@ -122,3 +122,17 @@ On macOS/Linux, ensure the config file is readable:
 ```bash
 chmod 644 ~/.cursor/mcp.json
 ```
+
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Other Editors"
+  :items="[
+    { title: 'Claude Desktop', link: '/configuration/claude-desktop', description: 'Desktop app setup' },
+    { title: 'Windsurf', link: '/configuration/windsurf', description: 'Codeium IDE setup' },
+    { title: 'Continue', link: '/configuration/continue', description: 'VS Code extension' },
+    { title: 'Environment Variables', link: '/configuration/environment', description: 'Token management' },
+  ]"
+/>

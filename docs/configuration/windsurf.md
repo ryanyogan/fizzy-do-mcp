@@ -126,3 +126,17 @@ Find your npx path with:
 which npx
 # Output: /usr/local/bin/npx
 ```
+
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Other Editors"
+  :items="[
+    { title: 'Claude Desktop', link: '/configuration/claude-desktop', description: 'Desktop app setup' },
+    { title: 'Cursor', link: '/configuration/cursor', description: 'AI code editor setup' },
+    { title: 'OpenCode', link: '/configuration/opencode', description: 'Open-source AI assistant' },
+    { title: 'Environment Variables', link: '/configuration/environment', description: 'Token management' },
+  ]"
+/>

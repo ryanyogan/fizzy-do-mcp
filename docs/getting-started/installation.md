@@ -147,8 +147,15 @@ Check your internet connection and that fizzy.do is accessible.
 2. Check the MCP config file syntax (must be valid JSON/TOML)
 3. Verify the config file location is correct for your OS
 
-## Next Steps
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-- [Quick Start](/getting-started/quickstart) - Try your first AI-driven task
-- [Configuration](/configuration/claude-desktop) - Editor-specific guides
-- [Tools Reference](/tools/overview) - Available MCP tools
+<RelatedLinks
+  title="Next Steps"
+  :items="[
+    { title: 'Quick Start', link: '/getting-started/quickstart', description: 'Try your first AI-driven task' },
+    { title: 'Editor Configuration', link: '/configuration/claude-desktop', description: 'Detailed setup guides' },
+    { title: 'Tools Reference', link: '/tools/overview', description: 'All 70+ available tools' },
+  ]"
+/>

@@ -91,3 +91,17 @@ Try removing and re-adding:
 claude mcp remove fizzy
 claude mcp add fizzy -- npx -y fizzy-do-mcp@latest
 ```
+
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Other Editors"
+  :items="[
+    { title: 'Claude Desktop', link: '/configuration/claude-desktop', description: 'Desktop app setup' },
+    { title: 'Cursor', link: '/configuration/cursor', description: 'AI code editor setup' },
+    { title: 'Continue', link: '/configuration/continue', description: 'VS Code extension' },
+    { title: 'Environment Variables', link: '/configuration/environment', description: 'Token management' },
+  ]"
+/>

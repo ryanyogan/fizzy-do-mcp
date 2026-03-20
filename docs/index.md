@@ -1,126 +1,222 @@
 ---
-layout: home
-
-hero:
-  name: "Fizzy Do"
-  text: "AI Project Manager"
-  tagline: AI-powered task management with MCP
-  image:
-    src: /logo.svg
-    alt: Fizzy MCP
-  actions:
-    - theme: brand
-      text: Get Started
-      link: /getting-started/introduction
-    - theme: alt
-      text: View on GitHub
-      link: https://github.com/ryanyogan/fizzy-do-mcp
-    - theme: alt
-      text: npm
-      link: https://www.npmjs.com/package/fizzy-do-mcp
-
-features:
-  - icon: "01"
-    title: Model Context Protocol
-    details: Native MCP integration lets AI assistants read, create, and manage your Fizzy cards with full context awareness.
-  - icon: "02"
-    title: Works Everywhere
-    details: Claude Desktop, Cursor, OpenCode, Windsurf, Continue, and any MCP-compatible editor.
-  - icon: "03"
-    title: Open Source
-    details: Fully open source. Run your own MCP server locally with a single command.
+layout: page
+title: Fizzy - AI Project Manager
 ---
 
 <script setup>
+import HomeHero from './.vitepress/theme/components/HomeHero.vue'
+import QuickLink from './.vitepress/theme/components/QuickLink.vue'
 import FeatureCard from './.vitepress/theme/components/FeatureCard.vue'
 import FeatureGrid from './.vitepress/theme/components/FeatureGrid.vue'
+import EditorBadge from './.vitepress/theme/components/EditorBadge.vue'
 </script>
 
-## Quick Start
+<HomeHero />
 
-Get started in seconds with npx:
+<div class="home-section">
 
-```bash
-npx fizzy-do-mcp@latest configure
+## Quick Links
 
-# Output:
-# Detected editors: Claude Desktop, Cursor
-# Enter your Fizzy token: ****
-# Configuration saved!
-```
-
-Or add to your editor config manually:
-
-```json
-{
-  "mcpServers": {
-    "fizzy": {
-      "command": "npx",
-      "args": ["-y", "fizzy-do-mcp@latest"],
-      "env": {
-        "FIZZY_TOKEN": "your-fizzy-api-token"
-      }
-    }
-  }
-}
-```
-
-## What Can Your AI Do?
-
-<FeatureGrid>
-  <FeatureCard
-    icon="BOARDS"
-    title="Manage Boards"
-    description="List, create, and organize Fizzy boards. Your AI understands your project structure."
+<FeatureGrid :columns="4">
+  <QuickLink
+    badge="Start Here"
+    title="Installation"
+    description="Get up and running in seconds with npx"
+    to="/getting-started/installation"
   />
-  <FeatureCard
-    icon="CARDS"
-    title="Create & Update Cards"
-    description="Add tasks, update descriptions, move cards between columns, and close completed work."
+  <QuickLink
+    badge="Configure"
+    title="Editor Setup"
+    description="Claude, Cursor, VS Code, and more"
+    to="/configuration/claude-desktop"
   />
-  <FeatureCard
-    icon="CONTEXT"
-    title="Full Context"
-    description="AI reads card descriptions, comments, and tags to provide contextual assistance."
+  <QuickLink
+    badge="Reference"
+    title="70+ Tools"
+    description="Complete API for boards, cards, and more"
+    to="/tools/overview"
   />
-  <FeatureCard
-    icon="WORKFLOW"
-    title="Automated Workflows"
-    description="Let AI triage cards, add comments, assign tags, and keep your board organized."
+  <QuickLink
+    badge="Learn"
+    title="Workflows"
+    description="Real-world AI-driven task patterns"
+    to="/workflows/ai-driven-tasks"
   />
 </FeatureGrid>
 
+</div>
+
+<div class="home-section">
+
+## What Can Your AI Do?
+
+<FeatureGrid :columns="2">
+  <FeatureCard
+    icon="Boards"
+    title="Manage Boards"
+    description="List, create, and organize your Fizzy boards. Your AI understands your entire project structure and can help you stay organized."
+  />
+  <FeatureCard
+    icon="Cards"
+    title="Create & Update Cards"
+    description="Add tasks, update descriptions, move cards between columns, assign team members, and close completed work."
+  />
+  <FeatureCard
+    icon="Context"
+    title="Full Context Awareness"
+    description="AI reads card descriptions, comments, tags, and history to provide contextual assistance and smart suggestions."
+  />
+  <FeatureCard
+    icon="Workflow"
+    title="Automated Workflows"
+    description="Let AI triage incoming cards, add progress comments, bulk-update tags, and keep your board clean and current."
+  />
+</FeatureGrid>
+
+</div>
+
+<div class="home-section">
+
+## Supported Editors
+
+Configure Fizzy MCP with any of these MCP-compatible editors:
+
+<div class="editor-grid">
+  <EditorBadge name="Claude Desktop" icon="claude" to="/configuration/claude-desktop" />
+  <EditorBadge name="Claude Code" icon="claude-code" to="/configuration/claude-code" />
+  <EditorBadge name="Cursor" icon="cursor" to="/configuration/cursor" />
+  <EditorBadge name="OpenCode" icon="opencode" to="/configuration/opencode" />
+  <EditorBadge name="Windsurf" icon="windsurf" to="/configuration/windsurf" />
+  <EditorBadge name="Continue" icon="continue" to="/configuration/continue" />
+</div>
+
+</div>
+
+<div class="home-section">
+
 ## Example Conversation
+
+See how natural it is to manage tasks with AI:
 
 ```
 You: What's on my Engineering board?
 
 AI: I found 12 open cards on your Engineering board:
 
-In Progress:
-- #234 "Implement user authentication" (assigned to you)
-- #235 "API rate limiting"
+    In Progress:
+    - #234 "Implement user authentication" (assigned to you)
+    - #235 "API rate limiting"
 
-Needs Triage:
-- #240 "Database migration script"
-- #241 "Update dependencies"
-...
+    Needs Triage:
+    - #240 "Database migration script"
+    - #241 "Update dependencies"
 
 You: Create a card for adding dark mode support
 
-AI: Created card #242 "Add dark mode support" on the Engineering board.
-    Would you like me to add any tags or assign it to someone?
+AI: Created card #242 "Add dark mode support" on Engineering.
+    Would you like me to add tags or assign it to someone?
+
+You: Tag it with #frontend and #ui, assign to me
+
+AI: Done! Card #242 now has tags #frontend and #ui,
+    and is assigned to you.
 ```
 
-## Supported Editors
+</div>
 
-| Editor | Status | Config Format |
-|--------|--------|---------------|
-| Claude Desktop | Full support | JSON (`mcpServers`) |
-| Claude Code | Full support | CLI command |
-| Cursor | Full support | JSON (`mcpServers`) |
-| OpenCode | Full support | JSON (`mcp`) |
-| Windsurf | Full support | JSON (`mcpServers`) |
-| Continue | Full support | YAML/JSON array |
+<div class="home-section">
 
-[View all configuration guides](/configuration/claude-desktop)
+## Open Source
+
+Fizzy MCP is fully open source under the MIT License. Run your own MCP server locally with complete privacy - your tokens never leave your machine.
+
+<div class="cta-row">
+  <a href="/getting-started/introduction" class="cta-button primary">Read the Docs</a>
+  <a href="https://github.com/ryanyogan/fizzy-do-mcp" class="cta-button secondary" target="_blank">View on GitHub</a>
+</div>
+
+</div>
+
+<style>
+.home-section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6);
+}
+
+.home-section + .home-section {
+  padding-top: 0;
+}
+
+.home-section h2 {
+  font-family: var(--vp-font-family-mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-6);
+  padding: 0;
+  border: none;
+}
+
+.editor-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.cta-row {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.cta-button {
+  font-family: var(--vp-font-family-mono);
+  font-size: 14px;
+  font-weight: 500;
+  padding: var(--space-3) var(--space-5);
+  text-decoration: none;
+  transition: all 0.15s;
+  display: inline-block;
+}
+
+.cta-button.primary {
+  background: var(--vp-c-text-1);
+  color: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-text-1);
+}
+
+.cta-button.primary:hover {
+  opacity: 0.85;
+}
+
+.cta-button.secondary {
+  background: transparent;
+  color: var(--vp-c-text-1);
+  border: 1px solid var(--vp-c-border);
+}
+
+.cta-button.secondary:hover {
+  border-color: var(--vp-c-text-1);
+  background: var(--vp-c-bg-soft);
+}
+
+@media (max-width: 768px) {
+  .home-section {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .editor-grid {
+    flex-direction: column;
+  }
+
+  .cta-row {
+    flex-direction: column;
+  }
+
+  .cta-button {
+    text-align: center;
+  }
+}
+</style>

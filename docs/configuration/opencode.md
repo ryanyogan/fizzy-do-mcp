@@ -139,3 +139,17 @@ OpenCode uses a single `command` array instead of separate `command` and `args`:
 2. Check file is named `opencode.json` (not `config.toml`)
 3. Ensure the `$schema` line is included for validation
 4. Restart OpenCode completely
+
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Other Editors"
+  :items="[
+    { title: 'Claude Desktop', link: '/configuration/claude-desktop', description: 'Desktop app setup' },
+    { title: 'Cursor', link: '/configuration/cursor', description: 'AI code editor setup' },
+    { title: 'Windsurf', link: '/configuration/windsurf', description: 'Codeium IDE setup' },
+    { title: 'Environment Variables', link: '/configuration/environment', description: 'Token management' },
+  ]"
+/>

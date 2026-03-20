@@ -137,7 +137,15 @@ async function withRetry<T>(
 }
 ```
 
-## Related
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-- [Result Type](/api/result) - Understanding the Result type
-- [TypeScript Client](/api/client) - Client API reference
+<RelatedLinks
+  title="Related"
+  :items="[
+    { title: 'Result Type', link: '/api/result', description: 'Type-safe error handling' },
+    { title: 'TypeScript Client', link: '/api/client', description: 'Full API reference' },
+    { title: 'CLI Reference', link: '/api/cli', description: 'Command-line tools' },
+  ]"
+/>

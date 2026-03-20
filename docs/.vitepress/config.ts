@@ -14,6 +14,10 @@ export default defineConfig({
 
   head: [
     ['meta', { name: 'theme-color', content: '#000000' }],
+    ['meta', { name: 'og:type', content: 'website' }],
+    ['meta', { name: 'og:title', content: 'Fizzy Do - MCP Server for Fizzy' }],
+    ['meta', { name: 'og:description', content: 'Connect your AI assistant to Fizzy with MCP' }],
+    ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     [
@@ -26,7 +30,7 @@ export default defineConfig({
     [
       'link',
       {
-        href: 'https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap',
         rel: 'stylesheet',
       },
     ],
@@ -35,12 +39,19 @@ export default defineConfig({
   cleanUrls: true,
 
   themeConfig: {
-    logo: '/logo.svg',
+    // Theme-adaptive logo: black for light mode, white for dark mode
+    logo: {
+      light: '/logo-dark.svg',
+      dark: '/logo-light.svg',
+    },
+
+    siteTitle: 'Fizzy Do',
 
     nav: [
       { text: 'Docs', link: '/getting-started/introduction' },
       { text: 'Tools', link: '/tools/overview' },
       { text: 'Workflows', link: '/workflows/ai-driven-tasks' },
+      { text: 'API', link: '/api/client' },
       {
         text: `v${version}`,
         items: [
@@ -54,13 +65,12 @@ export default defineConfig({
           },
         ],
       },
-      { text: 'GitHub', link: 'https://github.com/ryanyogan/fizzy-do-mcp' },
     ],
 
     sidebar: [
       {
         text: 'Getting Started',
-        collapsed: true,
+        collapsed: false,
         items: [
           { text: 'Introduction', link: '/getting-started/introduction' },
           { text: 'Installation', link: '/getting-started/installation' },
@@ -85,6 +95,7 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'AI-Driven Tasks', link: '/workflows/ai-driven-tasks' },
+          { text: 'Vibe Coding', link: '/workflows/vibe-coding' },
           { text: 'Project Management', link: '/workflows/project-management' },
           { text: 'Team Collaboration', link: '/workflows/team-collaboration' },
         ],
@@ -204,7 +215,26 @@ export default defineConfig({
 
     footer: {
       message: 'Open source under MIT License',
-      copyright: 'Built by Ryan Yogan',
+      copyright: 'Built by <a href="https://yogan.dev" target="_blank">Ryan Yogan</a>',
+    },
+
+    outline: {
+      level: [2, 3],
+      label: 'On this page',
+    },
+
+    lastUpdated: {
+      text: 'Updated',
+      formatOptions: {
+        dateStyle: 'medium',
+      },
+    },
+
+    docFooter: {
+      prev: 'Previous',
+      next: 'Next',
     },
   },
+
+  lastUpdated: true,
 });

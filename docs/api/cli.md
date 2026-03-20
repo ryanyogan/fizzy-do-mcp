@@ -235,3 +235,16 @@ fdm logout
 # Reconfigure
 fdm configure
 ```
+
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Related"
+  :items="[
+    { title: 'Installation', link: '/getting-started/installation', description: 'Full setup guide' },
+    { title: 'Environment Variables', link: '/configuration/environment', description: 'Token configuration' },
+    { title: 'TypeScript Client', link: '/api/client', description: 'Programmatic API' },
+  ]"
+/>

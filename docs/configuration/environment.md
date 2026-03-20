@@ -163,3 +163,17 @@ echo $FIZZY_TOKEN
 ```
 
 If empty, the variable isn't exported in your current shell.
+
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Editor Setup Guides"
+  :items="[
+    { title: 'Claude Desktop', link: '/configuration/claude-desktop', description: 'Desktop app setup' },
+    { title: 'Cursor', link: '/configuration/cursor', description: 'AI code editor setup' },
+    { title: 'Continue', link: '/configuration/continue', description: 'VS Code extension' },
+    { title: 'Quick Start', link: '/getting-started/quickstart', description: 'First AI-driven task' },
+  ]"
+/>

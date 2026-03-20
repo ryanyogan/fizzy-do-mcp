@@ -48,14 +48,9 @@ function formatLine(line: string): string {
 <template>
   <div class="terminal">
     <div class="terminal-header">
-      <div class="terminal-dots">
-        <span class="terminal-dot"></span>
-        <span class="terminal-dot"></span>
-        <span class="terminal-dot"></span>
-      </div>
       <span class="terminal-title">{{ title }}</span>
       <button class="terminal-copy" @click="copyToClipboard" :title="copied ? 'Copied!' : 'Copy'">
-        {{ copied ? 'Copied!' : 'Copy' }}
+        {{ copied ? 'Copied' : 'Copy' }}
       </button>
     </div>
     <div class="terminal-body">
@@ -74,39 +69,24 @@ function formatLine(line: string): string {
 <style scoped>
 .terminal {
   border: 1px solid var(--vp-c-border);
-  border-radius: 2px;
   overflow: hidden;
-  margin: 24px 0;
+  margin: var(--space-6) 0;
   background-color: #0a0a0a;
 }
 
 .terminal-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
   background-color: #111111;
   border-bottom: 1px solid var(--vp-c-border);
 }
 
-.terminal-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.terminal-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #333333;
-}
-
 .terminal-title {
-  flex: 1;
-  text-align: center;
+  font-family: var(--vp-font-family-mono);
   font-size: 12px;
   color: var(--vp-c-text-3);
-  font-family: var(--vp-font-family-mono);
 }
 
 .terminal-copy {
@@ -114,22 +94,21 @@ function formatLine(line: string): string {
   border: 1px solid transparent;
   color: var(--vp-c-text-3);
   cursor: pointer;
-  padding: 4px 8px;
-  font-size: 12px;
+  padding: var(--space-1) var(--space-2);
   font-family: var(--vp-font-family-mono);
-  border-radius: 2px;
+  font-size: 11px;
   transition: all 0.15s;
 }
 
 .terminal-copy:hover {
-  color: var(--vp-c-brand-1);
-  border-color: var(--vp-c-brand-1);
+  color: var(--fizzy-cyan);
+  border-color: var(--fizzy-cyan);
 }
 
 .terminal-body {
-  padding: 16px;
+  padding: var(--space-4);
   font-family: var(--vp-font-family-mono);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
   color: #e5e5e5;
 }
@@ -140,15 +119,15 @@ function formatLine(line: string): string {
 
 .terminal-line.prompt::before {
   content: '$ ';
-  color: var(--vp-c-brand-1);
+  color: var(--fizzy-cyan);
 }
 
 .terminal-line.output {
-  color: #a3a3a3;
+  color: var(--gray-400);
 }
 
 .terminal-line.comment {
-  color: #525252;
+  color: var(--gray-600);
   font-style: italic;
 }
 </style>

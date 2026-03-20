@@ -160,3 +160,17 @@ In VS Code:
 1. Open Command Palette (Cmd/Ctrl + Shift + P)
 2. Search "Continue: Open Logs"
 3. Look for MCP-related errors
+
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Other Editors"
+  :items="[
+    { title: 'Claude Desktop', link: '/configuration/claude-desktop', description: 'Desktop app setup' },
+    { title: 'Cursor', link: '/configuration/cursor', description: 'AI code editor setup' },
+    { title: 'OpenCode', link: '/configuration/opencode', description: 'Open-source AI assistant' },
+    { title: 'Environment Variables', link: '/configuration/environment', description: 'Token management' },
+  ]"
+/>

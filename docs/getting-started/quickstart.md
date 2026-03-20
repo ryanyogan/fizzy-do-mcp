@@ -157,8 +157,15 @@ You: Move all cards tagged #v2 to the "Next Release" column
 
 4. **Let AI help organize** - "What cards should I work on today?" can provide smart suggestions based on your board state
 
-## Next Steps
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-- [Workflows](/workflows/ai-driven-tasks) - Advanced workflow examples
-- [Tools Reference](/tools/overview) - Full list of available tools
-- [Configuration](/configuration/claude-desktop) - Editor-specific setup
+<RelatedLinks
+  title="Continue Learning"
+  :items="[
+    { title: 'AI-Driven Workflows', link: '/workflows/ai-driven-tasks', description: 'Advanced workflow patterns' },
+    { title: 'Tools Reference', link: '/tools/overview', description: 'Full list of 70+ tools' },
+    { title: 'Project Management', link: '/workflows/project-management', description: 'Sprint planning and releases' },
+  ]"
+/>

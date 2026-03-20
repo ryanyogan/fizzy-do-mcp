@@ -5,6 +5,9 @@ node_modules/
 dist/
 *.tsbuildinfo
 
+# VitePress cache
+docs/.vitepress/cache/
+
 # Turbo
 .turbo/
 

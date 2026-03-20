@@ -216,4 +216,16 @@ if (isErr(result)) {
 }
 ```
 
-See [Error Handling](/api/errors) and [Result Type](/api/result) for more details.
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
+
+<RelatedLinks
+  title="Related"
+  :items="[
+    { title: 'Error Handling', link: '/api/errors', description: 'Error types and codes' },
+    { title: 'Result Type', link: '/api/result', description: 'Type-safe error handling' },
+    { title: 'CLI Reference', link: '/api/cli', description: 'Command-line tools' },
+    { title: 'Tools Overview', link: '/tools/overview', description: 'All MCP tools' },
+  ]"
+/>

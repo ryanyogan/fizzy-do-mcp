@@ -265,8 +265,15 @@ Set up regular AI summaries:
 - Weekly: Progress reports
 - Sprint end: Metrics and retrospective data
 
-## Next Steps
+<script setup>
+import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
+</script>
 
-- [Team Collaboration](/workflows/team-collaboration) - Multi-person workflows
-- [AI-Driven Tasks](/workflows/ai-driven-tasks) - Individual productivity
-- [Tools Reference](/tools/overview) - Available operations
+<RelatedLinks
+  title="Related Workflows"
+  :items="[
+    { title: 'Vibe Coding', link: '/workflows/vibe-coding', description: 'Low-friction AI-first workflow' },
+    { title: 'Team Collaboration', link: '/workflows/team-collaboration', description: 'Multi-person patterns' },
+    { title: 'AI-Driven Tasks', link: '/workflows/ai-driven-tasks', description: 'Individual productivity' },
+  ]"
+/>
