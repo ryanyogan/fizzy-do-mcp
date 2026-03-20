@@ -48,10 +48,6 @@ $ claude mcp remove fizzy
 Removed MCP server: fizzy
 ```
 
-## Using the Hosted Proxy
-
-For the hosted proxy, you'll need to configure it differently since Claude Code primarily supports local commands. You can use curl-based MCP transports if available, or simply use the local npx approach.
-
 ## Verify It Works
 
 Start Claude Code and try a Fizzy command:

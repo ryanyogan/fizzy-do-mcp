@@ -19,12 +19,13 @@
     "docs:dev": "vp run -r --filter docs dev",
     "docs:build": "vp run -r --filter docs build",
     "docs:deploy": "vp run -r --filter docs deploy",
-    "hosted:dev": "vp run -r --filter @fizzy-do-mcp/hosted dev",
-    "hosted:build": "vp run -r --filter @fizzy-do-mcp/hosted build",
-    "hosted:deploy": "vp run -r --filter @fizzy-do-mcp/hosted deploy",
-    "hosted:typecheck": "vp run -r --filter @fizzy-do-mcp/hosted typecheck"
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.0",
     "@types/node": "^22.10.0",
     "typescript": "^5.7.0",
     "vite": "catalog:",

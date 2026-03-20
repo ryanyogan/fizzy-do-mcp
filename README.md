@@ -38,7 +38,7 @@ With Fizzy Do MCP, your AI can:
 - **Move cards through workflows** - Triage to columns, postpone, or close them
 - **Add comments and reactions** - Leave notes, updates, and emoji reactions
 - **Manage columns, tags, and steps** - Organize your workflow with checklists
-- **Process AI work queues** - Autonomous vibe coding driven by tagged cards
+- **Project manager tools** - AI-powered workflows to track and report progress
 
 ## Quick Start
 
@@ -74,25 +74,6 @@ Add to your editor's MCP configuration:
 ```
 
 > **Tip:** You can also use the `fdm` alias: `npx fdm configure`
-
-### Option 2: Remote Server
-
-For environments where `npx` isn't available (like web-based AI tools), use the hosted proxy:
-
-```json
-{
-  "mcpServers": {
-    "fizzy": {
-      "url": "https://mcp.fizzy.yogan.dev/sse",
-      "headers": {
-        "X-Fizzy-Token": "your-fizzy-api-token"
-      }
-    }
-  }
-}
-```
-
-The remote server is **free with no rate limits** - same as local.
 
 ## Supported Editors
 
@@ -142,34 +123,9 @@ Fizzy Do MCP provides 70+ tools covering all major Fizzy operations:
 | **Steps** | `fizzy_list_steps`, `fizzy_get_step`, `fizzy_create_step`, `fizzy_update_step`, `fizzy_delete_step` |
 | **Notifications** | `fizzy_list_notifications`, `fizzy_get_notification`, `fizzy_mark_read`, `fizzy_mark_all_read`, `fizzy_unread_count` |
 | **Webhooks** | `fizzy_list_webhooks`, `fizzy_get_webhook`, `fizzy_create_webhook`, `fizzy_update_webhook`, `fizzy_delete_webhook`, `fizzy_test_webhook` |
-| **Pending Work** | `fizzy_pending_work_list`, `fizzy_pending_work_get`, `fizzy_pending_work_claim`, `fizzy_pending_work_complete`, `fizzy_pending_work_abandon`, `fizzy_pending_work_status` |
+| **Project Manager** | `fizzy_pm_actionable_cards`, `fizzy_pm_project_context`, `fizzy_pm_report_progress`, `fizzy_pm_start_session`, `fizzy_pm_end_session` |
 
 See the [Tools Reference](https://fizzy.yogan.dev/tools/overview) for complete documentation.
-
-## AI Work Queue
-
-Fizzy Do MCP includes a KV-backed work queue that enables autonomous AI coding:
-
-1. **Tag cards** with `#ai-code` (implementation) or `#ai-plan` (break down into steps)
-2. **Move cards** to a trigger column (`To Do`, `Ready`, or `Accepted`) to queue them
-3. **AI agents** claim work via `fizzy_pending_work_claim`, process it, and mark it complete
-
-Work items flow through statuses: `pending` → `claimed` → `completed` (or `failed` / `abandoned`).
-
-```
-You: Let's start vibe coding with Fizzy
-
-AI: [checks pending work queue]
-    Found 2 items ready for work:
-    - #253 "Update README" (ai-code, pending)
-    - #254 "Add dark mode" (ai-plan, pending)
-
-    Claiming #253...
-    [does the work, commits, opens PR]
-    Done! Marked #253 complete.
-```
-
-This enables "vibe coding" - tag your cards, and let AI handle them while you focus on high-level decisions.
 
 ## CLI Commands
 
@@ -199,22 +155,9 @@ fizzy-do-mcp/
 │   ├── @fizzy-do-mcp/client/   # Type-safe HTTP client for Fizzy API
 │   └── @fizzy-do-mcp/tools/    # MCP tool definitions
 ├── apps/
-│   ├── server/                  # CLI and MCP server (npm: fizzy-do-mcp)
-│   └── hosted/                  # Hosted proxy service (Cloudflare Workers)
+│   └── server/                  # CLI and MCP server (npm: fizzy-do-mcp)
 └── docs/                        # Documentation site (VitePress)
 ```
-
-### Local vs Remote
-
-| Feature | Local Server | Remote Server |
-|---------|--------------|---------------|
-| Privacy | Tokens stay on your machine | Tokens sent via HTTPS header |
-| Rate Limits | None | None |
-| Setup | Requires Node.js | Works anywhere |
-| Offline | Works offline after install | Requires internet |
-| Cost | Free | Free |
-
-**We recommend local** for maximum privacy, but both options are fully supported and free.
 
 ## Development
 
@@ -224,23 +167,143 @@ git clone https://github.com/ryanyogan/fizzy-do-mcp.git
 cd fizzy-do-mcp
 
 # Install dependencies
-pnpm install
+vp install
 
 # Run checks (format, lint, typecheck)
-pnpm check
+vp check
 
 # Run tests
-pnpm test
+vp test
 
 # Build all packages
-pnpm build
+vp build
 
 # Develop the CLI
-cd apps/server && pnpm dev
+cd apps/server && vp dev
 
 # Develop docs
-cd docs && pnpm dev
+cd docs && vp dev
 ```
+
+> **Note:** This project uses [Vite+](https://github.com/nicepkg/vp) (`vp`) as the unified toolchain. All commands go through `vp` instead of calling pnpm/npm directly.
+
+## Versioning & Releases
+
+This project uses [Changesets](https://github.com/changesets/changesets) for version management and automated releases.
+
+### Creating a Changeset
+
+When you make changes that should be released, create a changeset:
+
+```bash
+pnpm changeset
+```
+
+This will prompt you to:
+1. Select which packages have changed
+2. Choose the semver bump type (patch/minor/major)
+3. Write a summary of the changes
+
+The changeset is saved as a markdown file in `.changeset/` and should be committed with your PR.
+
+### Changeset Guidelines
+
+| Change Type | Version Bump | Examples |
+|------------|--------------|----------|
+| **Patch** | `0.4.0` → `0.4.1` | Bug fixes, typos, dependency updates |
+| **Minor** | `0.4.0` → `0.5.0` | New features, new tools, non-breaking additions |
+| **Major** | `0.4.0` → `1.0.0` | Breaking changes, removed tools, API changes |
+
+### Example Changeset
+
+```markdown
+---
+"fizzy-do-mcp": minor
+"@fizzy-do-mcp/tools": minor
+---
+
+Add support for card checklists with new step management tools
+```
+
+### Release Process
+
+Releases are fully automated via GitHub Actions:
+
+1. **Push to main** - The release workflow runs automatically
+2. **Version PR created** - If changesets exist, a "Release" PR is created/updated
+3. **Merge the PR** - Merging the Release PR triggers:
+   - Version bumps in all affected packages
+   - CHANGELOG.md updates with changeset summaries
+   - Git tags for each released version
+   - npm publish for public packages
+
+### Manual Version Commands
+
+```bash
+# Preview what versions would be bumped
+pnpm changeset status
+
+# Apply version bumps locally (CI does this automatically)
+pnpm version
+
+# Publish packages (CI does this automatically)
+pnpm release
+```
+
+## Deployments
+
+### npm Package
+
+The main CLI package `fizzy-do-mcp` is published to npm automatically when the Release PR is merged.
+
+| Package | npm | Description |
+|---------|-----|-------------|
+| `fizzy-do-mcp` | [![npm](https://img.shields.io/npm/v/fizzy-do-mcp.svg)](https://www.npmjs.com/package/fizzy-do-mcp) | CLI and MCP server |
+| `@fizzy-do-mcp/client` | Internal | Type-safe API client |
+| `@fizzy-do-mcp/tools` | Internal | MCP tool definitions |
+| `@fizzy-do-mcp/shared` | Internal | Shared types and schemas |
+
+### Documentation Site
+
+The documentation site is deployed to [Cloudflare Pages](https://pages.cloudflare.com) automatically on every push to `main`.
+
+- **Production URL:** [fizzy.yogan.dev](https://fizzy.yogan.dev)
+- **Build command:** `vp build`
+- **Output directory:** `docs/.vitepress/dist`
+
+### CI/CD Workflow
+
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   PR with   │────▶│   Merge to   │────▶│  Release    │
+│  changeset  │     │     main     │     │   PR open   │
+└─────────────┘     └──────────────┘     └──────────────┘
+                                                │
+                                                ▼
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│  npm has    │◀────│   Packages   │◀────│   Merge     │
+│  new version│     │   published  │     │  Release PR │
+└─────────────┘     └──────────────┘     └─────────────┘
+```
+
+### Required Secrets
+
+Configure these in your GitHub repository settings:
+
+| Secret | Description |
+|--------|-------------|
+| `NPM_TOKEN` | npm access token with publish permissions |
+| `GITHUB_TOKEN` | Automatically provided by GitHub Actions |
+
+### Cloudflare Pages Setup
+
+The docs are deployed via Cloudflare Pages with these settings:
+
+- **Framework preset:** VitePress
+- **Build command:** `pnpm install && pnpm --filter docs build`
+- **Build output directory:** `docs/.vitepress/dist`
+- **Root directory:** `/`
+- **Node.js version:** `20`
 
 ## Requirements
 

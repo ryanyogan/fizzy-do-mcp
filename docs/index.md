@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "Fizzy Do"
   text: "AI Project Manager"
-  tagline: A fairly eager Product Manager that loves to Vibe Code
+  tagline: AI-powered task management with MCP
   image:
     src: /logo.svg
     alt: Fizzy MCP
@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: View on GitHub
       link: https://github.com/ryanyogan/fizzy-do-mcp
+    - theme: alt
+      text: npm
+      link: https://www.npmjs.com/package/fizzy-do-mcp
 
 features:
   - icon: "01"
@@ -25,7 +28,7 @@ features:
     details: Claude Desktop, Cursor, OpenCode, Windsurf, Continue, and any MCP-compatible editor.
   - icon: "03"
     title: Open Source
-    details: Fully open source and self-hostable. Run your own MCP server or use the hosted proxy.
+    details: Fully open source. Run your own MCP server locally with a single command.
 ---
 
 <script setup>

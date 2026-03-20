@@ -166,29 +166,3 @@ export {
   type NotificationList,
   type NotificationCount,
 } from './notifications.js';
-
-// Pending Work schemas (AI work queue)
-export {
-  WorkTriggerSchema,
-  WorkStatusSchema,
-  WorkModeSchema,
-  PendingWorkSchema,
-  CreatePendingWorkSchema,
-  ListPendingWorkFilterSchema,
-  ClaimWorkInputSchema,
-  CompleteWorkInputSchema,
-  pendingWorkKey,
-  generateWorkId,
-  detectWorkMode,
-  isWorkTriggerColumn,
-  WORK_TRIGGER_COLUMNS,
-  AI_WORK_TAGS,
-  type WorkTrigger,
-  type WorkStatus,
-  type WorkMode,
-  type PendingWork,
-  type CreatePendingWork,
-  type ListPendingWorkFilter,
-  type ClaimWorkInput,
-  type CompleteWorkInput,
-} from './pending-work.js';

@@ -160,8 +160,6 @@ export class FizzyClient {
 
   /**
    * The access token used by this client.
-   * Exposed for tools that need to make authenticated requests
-   * to external services (like the hosted worker).
    */
   readonly token: string;
 

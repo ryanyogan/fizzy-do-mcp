@@ -62,23 +62,6 @@ Then add to your shell profile:
 export FIZZY_TOKEN="your-fizzy-api-token"
 ```
 
-## Using the Hosted Proxy
-
-For environments where npx isn't available, use the hosted proxy:
-
-```json
-{
-  "mcpServers": {
-    "fizzy": {
-      "url": "https://fizzy.yogan.dev/mcp",
-      "headers": {
-        "X-Fizzy-Token": "your-fizzy-api-token"
-      }
-    }
-  }
-}
-```
-
 ## Restart Required
 
 After saving your config, fully quit and restart Claude Desktop for changes to take effect.

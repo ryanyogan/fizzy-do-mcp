@@ -45,7 +45,6 @@ export {
   ENV_VARS,
   CONFIG_PATHS,
   OLD_CONFIG_PATHS,
-  HOSTED_URLS,
   FIZZY_TOKEN_URL,
   type FizzyConfig,
   type StoredConfig,

@@ -10,7 +10,10 @@
 
 import { Command } from 'commander';
 import * as readline from 'node:readline';
+import { readFileSync } from 'node:fs';
 import { exec } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import { FizzyClient } from '@fizzy-do-mcp/client';
 import { FIZZY_TOKEN_URL } from '@fizzy-do-mcp/shared';
 import {
@@ -25,7 +28,12 @@ import { showBanner, showWelcome, colors, box, keyValue, listItem } from './ui/i
 import { withSpinner, showSuccess, showFailure, showInfo, showWarning } from './ui/spinner.js';
 import { runConfigureFlow } from './configure/index.js';
 
-const VERSION = '0.3.0';
+// Read version from package.json
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8')) as {
+  version: string;
+};
+const VERSION = pkg.version;
 
 const program = new Command();
 

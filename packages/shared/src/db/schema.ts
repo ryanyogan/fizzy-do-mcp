@@ -99,7 +99,7 @@ export const apiKeys = sqliteTable(
 );
 
 // ============ Application Settings ============
-// Configurable settings for the hosted service (managed via admin API)
+// Configurable settings (managed via admin API)
 
 export const settings = sqliteTable('settings', {
   key: text('key').primaryKey(),

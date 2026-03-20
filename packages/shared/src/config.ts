@@ -47,7 +47,6 @@ export const StoredConfigSchema = z.object({
 
   /**
    * Whether webhook secret has been configured for this account.
-   * Cached locally to avoid checking the server on every vibe start.
    */
   webhookConfigured: z.boolean().optional(),
 
@@ -89,16 +88,6 @@ export const CONFIG_PATHS = {
 export const OLD_CONFIG_PATHS = {
   dir: '.config/fizzy-mcp',
   file: 'config.json',
-} as const;
-
-/**
- * URLs for the hosted MCP service.
- */
-export const HOSTED_URLS = {
-  base: 'https://mcp.fizzy.yogan.dev',
-  mcp: 'https://mcp.fizzy.yogan.dev/mcp',
-  webhookSecret: 'https://mcp.fizzy.yogan.dev/accounts/webhook-secret',
-  webhooks: 'https://mcp.fizzy.yogan.dev/webhooks/fizzy',
 } as const;
 
 /**

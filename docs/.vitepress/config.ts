@@ -1,17 +1,25 @@
 import { defineConfig } from 'vitepress';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+// Read version from the main CLI package
+const serverPackageJson = JSON.parse(
+  readFileSync(resolve(__dirname, '../../apps/server/package.json'), 'utf-8'),
+);
+const version = serverPackageJson.version;
 
 export default defineConfig({
   title: 'Fizzy Do',
   description: 'AI-powered project management with Model Context Protocol',
 
   head: [
-    ['meta', { name: 'theme-color', content: '#3b82f6' }],
+    ['meta', { name: 'theme-color', content: '#22d3ee' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     [
       'link',
       {
-        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700;800&display=swap',
         rel: 'stylesheet',
       },
     ],
@@ -26,6 +34,19 @@ export default defineConfig({
       { text: 'Docs', link: '/getting-started/introduction' },
       { text: 'Tools', link: '/tools/overview' },
       { text: 'Workflows', link: '/workflows/ai-driven-tasks' },
+      {
+        text: `v${version}`,
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/ryanyogan/fizzy-do-mcp/blob/main/CHANGELOG.md',
+          },
+          {
+            text: 'npm',
+            link: 'https://www.npmjs.com/package/fizzy-do-mcp',
+          },
+        ],
+      },
       { text: 'GitHub', link: 'https://github.com/ryanyogan/fizzy-do-mcp' },
     ],
 
@@ -59,17 +80,6 @@ export default defineConfig({
           { text: 'AI-Driven Tasks', link: '/workflows/ai-driven-tasks' },
           { text: 'Project Management', link: '/workflows/project-management' },
           { text: 'Team Collaboration', link: '/workflows/team-collaboration' },
-        ],
-      },
-      {
-        text: 'Vibe Coding',
-        collapsed: false,
-        items: [
-          { text: 'Overview', link: '/vibe-coding/' },
-          { text: 'Setup Guide', link: '/vibe-coding/setup' },
-          { text: 'Config Card', link: '/vibe-coding/config-card' },
-          { text: 'Workflow Columns', link: '/vibe-coding/columns' },
-          { text: 'Troubleshooting', link: '/vibe-coding/troubleshooting' },
         ],
       },
       {
@@ -155,13 +165,6 @@ export default defineConfig({
             items: [
               { text: 'fizzy_list_users', link: '/tools/users/list-users' },
               { text: 'fizzy_get_user', link: '/tools/users/get-user' },
-            ],
-          },
-          {
-            text: 'Pending Work',
-            collapsed: true,
-            items: [
-              { text: 'Overview', link: '/tools/pending-work/overview' },
             ],
           },
         ],

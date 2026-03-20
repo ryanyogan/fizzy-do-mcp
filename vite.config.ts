@@ -3,12 +3,7 @@ import { defineConfig } from 'vite-plus';
 export default defineConfig({
   lint: {
     options: { typeAware: true, typeCheck: true },
-    ignorePatterns: [
-      'docs/',
-      'apps/hosted/drizzle.config.ts',
-      'apps/hosted/worker-configuration.d.ts',
-      'apps/hosted/migrations/',
-    ],
+    ignorePatterns: ['docs/'],
   },
   fmt: {
     semi: true,

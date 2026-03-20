@@ -37,25 +37,6 @@ OpenCode's MCP configuration differs from other editors:
 - Uses `environment` (not `env`)
 :::
 
-## Remote/Hosted Proxy
-
-For the hosted proxy, use `type: "remote"`:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "fizzy": {
-      "type": "remote",
-      "url": "https://fizzy.yogan.dev/mcp",
-      "headers": {
-        "X-Fizzy-Token": "your-fizzy-api-token"
-      }
-    }
-  }
-}
-```
-
 ## Multiple Servers
 
 ```json

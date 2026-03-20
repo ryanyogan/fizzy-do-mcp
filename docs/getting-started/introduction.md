@@ -31,9 +31,7 @@ With Fizzy MCP, your AI assistant can:
 3. **Fizzy** processes the request and returns results
 4. **Your AI** presents the information in conversation
 
-## Deployment Options
-
-### Local Server (Recommended)
+## Running the Server
 
 Run the MCP server locally on your machine:
 
@@ -41,32 +39,10 @@ Run the MCP server locally on your machine:
 npx fizzy-do-mcp@latest
 ```
 
-This is the recommended approach for:
+Benefits of local installation:
 - Maximum privacy (tokens stay local)
 - Best performance (no network hops)
 - Full offline capability (once configured)
-
-### Hosted Proxy
-
-Use our hosted proxy at `https://fizzy.yogan.dev/mcp`:
-
-```json
-{
-  "mcpServers": {
-    "fizzy": {
-      "url": "https://fizzy.yogan.dev/mcp",
-      "headers": {
-        "X-Fizzy-Token": "your-token"
-      }
-    }
-  }
-}
-```
-
-Useful for:
-- Quick testing
-- Environments where npx isn't available
-- Remote/cloud-based AI setups
 
 ## Requirements
 

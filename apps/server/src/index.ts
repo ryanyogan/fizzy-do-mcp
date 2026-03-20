@@ -20,11 +20,19 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import { FizzyClient } from '@fizzy-do-mcp/client';
 import { registerAllTools } from '@fizzy-do-mcp/tools';
 import { resolveConfig, isConfigured } from './credentials.js';
 
-const VERSION = '0.1.0';
+// Read version from package.json
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8')) as {
+  version: string;
+};
+const VERSION = pkg.version;
 
 /**
  * Creates and configures the MCP server.

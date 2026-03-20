@@ -24,9 +24,7 @@ Override the Fizzy API base URL. Defaults to `https://api.fizzy.do`.
 export FIZZY_API_URL="https://api.fizzy.do"
 ```
 
-Useful for:
-- Self-hosted Fizzy instances
-- Development/testing against staging environments
+Useful for development/testing against staging environments.
 
 ## Setting Environment Variables
 

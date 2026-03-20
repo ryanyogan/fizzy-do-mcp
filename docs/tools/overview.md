@@ -113,18 +113,15 @@ Fizzy MCP provides 70+ tools for managing your Fizzy boards, cards, and collabor
 | `fizzy_delete_webhook` | Delete a webhook |
 | `fizzy_test_webhook` | Send a test event to a webhook |
 
-### Pending Work
+### Project Manager
 
 | Tool | Description |
 |------|-------------|
-| `fizzy_pending_work_list` | List work items in the AI queue |
-| `fizzy_pending_work_get` | Get details of a work item |
-| `fizzy_pending_work_claim` | Claim a work item for processing |
-| `fizzy_pending_work_complete` | Mark work as completed or failed |
-| `fizzy_pending_work_abandon` | Release a claimed work item |
-| `fizzy_pending_work_status` | Get queue status summary |
-
-See [Vibe Coding](/vibe-coding/) for how pending work tools enable autonomous AI coding.
+| `fizzy_pm_actionable_cards` | Get cards ready for AI work |
+| `fizzy_pm_project_context` | Get comprehensive project context |
+| `fizzy_pm_report_progress` | Report progress on a card |
+| `fizzy_pm_start_session` | Start a tracked work session |
+| `fizzy_pm_end_session` | End a work session with summary |
 
 ## Common Parameters
 

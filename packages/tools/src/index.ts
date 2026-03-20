@@ -38,7 +38,6 @@ export { registerReactionTools } from './reactions/index.js';
 export { registerStepTools } from './steps/index.js';
 export { registerNotificationTools } from './notifications/index.js';
 export { registerProjectManagerTools } from './project-manager/index.js';
-export { registerPendingWorkTools } from './pending-work/index.js';
 
 // Utilities
 export { formatToolSuccess, formatToolError, wrapToolOperation } from './utils.js';
