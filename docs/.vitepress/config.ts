@@ -13,13 +13,20 @@ export default defineConfig({
   description: 'AI-powered project management with Model Context Protocol',
 
   head: [
-    ['meta', { name: 'theme-color', content: '#22d3ee' }],
+    ['meta', { name: 'theme-color', content: '#000000' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     [
       'link',
       {
-        href: 'https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700;800&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+        rel: 'stylesheet',
+      },
+    ],
+    [
+      'link',
+      {
+        href: 'https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap',
         rel: 'stylesheet',
       },
     ],

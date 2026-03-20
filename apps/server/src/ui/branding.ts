@@ -1,16 +1,46 @@
 /**
  * Branding utilities for the Fizzy Do CLI.
  *
- * Provides consistent styling with the Fizzy.do brand colors:
- * - Primary: Blue (oklch 57.02% 0.1895 260.46 → #3b82f6)
- * - Light mode accent: (oklch 50% 0.2 260 → #2563eb)
- * - Dark mode accent: (oklch 74% 0.1293 256 → #60a5fa)
+ * Provides consistent styling with the Fizzy.do brand colors.
  */
 
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import chalk from 'chalk';
 import figlet from 'figlet';
 import boxen from 'boxen';
 import gradient from 'gradient-string';
+
+// Read version from package.json
+// After build, files are in dist/, so we need ../package.json
+// During dev, files are in src/ui/, so we try multiple paths
+const __dirname = dirname(fileURLToPath(import.meta.url));
+let VERSION = '0.0.0';
+try {
+  // Try ../package.json first (works for built dist/ files)
+  const pkg = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8')) as {
+    version: string;
+  };
+  VERSION = pkg.version;
+} catch {
+  try {
+    // Fallback for dev mode (src/ui/ -> ../../package.json)
+    const pkg = JSON.parse(readFileSync(join(__dirname, '../../package.json'), 'utf-8')) as {
+      version: string;
+    };
+    VERSION = pkg.version;
+  } catch {
+    // Final fallback
+  }
+}
+
+/**
+ * Gets the current version.
+ */
+export function getVersion(): string {
+  return VERSION;
+}
 
 /**
  * Fizzy Do brand gradient - blue spectrum
@@ -71,21 +101,18 @@ export function getLogo(): string {
 export function getCompactLogo(): string {
   const logo = `
 ╭─────────────────────────────────────╮
-│  ⚡ Fizzy Do                        │
-│  Your AI Works While You Sleep      │
+│  ⚡ Fizzy Do  v${VERSION.padEnd(22)}│
 ╰─────────────────────────────────────╯`;
   return fizzyGradient.multiline(logo);
 }
 
 /**
- * Displays the Fizzy Do banner with gradient logo and tagline.
+ * Displays the Fizzy Do banner with gradient logo.
  */
 export function showBanner(): void {
   console.error('');
   console.error(getLogo());
-  console.error('');
-  console.error(colors.muted('  Your AI works while you sleep'));
-  console.error(colors.muted(`  v${process.env.npm_package_version || '0.2.0'}`));
+  console.error(colors.muted(`  v${VERSION}`));
   console.error('');
 }
 
