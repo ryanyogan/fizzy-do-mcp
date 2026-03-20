@@ -16,15 +16,15 @@ async function parseJson(res: Response): Promise<Record<string, unknown>> {
   return (await res.json()) as Record<string, unknown>;
 }
 
-// Mock the auth module
-vi.mock('../websocket/auth', () => ({
-  validateFizzyToken: vi.fn(),
+const { mockValidateFizzyToken } = vi.hoisted(() => ({
+  mockValidateFizzyToken: vi.fn(),
 }));
 
-import { validateFizzyToken } from '../websocket/auth';
-import { accountRoutes } from '../accounts/handler';
+vi.mock('../auth', () => ({
+  validateFizzyToken: mockValidateFizzyToken,
+}));
 
-const mockValidateFizzyToken = vi.mocked(validateFizzyToken);
+import { accountRoutes } from '../accounts/handler';
 
 /**
  * Creates a mock KV namespace for testing

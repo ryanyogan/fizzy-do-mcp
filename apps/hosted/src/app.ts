@@ -4,9 +4,9 @@ import { secureHeaders } from 'hono/secure-headers';
 import type { HonoEnv } from './types';
 import { apiRoutes } from './api';
 import { mcpRoutes } from './mcp/handler';
-import { vibeRoutes } from './websocket/handler';
 import { webhookRoutes } from './webhooks';
 import { accountRoutes } from './accounts';
+import { pendingWorkRoutes } from './pending-work';
 import { fizzyTokenMiddleware } from './middleware/fizzy-token';
 import { loggingMiddleware, errorLoggingMiddleware } from './middleware/logging';
 
@@ -46,13 +46,13 @@ export function createApp() {
   app.get('/', (c) => {
     return c.json({
       name: 'Fizzy MCP',
-      version: '0.2.0',
+      version: '0.3.0',
       description: 'Open source MCP server for Fizzy task management',
       endpoints: {
         mcp: '/mcp',
-        vibe: '/vibe/ws',
         webhooks: '/webhooks/fizzy',
         accounts: '/accounts/webhook-secret',
+        pending_work: '/pending-work',
         health: '/health',
         docs: 'https://fizzy.yogan.dev',
       },
@@ -63,9 +63,9 @@ export function createApp() {
   // Mount routes
   app.route('/api', apiRoutes);
   app.route('/mcp', mcpRoutes);
-  app.route('/vibe', vibeRoutes);
   app.route('/webhooks', webhookRoutes);
   app.route('/accounts', accountRoutes);
+  app.route('/pending-work', pendingWorkRoutes);
 
   // 404 handler
   app.notFound((c) => {

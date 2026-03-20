@@ -18,7 +18,7 @@ import {
   type WebhookSecretEntry,
   type WebhookStatusResponse,
 } from '@fizzy-do-mcp/shared';
-import { validateFizzyToken } from '../websocket/auth';
+import { validateFizzyToken } from '../auth';
 
 /**
  * Account routes for webhook secret management.

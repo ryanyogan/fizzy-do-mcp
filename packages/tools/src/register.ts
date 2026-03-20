@@ -12,13 +12,13 @@ import { registerReactionTools } from './reactions/index.js';
 import { registerStepTools } from './steps/index.js';
 import { registerNotificationTools } from './notifications/index.js';
 import { registerProjectManagerTools } from './project-manager/index.js';
-import { registerVibeTools } from './vibe/index.js';
+import { registerPendingWorkTools } from './pending-work/index.js';
 
 /**
  * Registers all Fizzy MCP tools with the server.
  *
  * This is the main entry point for tool registration. It registers
- * all 46 tools across 8 categories:
+ * all tools across these categories:
  *
  * - Identity (2 tools): Account discovery and settings
  * - Boards (7 tools): Board CRUD and management
@@ -32,6 +32,7 @@ import { registerVibeTools } from './vibe/index.js';
  * - Steps (5 tools): Checklist items on cards
  * - Notifications (5 tools): User notification management
  * - Project Manager (5 tools): Autonomous AI project management
+ * - Pending Work (6 tools): AI work queue management
  *
  * @param server - The MCP server instance
  * @param client - The Fizzy API client
@@ -61,5 +62,5 @@ export function registerAllTools(server: McpServer, client: FizzyClient): void {
   registerStepTools(server, client);
   registerNotificationTools(server, client);
   registerProjectManagerTools(server, client);
-  registerVibeTools(server, client);
+  registerPendingWorkTools(server, client);
 }

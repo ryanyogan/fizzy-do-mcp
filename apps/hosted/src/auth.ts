@@ -1,5 +1,5 @@
 /**
- * WebSocket authentication utilities
+ * Authentication utilities
  *
  * Validates Fizzy tokens using the shared schemas and constants.
  * Designed for testability with dependency injection.
@@ -107,32 +107,5 @@ export async function validateFizzyToken(
     };
   } catch {
     return null;
-  }
-}
-
-/**
- * Validate that a user has access to a specific board
- *
- * @param token - Fizzy personal access token
- * @param boardId - Board ID to check access for
- * @param accountSlug - Account slug (e.g., "/6099243")
- * @param config - Optional auth configuration for DI
- * @returns True if user has access, false otherwise
- */
-export async function validateBoardAccess(
-  token: string,
-  boardId: string,
-  accountSlug: string,
-  config: AuthConfig = defaultAuthConfig,
-): Promise<boolean> {
-  try {
-    const response = await config.httpClient.fetch(
-      `${config.baseUrl}${accountSlug}/boards/${boardId}`,
-      { headers: createAuthHeaders(token) },
-    );
-
-    return response.ok;
-  } catch {
-    return false;
   }
 }

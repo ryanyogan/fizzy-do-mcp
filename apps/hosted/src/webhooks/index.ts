@@ -2,21 +2,11 @@
  * Webhooks Module
  *
  * Handles incoming webhooks from Fizzy, filters for AI-tagged cards,
- * and dispatches work to connected sessions.
+ * and stores pending work in KV for retrieval by AI agents.
  */
 
 // Routes
 export { webhookRoutes, verifyWebhookSignature } from './handler';
 
-// Filtering utilities
-export {
-  isAiTaggedCard,
-  getAiWorkMode,
-  shouldProcessCard,
-  isAcceptedColumn,
-  hasAiStartCommand,
-  type CardData,
-} from './filter';
-
 // Dispatcher
-export { dispatchWork, cancelWork, getQueueStatus, type DispatchResult } from './dispatcher';
+export { dispatchWork, cancelWork, type DispatchResult, type WebhookCardData } from './dispatcher';

@@ -15,24 +15,24 @@
     "ENVIRONMENT": "production",
   },
 
-  // Durable Objects for vibe coding
-  "durable_objects": {
-    "bindings": [
-      { "name": "SESSION_REGISTRY", "class_name": "SessionRegistry" },
-      { "name": "WORK_QUEUE", "class_name": "WorkQueue" },
-      { "name": "CARD_LOCK", "class_name": "CardLock" },
-    ],
-  },
+  // Durable Object migrations (v1 created classes, v2 deletes them)
+  "migrations": [
+    { "tag": "v1", "new_classes": ["SessionRegistry", "WorkQueue", "CardLock"] },
+    { "tag": "v2", "deleted_classes": ["SessionRegistry", "WorkQueue", "CardLock"] },
+  ],
 
-  // Durable Object migrations
-  "migrations": [{ "tag": "v1", "new_classes": ["SessionRegistry", "WorkQueue", "CardLock"] }],
-
-  // KV namespaces for webhook secrets (per-account storage)
+  // KV namespaces
   "kv_namespaces": [
+    // Webhook secrets (per-account storage)
     {
       "binding": "WEBHOOK_SECRETS",
       "id": "1b9bec287286424a82292f2f46723d8e",
       "preview_id": "3359d3301b214906bba25b908ee84da3",
+    },
+    // Pending work items for AI agents
+    {
+      "binding": "PENDING_WORK",
+      "id": "5e01050ed4c94dcfb7594736b6b9e4cb",
     },
   ],
 

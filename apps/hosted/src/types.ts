@@ -6,10 +6,6 @@
 
 /// <reference types="@cloudflare/workers-types" />
 
-import type { SessionRegistry } from './durable-objects/session-registry';
-import type { WorkQueue } from './durable-objects/work-queue';
-import type { CardLock } from './durable-objects/card-lock';
-
 /**
  * Cloudflare Worker environment bindings
  */
@@ -17,13 +13,11 @@ export interface Env {
   // Environment (development, staging, production)
   ENVIRONMENT: 'development' | 'staging' | 'production';
 
-  // Durable Object bindings
-  SESSION_REGISTRY: DurableObjectNamespace<SessionRegistry>;
-  WORK_QUEUE: DurableObjectNamespace<WorkQueue>;
-  CARD_LOCK: DurableObjectNamespace<CardLock>;
-
   // KV namespace for webhook secrets (per-account)
   WEBHOOK_SECRETS: KVNamespace;
+
+  // KV namespace for pending work items
+  PENDING_WORK: KVNamespace;
 }
 
 /**

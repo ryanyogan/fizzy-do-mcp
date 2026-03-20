@@ -158,9 +158,17 @@ export class FizzyClient {
    */
   readonly baseUrl: string;
 
+  /**
+   * The access token used by this client.
+   * Exposed for tools that need to make authenticated requests
+   * to external services (like the hosted worker).
+   */
+  readonly token: string;
+
   constructor(config: FizzyClientConfig) {
     this.baseUrl = config.baseUrl ?? DEFAULT_CONFIG.baseUrl;
     this.accountSlug = config.accountSlug ?? '';
+    this.token = config.accessToken;
 
     // Create HTTP client
     const http =

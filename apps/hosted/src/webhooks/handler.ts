@@ -2,7 +2,7 @@
  * Webhook Handler
  *
  * Receives webhooks from Fizzy when cards change, filters for AI-tagged
- * cards, and enqueues work for processing.
+ * cards, and stores pending work in KV for retrieval by AI agents.
  *
  * Route: POST /webhooks/fizzy
  */
@@ -11,16 +11,9 @@ import type { Context } from 'hono';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import type { HonoEnv } from '../types';
-import type { CardWorkItem, VibeConfig, WebhookSecretEntry } from '@fizzy-do-mcp/shared';
-import { WebhookEventSchema, VibeConfigSchema } from '@fizzy-do-mcp/shared';
-import {
-  shouldProcessCard,
-  getAiWorkMode,
-  isAcceptedColumn,
-  hasAiStartCommand,
-  type CardData,
-} from './filter';
-import { dispatchWork, cancelWork } from './dispatcher';
+import type { WebhookSecretEntry } from '@fizzy-do-mcp/shared';
+import { WebhookEventSchema, detectWorkMode, isWorkTriggerColumn } from '@fizzy-do-mcp/shared';
+import { dispatchWork, cancelWork, type WebhookCardData } from './dispatcher';
 
 /**
  * Schema for card data in webhook payloads.
@@ -37,15 +30,6 @@ const WebhookCardSchema = z.object({
       id: z.string(),
       name: z.string(),
     })
-    .optional(),
-  steps: z
-    .array(
-      z.object({
-        id: z.string(),
-        content: z.string(),
-        completed: z.boolean(),
-      }),
-    )
     .optional(),
 });
 
@@ -66,8 +50,6 @@ const WebhookPayloadSchema = z.object({
   account_slug: z.string(),
   card: WebhookCardSchema.optional(),
   comment: WebhookCommentSchema.optional(),
-  // Optional vibe config (attached by server for convenience)
-  vibe_config: VibeConfigSchema.optional(),
 });
 
 type WebhookPayload = z.infer<typeof WebhookPayloadSchema>;
@@ -142,33 +124,24 @@ async function getWebhookSecret(kv: KVNamespace, accountSlug: string): Promise<s
 }
 
 /**
- * Convert webhook card data to CardWorkItem.
+ * Convert webhook card to WebhookCardData.
  */
-function toCardWorkItem(card: z.infer<typeof WebhookCardSchema>): CardWorkItem {
+function toCardData(card: z.infer<typeof WebhookCardSchema>): WebhookCardData {
   return {
     number: card.number,
     title: card.title,
-    description: card.description,
-    tags: card.tags,
     board_id: card.board_id,
     board_name: card.board_name ?? 'Unknown Board',
-    steps: card.steps ?? [],
+    column_name: card.column?.name ?? null,
   };
 }
 
 /**
- * Get default vibe config for boards without explicit config.
- *
- * In a real implementation, this would fetch the config card from the board.
+ * Check for @ai start command in comment body.
  */
-function getDefaultVibeConfig(): VibeConfig {
-  return {
-    repository: 'https://github.com/placeholder/repo',
-    default_branch: 'main',
-    branch_pattern: 'ai/card-{number}-{slug}',
-    pr_template: 'default',
-    auto_assign_pr: true,
-  };
+function hasAiStartCommand(body: string): boolean {
+  const normalizedBody = body.toLowerCase().trim();
+  return normalizedBody.includes('@ai start') || normalizedBody.includes('@ai go');
 }
 
 /**
@@ -271,10 +244,10 @@ webhookRoutes.post('/fizzy', async (c) => {
 /**
  * Handle card_triaged event.
  *
- * Check if card was moved to "Accepted" column and has AI tags.
+ * Check if card was moved to a trigger column and has AI tags.
  */
 async function handleCardTriaged(c: Context<HonoEnv>, payload: WebhookPayload) {
-  const { card, account_slug, vibe_config } = payload;
+  const { card, account_slug } = payload;
 
   if (!card) {
     return c.json({
@@ -283,55 +256,33 @@ async function handleCardTriaged(c: Context<HonoEnv>, payload: WebhookPayload) {
     });
   }
 
-  // Check if card is in Accepted column
+  // Check if card is in a trigger column
   const columnName = card.column?.name;
-  if (!columnName || !isAcceptedColumn(columnName)) {
+  if (!columnName || !isWorkTriggerColumn(columnName)) {
     return c.json({
       processed: false,
-      reason: `Card is in column "${columnName ?? 'unknown'}", not Accepted`,
+      reason: `Card is in column "${columnName ?? 'unknown'}", not a trigger column`,
     });
   }
 
-  // Check if card should be processed (has AI tags, etc.)
-  const cardData: CardData = {
-    number: card.number,
-    title: card.title,
-    description: card.description,
-    tags: card.tags,
-    board_id: card.board_id,
-    column: card.column,
-  };
-
-  if (!shouldProcessCard(cardData, columnName)) {
-    return c.json({
-      processed: false,
-      reason: 'Card does not have AI work tags',
-    });
-  }
-
-  // Get AI work mode
-  const mode = getAiWorkMode(card.tags);
+  // Check if card has AI work tags
+  const mode = detectWorkMode(card.tags);
   if (!mode) {
     return c.json({
       processed: false,
-      reason: 'No AI work mode tag found',
+      reason: 'Card does not have AI work tags (ai-code, ai-plan, etc.)',
     });
   }
 
-  // Get vibe config (from payload or default)
-  const config = vibe_config ?? getDefaultVibeConfig();
-
-  // Dispatch work
-  const cardWorkItem = toCardWorkItem(card);
-  const result = await dispatchWork(c.env, account_slug, card.board_id, cardWorkItem, mode, config);
+  // Dispatch work to KV
+  const result = await dispatchWork(c.env, account_slug, toCardData(card), mode, 'card_triaged');
 
   if (result.success) {
     return c.json({
       processed: true,
       card_number: card.number,
       mode,
-      position: result.position,
-      notified: result.notified,
+      work_id: result.work_id,
     });
   }
 
@@ -340,17 +291,17 @@ async function handleCardTriaged(c: Context<HonoEnv>, payload: WebhookPayload) {
       processed: false,
       error: result.error,
     },
-    500,
+    result.error?.includes('already exists') ? 409 : 500,
   );
 }
 
 /**
  * Handle card_published event.
  *
- * Check if newly published card has AI tags and is in Accepted column.
+ * Check if newly published card has AI tags and is in a trigger column.
  */
 async function handleCardPublished(c: Context<HonoEnv>, payload: WebhookPayload) {
-  const { card, account_slug, vibe_config } = payload;
+  const { card, account_slug } = payload;
 
   if (!card) {
     return c.json({
@@ -359,55 +310,33 @@ async function handleCardPublished(c: Context<HonoEnv>, payload: WebhookPayload)
     });
   }
 
-  // Check if card is in Accepted column (or has no column yet)
+  // Check if card is in a trigger column (or has no column yet)
   const columnName = card.column?.name;
-  if (columnName && !isAcceptedColumn(columnName)) {
+  if (columnName && !isWorkTriggerColumn(columnName)) {
     return c.json({
       processed: false,
-      reason: `Card is in column "${columnName}", not Accepted`,
+      reason: `Card is in column "${columnName}", not a trigger column`,
     });
   }
 
-  // Check if card should be processed
-  const cardData: CardData = {
-    number: card.number,
-    title: card.title,
-    description: card.description,
-    tags: card.tags,
-    board_id: card.board_id,
-    column: card.column,
-  };
-
-  if (!shouldProcessCard(cardData, columnName)) {
-    return c.json({
-      processed: false,
-      reason: 'Card does not have AI work tags or is not in Accepted column',
-    });
-  }
-
-  // Get AI work mode
-  const mode = getAiWorkMode(card.tags);
+  // Check if card has AI work tags
+  const mode = detectWorkMode(card.tags);
   if (!mode) {
     return c.json({
       processed: false,
-      reason: 'No AI work mode tag found',
+      reason: 'Card does not have AI work tags',
     });
   }
 
-  // Get vibe config
-  const config = vibe_config ?? getDefaultVibeConfig();
-
-  // Dispatch work
-  const cardWorkItem = toCardWorkItem(card);
-  const result = await dispatchWork(c.env, account_slug, card.board_id, cardWorkItem, mode, config);
+  // Dispatch work to KV
+  const result = await dispatchWork(c.env, account_slug, toCardData(card), mode, 'card_tagged');
 
   if (result.success) {
     return c.json({
       processed: true,
       card_number: card.number,
       mode,
-      position: result.position,
-      notified: result.notified,
+      work_id: result.work_id,
     });
   }
 
@@ -416,7 +345,7 @@ async function handleCardPublished(c: Context<HonoEnv>, payload: WebhookPayload)
       processed: false,
       error: result.error,
     },
-    500,
+    result.error?.includes('already exists') ? 409 : 500,
   );
 }
 
@@ -426,7 +355,7 @@ async function handleCardPublished(c: Context<HonoEnv>, payload: WebhookPayload)
  * Check for @ai start command in comment body.
  */
 async function handleCommentCreated(c: Context<HonoEnv>, payload: WebhookPayload) {
-  const { comment, card, account_slug, vibe_config } = payload;
+  const { comment, card, account_slug } = payload;
 
   if (!comment) {
     return c.json({
@@ -452,7 +381,7 @@ async function handleCommentCreated(c: Context<HonoEnv>, payload: WebhookPayload
   }
 
   // Check if card has AI tags
-  const mode = getAiWorkMode(card.tags);
+  const mode = detectWorkMode(card.tags);
   if (!mode) {
     return c.json({
       processed: false,
@@ -460,20 +389,15 @@ async function handleCommentCreated(c: Context<HonoEnv>, payload: WebhookPayload
     });
   }
 
-  // Get vibe config
-  const config = vibe_config ?? getDefaultVibeConfig();
-
   // Dispatch work (regardless of column for @ai start)
-  const cardWorkItem = toCardWorkItem(card);
-  const result = await dispatchWork(c.env, account_slug, card.board_id, cardWorkItem, mode, config);
+  const result = await dispatchWork(c.env, account_slug, toCardData(card), mode, 'manual');
 
   if (result.success) {
     return c.json({
       processed: true,
       card_number: card.number,
       mode,
-      position: result.position,
-      notified: result.notified,
+      work_id: result.work_id,
       trigger: '@ai start',
     });
   }
@@ -483,14 +407,14 @@ async function handleCommentCreated(c: Context<HonoEnv>, payload: WebhookPayload
       processed: false,
       error: result.error,
     },
-    500,
+    result.error?.includes('already exists') ? 409 : 500,
   );
 }
 
 /**
  * Handle card_closed, card_postponed, and card_auto_postponed events.
  *
- * Cancel any pending or in-progress work for the card.
+ * Cancel any pending work for the card.
  */
 async function handleCardRemoved(c: Context<HonoEnv>, payload: WebhookPayload) {
   const { card, account_slug, event } = payload;
@@ -503,7 +427,7 @@ async function handleCardRemoved(c: Context<HonoEnv>, payload: WebhookPayload) {
   }
 
   // Cancel any work for this card
-  await cancelWork(c.env, account_slug, card.board_id, card.number, event);
+  await cancelWork(c.env, account_slug, card.number, event);
 
   return c.json({
     processed: true,
@@ -529,7 +453,7 @@ async function handleCardSentBackToTriage(c: Context<HonoEnv>, payload: WebhookP
   }
 
   // Cancel any work for this card
-  await cancelWork(c.env, account_slug, card.board_id, card.number, 'card_sent_back_to_triage');
+  await cancelWork(c.env, account_slug, card.number, 'card_sent_back_to_triage');
 
   return c.json({
     processed: true,
