@@ -67,6 +67,7 @@ function formatLine(line: string): string {
 </template>
 
 <style scoped>
+/* Terminal - dark background with light text in both modes */
 .terminal {
   border: 1px solid var(--vp-c-border);
   overflow: hidden;
@@ -80,19 +81,19 @@ function formatLine(line: string): string {
   justify-content: space-between;
   padding: var(--space-3) var(--space-4);
   background-color: #111111;
-  border-bottom: 1px solid var(--vp-c-border);
+  border-bottom: 1px solid var(--gray-800);
 }
 
 .terminal-title {
   font-family: var(--vp-font-family-mono);
   font-size: 12px;
-  color: var(--vp-c-text-3);
+  color: var(--gray-400);
 }
 
 .terminal-copy {
   background: none;
   border: 1px solid transparent;
-  color: var(--vp-c-text-3);
+  color: var(--gray-400);
   cursor: pointer;
   padding: var(--space-1) var(--space-2);
   font-family: var(--vp-font-family-mono);
@@ -101,8 +102,8 @@ function formatLine(line: string): string {
 }
 
 .terminal-copy:hover {
-  color: var(--fizzy-cyan);
-  border-color: var(--fizzy-cyan);
+  color: var(--fizzy-orange);
+  border-color: var(--fizzy-orange);
 }
 
 .terminal-body {
@@ -117,17 +118,20 @@ function formatLine(line: string): string {
   display: block;
 }
 
+/* Prompt with colorful $ */
 .terminal-line.prompt::before {
   content: '$ ';
-  color: var(--fizzy-cyan);
+  color: #22c55e;
 }
 
+/* Output in lighter gray */
 .terminal-line.output {
-  color: var(--gray-400);
+  color: var(--gray-300);
 }
 
+/* Comments in muted color */
 .terminal-line.comment {
-  color: var(--gray-600);
+  color: var(--gray-500);
   font-style: italic;
 }
 </style>

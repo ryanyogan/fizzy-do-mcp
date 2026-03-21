@@ -9,6 +9,26 @@ import QuickLink from './.vitepress/theme/components/QuickLink.vue'
 import FeatureCard from './.vitepress/theme/components/FeatureCard.vue'
 import FeatureGrid from './.vitepress/theme/components/FeatureGrid.vue'
 import EditorBadge from './.vitepress/theme/components/EditorBadge.vue'
+import ConversationTerminal from './.vitepress/theme/components/ConversationTerminal.vue'
+
+const exampleConversation = [
+  { role: 'user', content: "What's on my Engineering board?" },
+  { role: 'ai', content: `I found 12 open cards on your Engineering board:
+
+In Progress:
+- #234 "Implement user authentication" (assigned to you)
+- #235 "API rate limiting"
+
+Needs Triage:
+- #240 "Database migration script"
+- #241 "Update dependencies"` },
+  { role: 'user', content: 'Create a card for adding dark mode support' },
+  { role: 'ai', content: `Created card #242 "Add dark mode support" on Engineering.
+Would you like me to add tags or assign it to someone?` },
+  { role: 'user', content: 'Tag it with #frontend and #ui, assign to me' },
+  { role: 'ai', content: `Done! Card #242 now has tags #frontend and #ui,
+and is assigned to you.` },
+]
 </script>
 
 <HomeHero />
@@ -98,29 +118,7 @@ Configure Fizzy MCP with any of these MCP-compatible editors:
 
 See how natural it is to manage tasks with AI:
 
-```
-You: What's on my Engineering board?
-
-AI: I found 12 open cards on your Engineering board:
-
-    In Progress:
-    - #234 "Implement user authentication" (assigned to you)
-    - #235 "API rate limiting"
-
-    Needs Triage:
-    - #240 "Database migration script"
-    - #241 "Update dependencies"
-
-You: Create a card for adding dark mode support
-
-AI: Created card #242 "Add dark mode support" on Engineering.
-    Would you like me to add tags or assign it to someone?
-
-You: Tag it with #frontend and #ui, assign to me
-
-AI: Done! Card #242 now has tags #frontend and #ui,
-    and is assigned to you.
-```
+<ConversationTerminal title="Example Session" :messages="exampleConversation" />
 
 </div>
 

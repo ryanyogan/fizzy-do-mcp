@@ -38,12 +38,16 @@ export default defineConfig({
 
   cleanUrls: true,
 
-  themeConfig: {
-    // Theme-adaptive logo: black for light mode, white for dark mode
-    logo: {
-      light: '/logo-dark.svg',
-      dark: '/logo-light.svg',
+  markdown: {
+    theme: {
+      light: 'github-dark',
+      dark: 'github-dark',
     },
+  },
+
+  themeConfig: {
+    // Orange logo for both modes
+    logo: '/logo-orange.svg',
 
     siteTitle: 'Fizzy Do',
 
@@ -200,13 +204,6 @@ export default defineConfig({
     ],
 
     socialLinks: [{ icon: 'github', link: 'https://github.com/ryanyogan/fizzy-do-mcp' }],
-
-    search: {
-      provider: 'local',
-      options: {
-        detailedView: true,
-      },
-    },
 
     editLink: {
       pattern: 'https://github.com/ryanyogan/fizzy-do-mcp/edit/main/docs/:path',

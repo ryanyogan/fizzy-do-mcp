@@ -33,6 +33,14 @@
   --fizzy-cyan-soft: rgba(13, 148, 136, 0.1);
   --fizzy-cyan-hover: rgba(13, 148, 136, 0.15);
 
+  /* Accent colors - orange and blue hints */
+  --fizzy-orange: #f97316;
+  --fizzy-orange-soft: rgba(249, 115, 22, 0.1);
+  --fizzy-dark-blue: #1e40af;
+  --fizzy-dark-blue-soft: rgba(30, 64, 175, 0.1);
+  --fizzy-light-blue: #38bdf8;
+  --fizzy-light-blue-soft: rgba(56, 189, 248, 0.15);
+
   /* Brand colors - map to fizzy teal */
   --vp-c-brand-1: var(--fizzy-cyan);
   --vp-c-brand-2: var(--fizzy-cyan-light);
@@ -86,6 +94,12 @@
   --vp-c-text-2: var(--gray-600);
   --vp-c-text-3: var(--gray-500);
 
+  /* Light mode accent colors - orange and dark blue */
+  --fizzy-accent-1: var(--fizzy-orange);
+  --fizzy-accent-1-soft: var(--fizzy-orange-soft);
+  --fizzy-accent-2: var(--fizzy-dark-blue);
+  --fizzy-accent-2-soft: var(--fizzy-dark-blue-soft);
+
   /* Code blocks */
   --vp-code-block-bg: var(--gray-950);
   --vp-code-block-color: var(--gray-100);
@@ -117,6 +131,12 @@
   /* Lighter teal for dark mode */
   --fizzy-cyan: #14b8a6;
   --fizzy-cyan-soft: rgba(20, 184, 166, 0.12);
+
+  /* Dark mode accent colors - orange and light blue */
+  --fizzy-accent-1: var(--fizzy-orange);
+  --fizzy-accent-1-soft: rgba(249, 115, 22, 0.12);
+  --fizzy-accent-2: var(--fizzy-light-blue);
+  --fizzy-accent-2-soft: var(--fizzy-light-blue-soft);
 
   /* Code blocks */
   --vp-code-block-bg: var(--gray-950);
@@ -245,14 +265,14 @@ body {
 
 /* Links */
 .vp-doc a {
-  color: var(--vp-c-brand-1);
+  color: var(--fizzy-orange);
   text-decoration: none;
   font-weight: 500;
-  transition: opacity 0.15s;
+  transition: color 0.15s;
 }
 
 .vp-doc a:hover {
-  opacity: 0.8;
+  color: var(--fizzy-cyan);
 }
 
 /* Strong emphasis */
@@ -294,11 +314,11 @@ body {
   border: 1px solid var(--vp-c-border);
 }
 
-/* Code blocks */
+/* Code blocks - dark background with light text in both modes */
 .vp-doc [class*='language-'],
 .vp-doc pre {
-  background: var(--vp-code-block-bg) !important;
-  border: 1px solid var(--vp-c-border);
+  background: #0a0a0a !important;
+  border: 1px solid var(--gray-800);
   margin: var(--space-6) 0;
   font-size: 14px;
 }
@@ -306,6 +326,43 @@ body {
 .vp-doc [class*='language-'] code {
   font-size: 13px;
   line-height: 1.7;
+  color: #e5e5e5 !important;
+}
+
+/* Code block text - ensure light colors */
+.vp-doc [class*='language-'] code span {
+  color: inherit;
+}
+
+/* Bash/shell specific - light text */
+.vp-doc .language-bash code,
+.vp-doc .language-sh code,
+.vp-doc .language-shell code,
+.vp-doc .language-terminal code {
+  color: #e5e5e5 !important;
+}
+
+/* Plain text code blocks */
+.vp-doc .language-text code,
+.vp-doc .language-plaintext code,
+.vp-doc pre:not([class*='language-']) code {
+  color: #e5e5e5 !important;
+}
+
+/* Code block copy button */
+.vp-doc [class*='language-'] button.copy {
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
+}
+
+.vp-doc [class*='language-'] button.copy:hover {
+  background: var(--gray-700);
+  border-color: var(--gray-600);
+}
+
+/* Code block language label */
+.vp-doc div[class*='language-'] > span.lang {
+  color: var(--gray-500) !important;
 }
 
 /* Code block header (filename) */
@@ -331,10 +388,20 @@ body {
   max-width: var(--vp-layout-max-width);
 }
 
-/* Fix header alignment - ensure all items align */
+
+
+/* Fix header alignment - justify-between instead of center */
 .VPNavBar .content {
   display: flex;
   align-items: center;
+  justify-content: space-between !important;
+}
+
+.VPNavBar .content-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between !important;
+  width: 100%;
 }
 
 .VPNavBarMenu {
@@ -342,7 +409,21 @@ body {
   align-items: center;
 }
 
+/* Ensure nav items don't center - push to the right */
+.VPNavBar .VPNavBarMenu {
+  margin-left: auto;
+}
+
 /* Logo and title */
+.VPNavBarTitle .logo {
+  filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.3));
+  transition: filter 0.2s;
+}
+
+.VPNavBarTitle .logo:hover {
+  filter: drop-shadow(0 3px 6px rgba(249, 115, 22, 0.4));
+}
+
 .VPNavBarTitle .title {
   font-family: var(--vp-font-family-mono);
   font-size: 15px;
@@ -364,7 +445,7 @@ body {
 }
 
 .VPNavBarMenu .VPNavBarMenuLink:hover {
-  color: var(--vp-c-text-1);
+  color: var(--fizzy-orange);
 }
 
 .VPNavBarMenu .VPNavBarMenuLink.active {
@@ -467,7 +548,7 @@ body {
 }
 
 .VPSidebarItem .link:hover {
-  color: var(--vp-c-text-1);
+  color: var(--fizzy-orange);
   background: var(--vp-c-bg-soft);
 }
 
@@ -475,8 +556,8 @@ body {
 .VPSidebarItem.is-active > .item > .link {
   color: var(--vp-c-text-1);
   font-weight: 500;
-  background: var(--vp-c-bg-mute);
-  border-left: 2px solid var(--fizzy-cyan);
+  background: var(--fizzy-orange-soft);
+  border-left: 2px solid var(--fizzy-orange);
   margin-left: -2px;
 }
 
@@ -557,7 +638,7 @@ body {
 }
 
 .VPDocAsideOutline .outline-link.active {
-  color: var(--fizzy-cyan);
+  color: var(--fizzy-orange);
   font-weight: 500;
 }
 
@@ -656,18 +737,19 @@ body {
   border: 1px solid var(--vp-c-border);
   background: var(--vp-c-bg);
   padding: var(--space-6);
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .VPFeature:hover {
-  border-color: var(--fizzy-cyan);
+  border-color: var(--fizzy-orange);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
 }
 
 .VPFeature .icon {
   font-family: var(--vp-font-family-mono);
   font-size: 12px;
   font-weight: 600;
-  color: var(--fizzy-cyan);
+  color: var(--fizzy-orange);
   margin-bottom: var(--space-3);
 }
 
@@ -775,40 +857,6 @@ body {
 }
 
 /* =================================
-   SEARCH
-   ================================= */
-
-.VPLocalSearchBox .shell {
-  border: 1px solid var(--vp-c-border);
-  background: var(--vp-c-bg);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-}
-
-.dark .VPLocalSearchBox .shell {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
-
-.VPLocalSearchBox input {
-  font-family: var(--vp-font-family-mono);
-}
-
-.VPLocalSearchBox .search-kbd {
-  font-family: var(--vp-font-family-mono);
-  border: 1px solid var(--vp-c-border);
-  background: var(--vp-c-bg-soft);
-}
-
-/* Search results */
-.VPLocalSearchBox .result {
-  border: 1px solid transparent;
-}
-
-.VPLocalSearchBox .result.selected {
-  border-color: var(--fizzy-cyan);
-  background: var(--fizzy-cyan-soft);
-}
-
-/* =================================
    FOOTER
    ================================= */
 
@@ -818,22 +866,41 @@ body {
   padding: var(--space-8) var(--space-6);
 }
 
-.VPFooter .message,
-.VPFooter .copyright {
+.VPFooter .message {
   font-family: var(--vp-font-family-mono);
   font-size: 13px;
   color: var(--vp-c-text-3);
 }
 
-/* Footer link styling */
+/* Faint "built by" link */
+.VPFooter .copyright {
+  font-family: var(--vp-font-family-mono);
+  font-size: 12px;
+  color: var(--gray-400);
+  opacity: 0.7;
+}
+
 .VPFooter .copyright a {
-  color: var(--vp-c-text-2);
+  color: var(--gray-400);
   text-decoration: none;
-  transition: color 0.15s;
+  transition: all 0.15s;
 }
 
 .VPFooter .copyright a:hover {
-  color: var(--fizzy-cyan);
+  color: var(--fizzy-accent-1);
+  opacity: 1;
+}
+
+.dark .VPFooter .copyright {
+  color: var(--gray-600);
+}
+
+.dark .VPFooter .copyright a {
+  color: var(--gray-600);
+}
+
+.dark .VPFooter .copyright a:hover {
+  color: var(--fizzy-accent-2);
 }
 
 /* =================================
@@ -875,6 +942,32 @@ body {
   letter-spacing: 0.02em;
   padding: 2px 6px;
   border: 1px solid currentColor;
+}
+
+/* =================================
+   ACCENT COLOR UTILITIES
+   ================================= */
+
+/* Orange accent text */
+.accent-orange {
+  color: var(--fizzy-accent-1);
+}
+
+/* Blue accent text (dark blue in light mode, light blue in dark mode) */
+.accent-blue {
+  color: var(--fizzy-accent-2);
+}
+
+/* Orange accent background */
+.accent-orange-bg {
+  background: var(--fizzy-accent-1-soft);
+  border-color: var(--fizzy-accent-1);
+}
+
+/* Blue accent background */
+.accent-blue-bg {
+  background: var(--fizzy-accent-2-soft);
+  border-color: var(--fizzy-accent-2);
 }
 
 /* =================================
@@ -986,10 +1079,7 @@ body {
     padding: var(--space-4) !important;
   }
 
-  /* Mobile nav */
-  .VPNavBar {
-    padding: 0 var(--space-4);
-  }
+
 
   /* Tables scroll on mobile */
   .vp-doc table {
