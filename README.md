@@ -1,42 +1,22 @@
 # Fizzy Do MCP
 
-<div align="center">
+Open-source MCP server that connects AI assistants to Fizzy (Basecamp's task management) with 70+ tools for boards, cards, workflows, and AI-powered project management.
 
-**AI-Native Task Management with Model Context Protocol**
+## What It Is
 
-Connect your AI assistant to [Fizzy](https://fizzy.do) for intelligent, context-aware project management.
+Fizzy Do MCP is a [Model Context Protocol](https://modelcontextprotocol.io) server that gives AI assistants full read/write access to [Fizzy](https://fizzy.do). Rather than switching between your editor and a project management UI, you manage boards, cards, comments, tags, and workflows through conversation. The tool surface covers the complete Fizzy API: card lifecycle (create, update, close, reopen, triage, postpone), board management, column workflows, checklist steps, reactions, notifications, and webhooks.
+
+It also includes AI-powered project management tools — standup generation, progress tracking, and session management — that synthesize project state from card data rather than requiring manual status updates.
 
 [![npm version](https://img.shields.io/npm/v/fizzy-do-mcp.svg)](https://www.npmjs.com/package/fizzy-do-mcp)
-[![license](https://img.shields.io/npm/l/fizzy-do-mcp.svg)](https://github.com/ryanyogan/fizzy-do-mcp/blob/main/LICENSE)
-
-[Documentation](https://fizzy.yogan.dev) ・ [Quick Start](https://fizzy.yogan.dev/getting-started/installation) ・ [Issues](https://github.com/ryanyogan/fizzy-do-mcp/issues)
-
-</div>
-
----
-
-## What is Fizzy Do MCP?
-
-Fizzy Do MCP is a **free, open-source** [Model Context Protocol](https://modelcontextprotocol.io) server that enables AI assistants to interact with [Fizzy](https://fizzy.do), Basecamp's task management tool.
-
-- Read boards, cards, and project context
-- Create, update, and organize tasks through conversation
-- Move cards through workflows, add comments, and track progress
-- AI-powered project management tools for standups and reporting
-
-> **[Read the full documentation →](https://fizzy.yogan.dev)**
-
----
 
 ## Quick Start
-
-Run the interactive setup wizard:
 
 ```bash
 npx fizzy-do-mcp configure
 ```
 
-The wizard detects your installed editors and configures them automatically.
+The interactive wizard detects installed editors and configures them automatically.
 
 **Manual configuration:**
 
@@ -54,104 +34,37 @@ The wizard detects your installed editors and configures them automatically.
 }
 ```
 
-> **[See installation guide →](https://fizzy.yogan.dev/getting-started/installation)**
-
----
-
 ## Supported Editors
 
 | Editor | Status | Guide |
 |--------|--------|-------|
-| Claude Desktop | Full support | [Configure →](https://fizzy.yogan.dev/configuration/claude-desktop) |
-| Claude Code | Full support | [Configure →](https://fizzy.yogan.dev/configuration/claude-code) |
-| Cursor | Full support | [Configure →](https://fizzy.yogan.dev/configuration/cursor) |
-| Windsurf | Full support | [Configure →](https://fizzy.yogan.dev/configuration/windsurf) |
-| Continue | Full support | [Configure →](https://fizzy.yogan.dev/configuration/continue) |
-| OpenCode | Full support | [Configure →](https://fizzy.yogan.dev/configuration/opencode) |
-
----
-
-## Example Usage
-
-```
-You: What's on my Engineering board?
-
-AI: I found 12 open cards on your Engineering board:
-
-    In Progress:
-    - #234 "Implement user authentication" (assigned to you)
-    - #235 "API rate limiting"
-
-    Needs Triage:
-    - #240 "Database migration script"
-    - #241 "Update dependencies"
-
-You: Create a card for adding dark mode support
-
-AI: Created card #242 "Add dark mode support" on the Engineering board.
-    Would you like me to add any tags or assign it to someone?
-```
-
-> **[See more workflow examples →](https://fizzy.yogan.dev/workflows/ai-driven-tasks)**
-
----
+| Claude Desktop | Full support | [Configure](https://fizzy.yogan.dev/configuration/claude-desktop) |
+| Claude Code | Full support | [Configure](https://fizzy.yogan.dev/configuration/claude-code) |
+| Cursor | Full support | [Configure](https://fizzy.yogan.dev/configuration/cursor) |
+| Windsurf | Full support | [Configure](https://fizzy.yogan.dev/configuration/windsurf) |
+| Continue | Full support | [Configure](https://fizzy.yogan.dev/configuration/continue) |
+| OpenCode | Full support | [Configure](https://fizzy.yogan.dev/configuration/opencode) |
 
 ## Available Tools
 
-Fizzy Do MCP provides **70+ tools** across these categories:
+70+ tools across these categories:
 
 | Category | Description |
 |----------|-------------|
-| **Boards** | List, create, update, delete, publish/unpublish boards |
-| **Cards** | Full card lifecycle - create, update, close, reopen, triage, postpone |
-| **Comments** | Add, edit, delete comments on cards |
-| **Columns** | Manage board columns for workflow stages |
-| **Tags & Users** | List tags, list and lookup users |
-| **Reactions** | Add emoji reactions to cards and comments |
+| **Boards** | List, create, update, delete, publish/unpublish |
+| **Cards** | Full lifecycle — create, update, close, reopen, triage, postpone |
+| **Comments** | Add, edit, delete on cards |
+| **Columns** | Manage workflow stages |
+| **Tags & Users** | List, lookup, assign |
+| **Reactions** | Emoji reactions on cards and comments |
 | **Steps** | Checklist items within cards |
-| **Notifications** | Read and manage notifications |
-| **Webhooks** | Configure webhook integrations |
-| **Project Manager** | AI-powered tools for standups, progress tracking, and sessions |
+| **Notifications** | Read and manage |
+| **Webhooks** | Configure integrations |
+| **Project Manager** | AI standups, progress tracking, sessions |
 
-> **[Full tools reference →](https://fizzy.yogan.dev/tools/overview)**
+> [Full tools reference](https://fizzy.yogan.dev/tools/overview)
 
----
-
-## CLI Commands
-
-```bash
-npx fizzy-do-mcp configure   # Interactive setup wizard
-npx fizzy-do-mcp whoami      # Check current identity
-npx fizzy-do-mcp status      # View configuration status
-npx fizzy-do-mcp logout      # Clear stored credentials
-npx fizzy-do-mcp             # Run as MCP server
-```
-
-> **[CLI documentation →](https://fizzy.yogan.dev/api/cli)**
-
----
-
-## Development
-
-```bash
-# Clone and install
-git clone https://github.com/ryanyogan/fizzy-do-mcp.git
-cd fizzy-do-mcp
-vp install
-
-# Development workflow
-vp check          # Format, lint, typecheck
-vp test           # Run tests
-vp build          # Build all packages
-
-# Run locally
-cd apps/server && vp dev    # CLI/server
-cd docs && vp dev           # Documentation site
-```
-
-This project uses [Vite+](https://github.com/nicepkg/vp) (`vp`) as the unified toolchain.
-
-### Architecture
+## Architecture
 
 ```
 fizzy-do-mcp/
@@ -164,29 +77,32 @@ fizzy-do-mcp/
 └── docs/                        # Documentation (VitePress)
 ```
 
-### Releases
+## Why This Matters
 
-This project uses [Changesets](https://github.com/changesets/changesets) for versioning. Create a changeset when making changes:
+MCP servers tend to be thin wrappers around a single API. Fizzy Do MCP is more opinionated: the project management tools (standups, progress tracking) demonstrate that MCP tools can synthesize across multiple API calls rather than just proxying them. The AI doesn't just read your board — it generates a standup from card state across all your boards.
+
+## Status
+
+Published on npm. Active development. Full documentation at [fizzy.yogan.dev](https://fizzy.yogan.dev).
+
+## Stack
+
+- **Runtime:** Node.js 20+
+- **Language:** TypeScript
+- **Protocol:** Model Context Protocol (MCP)
+- **Build:** Vite+ (vp), Changesets for versioning
+- **Docs:** VitePress
+
+## CLI
 
 ```bash
-pnpm changeset
+npx fizzy-do-mcp configure   # Interactive setup wizard
+npx fizzy-do-mcp whoami      # Check current identity
+npx fizzy-do-mcp status      # View configuration status
+npx fizzy-do-mcp logout      # Clear stored credentials
+npx fizzy-do-mcp             # Run as MCP server
 ```
-
-Releases are automated via GitHub Actions when changesets are merged.
-
----
-
-## Requirements
-
-- **Node.js 20+**
-- **Fizzy Account** — [Sign up free](https://fizzy.do)
-- **API Token** — Generate from Fizzy account settings
-- **MCP-Compatible Editor** — Claude Desktop, Cursor, etc.
-
----
 
 ## License
 
 MIT — [Ryan Yogan](https://yogan.dev)
-
-Built for [Claude](https://claude.ai) and the [Model Context Protocol](https://modelcontextprotocol.io). Connects to [Fizzy](https://fizzy.do), Basecamp's task management tool.
