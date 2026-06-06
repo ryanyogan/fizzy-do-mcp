@@ -6,9 +6,9 @@ import { z } from 'zod';
 export const UserSchema = z.object({
   id: z.string(),
   name: z.string(),
-  role: z.enum(['owner', 'admin', 'member']),
+  role: z.enum(['owner', 'admin', 'member', 'system']),
   active: z.boolean(),
-  email_address: z.string().email(),
+  email_address: z.string().email().nullable(),
   created_at: z.string().datetime({ offset: true }),
   url: z.string().url(),
   avatar_url: z.string().url().optional(),
