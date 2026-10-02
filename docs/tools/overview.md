@@ -1,6 +1,6 @@
 # Tools Overview
 
-Fizzy MCP provides 70+ tools for managing your Fizzy boards, cards, and collaboration.
+Fizzy MCP provides 67 tools for managing your Fizzy boards, cards, and collaboration.
 
 ## Tool Categories
 

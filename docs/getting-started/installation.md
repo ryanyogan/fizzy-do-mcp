@@ -156,6 +156,6 @@ import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
   :items="[
     { title: 'Quick Start', link: '/getting-started/quickstart', description: 'Try your first AI-driven task' },
     { title: 'Editor Configuration', link: '/configuration/claude-desktop', description: 'Detailed setup guides' },
-    { title: 'Tools Reference', link: '/tools/overview', description: 'All 70+ available tools' },
+    { title: 'Tools Reference', link: '/tools/overview', description: 'All 67 available tools' },
   ]"
 />

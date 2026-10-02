@@ -1,6 +1,6 @@
 # Fizzy Do MCP
 
-Open-source MCP server that connects AI assistants to Fizzy (Basecamp's task management) with 70+ tools for boards, cards, workflows, and AI-powered project management.
+Open-source MCP server that connects AI assistants to Fizzy (Basecamp's task management) with 67 tools for boards, cards, workflows, and AI-powered project management.
 
 ## What It Is
 
@@ -47,7 +47,7 @@ The interactive wizard detects installed editors and configures them automatical
 
 ## Available Tools
 
-70+ tools across these categories:
+67 tools across these categories:
 
 | Category | Description |
 |----------|-------------|

@@ -128,7 +128,7 @@ AI: Created card #242 "Add dark mode support" on the Engineering board.
 
 ## Available Tools
 
-Fizzy Do MCP provides 40+ tools covering all major Fizzy operations:
+Fizzy Do MCP provides 67 tools covering all major Fizzy operations:
 
 | Category | Tools |
 |----------|-------|
