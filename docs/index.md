@@ -52,7 +52,7 @@ and is assigned to you.` },
   />
   <QuickLink
     badge="Reference"
-    title="70+ Tools"
+    title="67 Tools"
     description="Complete API for boards, cards, and more"
     to="/tools/overview"
   />

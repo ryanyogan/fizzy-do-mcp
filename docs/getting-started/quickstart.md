@@ -165,7 +165,7 @@ import RelatedLinks from '../.vitepress/theme/components/RelatedLinks.vue'
   title="Continue Learning"
   :items="[
     { title: 'AI-Driven Workflows', link: '/workflows/ai-driven-tasks', description: 'Advanced workflow patterns' },
-    { title: 'Tools Reference', link: '/tools/overview', description: 'Full list of 70+ tools' },
+    { title: 'Tools Reference', link: '/tools/overview', description: 'Full list of 67 tools' },
     { title: 'Project Management', link: '/workflows/project-management', description: 'Sprint planning and releases' },
   ]"
 />
